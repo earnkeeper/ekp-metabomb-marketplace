@@ -1,0 +1,10 @@
+python-socketio
+eventlet
+requests
+Flask
+python-engineio
+flask-cors
+python-decouple
+moment
+redis
+gql[all]
