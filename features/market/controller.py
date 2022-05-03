@@ -18,7 +18,7 @@ class MarketController:
         self.client_service.emit_page(
             sid,
             self.path,
-            page()
+            page(listings_collection_name)
         )
 
     def on_client_state_changed(self, sid, event):

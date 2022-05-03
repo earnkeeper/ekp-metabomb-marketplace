@@ -108,7 +108,18 @@ def Icon(name, class_name=None, size=None):
     }
 
 
-def Datatable(data, columns, class_name=None, busy_when=None, show_export=None, pagination=None):
+def Datatable(
+    data, 
+    columns, 
+    class_name=None, 
+    busy_when=None, 
+    show_export=None, 
+    pagination=None, 
+    pagination_per_page=None,
+    grid_view=None,
+    disable_list_view=None,
+    default_view=None
+    ):
     return {
         "_type": "Datatable",
         "props": cleanNullTerms({
@@ -116,12 +127,20 @@ def Datatable(data, columns, class_name=None, busy_when=None, show_export=None, 
             "className": class_name,
             "columns": columns,
             "data": data,
+            "gridView": grid_view,
+            "pagination": pagination,
             "showExport": show_export,
-            "pagination": pagination
+            "disableListView": disable_list_view,
+            "defaultView": default_view,
+            "paginationPerPage": pagination_per_page
         })
     }
 
-
+def Hr():
+    return {
+        "_type": "Hr",
+        "props": {}
+    }
 def Badge(color, children, class_name=None):
     return {
         "_type": "Badge",
@@ -146,6 +165,14 @@ def Column(id, value=None, title=None, format=None, right=None, width=None, min_
         "width": width,
     })
 
+def Card(children=None, className = None):
+    return {
+        "_type": "Card",
+        "props": cleanNullTerms({
+            "children": children,
+            "className": className
+        })
+    }
 
 def Form(name, schema, children, class_name=None):
     return {
@@ -284,4 +311,14 @@ def format_percent(value):
     return {
         "method": "formatPercent",
         "params": [value]
+    }
+
+def Image(src, style=None, class_name=None):
+    return {
+        "_type": "Image",
+        "props": cleanNullTerms({
+            "src": src,
+            "style": style,
+            "className": class_name
+        })
     }
