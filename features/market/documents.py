@@ -1,17 +1,23 @@
-from sdk import cache
 import json
+import time
+
+from sdk import cache
+
 
 def documents():
     json_str = cache.get("metabomb_market_listings")
+    now = time.time()
 
     if (json_str == None):
         return []
     docs = json.loads(cache.get("metabomb_market_listings"))
-    return list(map(lambda doc: format_document(doc), docs))
+    return list(map(lambda doc: format_document(doc, now), docs))
 
-def format_document(doc):
+
+def format_document(doc, now):
     return {
         "id": doc["id"],
+        "updated": now,
         "name": f'Hero #{doc["id"]}',
         "display_id": doc["display_id"],
         "rarity": doc["rarity"],

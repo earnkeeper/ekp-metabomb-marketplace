@@ -24,7 +24,6 @@ def market_row(listings_collection_name):
     return Datatable(
         data=documents(listings_collection_name),
         busy_when=is_busy(collection(listings_collection_name)),
-        show_export=False,
         default_view="grid",
         default_sort_field_id="name",
         pagination_per_page=18,
@@ -70,6 +69,7 @@ def market_row(listings_collection_name):
 
 def grid_tile():
     return Card(
+        class_name='m-0',
         children=[
             Row(
                 class_name="mb-1 font-small-3",

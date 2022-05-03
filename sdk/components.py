@@ -201,12 +201,12 @@ def Column(
     })
 
 
-def Card(children=None, className=None):
+def Card(children=None, class_name=None):
     return {
         "_type": "Card",
         "props": cleanNullTerms({
             "children": children,
-            "className": className
+            "className": class_name
         })
     }
 
