@@ -17,6 +17,21 @@ def format_document(doc):
         "rarity": doc["rarity"],
         "level": doc["level"],
         "hero_class": doc["hero_class"],
+        "hero_class_name": map_hero_class_name(doc["hero_class"]),
         "for_sale": doc["for_sale"],
         "price": doc["price"],
     }
+
+
+def map_hero_class_name(class_id):
+    if (class_id == 0):
+        return "Warrior"
+    if (class_id == 1):
+        return "Assassin"
+    if (class_id == 2):
+        return "Mage"
+    if (class_id == 3):
+        return "Support"
+    if (class_id == 4):
+        return "Ranger"
+    return "?"

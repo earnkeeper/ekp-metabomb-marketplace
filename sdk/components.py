@@ -11,6 +11,16 @@ def cleanNullTerms(d):
     return clean
 
 
+def Paragraphs(children, class_name=None):
+    return {
+        "_type": "Paragraphs",
+        "props": cleanNullTerms({
+            "class_name": class_name,
+            "children": children,
+        })
+    }
+
+
 def Fragment(children, class_name=None):
     return {
         "_type": "Fragment",
@@ -109,17 +119,20 @@ def Icon(name, class_name=None, size=None):
 
 
 def Datatable(
-    data, 
-    columns, 
-    class_name=None, 
-    busy_when=None, 
-    show_export=None, 
-    pagination=None, 
+    data,
+    columns,
+    class_name=None,
+    busy_when=None,
+    show_export=None,
+    pagination=None,
     pagination_per_page=None,
     grid_view=None,
     disable_list_view=None,
-    default_view=None
-    ):
+    default_view=None,
+    filters=None,
+    default_sort_field_id=None,
+    default_sort_asc=None
+):
     return {
         "_type": "Datatable",
         "props": cleanNullTerms({
@@ -127,20 +140,26 @@ def Datatable(
             "className": class_name,
             "columns": columns,
             "data": data,
+            "defaultSortAsc": default_sort_asc,
+            "defaultSortFieldId": default_sort_field_id,
+            "defaultView": default_view,
+            "disableListView": disable_list_view,
+            "filters": filters,
             "gridView": grid_view,
             "pagination": pagination,
+            "paginationPerPage": pagination_per_page,
             "showExport": show_export,
-            "disableListView": disable_list_view,
-            "defaultView": default_view,
-            "paginationPerPage": pagination_per_page
         })
     }
+
 
 def Hr():
     return {
         "_type": "Hr",
         "props": {}
     }
+
+
 def Badge(color, children, class_name=None):
     return {
         "_type": "Badge",
@@ -152,7 +171,19 @@ def Badge(color, children, class_name=None):
     }
 
 
-def Column(id, value=None, title=None, format=None, right=None, width=None, min_width=None, grow=None, cell=None):
+def Column(
+    id,
+    cell=None,
+    format=None,
+    grow=None,
+    min_width=None,
+    right=None,
+    searchable=None,
+    sortable=None,
+    title=None,
+    value=None,
+    width=None,
+):
     return cleanNullTerms({
         "cell": cell,
         "format": format,
@@ -160,12 +191,15 @@ def Column(id, value=None, title=None, format=None, right=None, width=None, min_
         "id": id,
         "minWidth": min_width,
         "right": right,
+        "searchable": searchable,
+        "sortable": sortable,
         "title": title,
         "value": value,
         "width": width,
     })
 
-def Card(children=None, className = None):
+
+def Card(children=None, className=None):
     return {
         "_type": "Card",
         "props": cleanNullTerms({
@@ -173,6 +207,7 @@ def Card(children=None, className = None):
             "className": className
         })
     }
+
 
 def Form(name, schema, children, class_name=None):
     return {
@@ -312,6 +347,7 @@ def format_percent(value):
         "method": "formatPercent",
         "params": [value]
     }
+
 
 def Image(src, style=None, class_name=None):
     return {

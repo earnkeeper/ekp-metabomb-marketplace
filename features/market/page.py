@@ -1,50 +1,68 @@
-from sdk.components import (Badge, Button, Card, Col, Column, Container, Datatable,
-                            Div, Form, Fragment, Hr, Icon, Image, Row, Select, Span, collection,
-                            commify, documents, format_currency,
-                            format_template, is_busy, switch_case)
+from sdk.components import (Badge, Button, Card, Col, Column, Container,
+                            Datatable, Div, Form, Fragment, Hr, Icon, Image,
+                            Paragraphs, Row, Select, Span, collection, commify,
+                            documents, format_currency, format_template,
+                            is_busy, switch_case)
+from util.game_contants import class_names, rarity_names
+from util.page_title import page_title
 
 
 def page(listings_collection_name):
     return Container(
         children=[
-            title_row(),
+            page_title('shopping-cart', 'Marketplace'),
+            Paragraphs(
+                ["The Metabomb marketplace is launching soon!",
+                 "We are ready to fill it with all the Play to Earn metrics you need. Watch this space 👀"],
+            ),
             market_row(listings_collection_name),
         ]
     )
 
 
-def title_row():
-    return Row(
-        children=[
-            Col(
-                children=[Icon("shopping-cart")],
-                class_name='col-auto pr-0'
-            ),
-            Col(
-                children=[
-                    Span("Marketplace", "font-medium-3")
-                ]
-            )
-        ],
-        class_name="mb-2"
-    )
-
-
 def market_row(listings_collection_name):
     return Datatable(
-        class_name="mt-2",
         data=documents(listings_collection_name),
         busy_when=is_busy(collection(listings_collection_name)),
         show_export=False,
         default_view="grid",
+        default_sort_field_id="name",
         pagination_per_page=18,
         disable_list_view=True,
         grid_view={
+            "tileWidth": [12, 6, 4, 3],
             "tile": grid_tile()
         },
+        filters=[
+            {"columnId": "rarity", "icon": "cil-spa"},
+            {"columnId": "hero_class", "icon": "cil-shield-alt"},
+            {"columnId": "level", "icon": "cil-chevron-double-up"},
+        ],
         columns=[
             Column(
-                id="id",
+                id="name",
+                sortable=True,
+                searchable=True
+            ),
+            Column(
+                id="hero_class",
+                value=switch_case("$.hero_class", class_names()),
+                title="Class"
+            ),
+            Column(
+                id="rarity",
+                value=switch_case("$.rarity", rarity_names()),
+                omit=True
+            ),
+            Column(
+                id="rarity_num",
+                title="Rarity",
+                format=switch_case("$.rarity", rarity_names()),
+                sortable=True
+            ),
+            Column(
+                id="level",
+                sortable=True
             ),
         ]
     )
@@ -54,7 +72,7 @@ def grid_tile():
     return Card(
         children=[
             Row(
-                class_name="mb-1",
+                class_name="mb-1 font-small-3",
                 children=[
                     Col(
                         class_name='text-center col-12',
@@ -63,7 +81,7 @@ def grid_tile():
                                 style={
                                     "height": "156px"
                                 },
-                                class_name="mt-3 mb-2",
+                                class_name="mt-4 mb-2",
                                 src=format_template(
                                     "https://market.metabomb.io/gifs/char-gif/{{ image_id }}.gif",
                                     {
@@ -78,9 +96,11 @@ def grid_tile():
                             table(
                                 [
                                     ["Name", "$.name"],
-                                    ["Rarity", "$.rarity"],
+                                    ["Class", switch_case(
+                                        "$.hero_class", class_names())],
+                                    ["Rarity", switch_case(
+                                        "$.rarity", rarity_names())],
                                     ["Level", "$.level"],
-                                    ["Class", "$.hero_class"],
                                 ],
                             )
                         ]
