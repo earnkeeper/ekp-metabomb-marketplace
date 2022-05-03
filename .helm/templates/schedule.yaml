@@ -23,5 +23,3 @@ spec:
                   value: "{{ .Values.redis.password }}"
                 - name: REDIS_DB
                   value: "{{ .Values.redis.db }}"
-                - name: BSCSCAN_API_KEY
-                  value: "{{ .Values.bsc.apiKey }}"
