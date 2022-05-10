@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: schedule
+  name: schedule-job
 spec:
   schedule: "* * * * *"
   jobTemplate:
@@ -13,13 +13,9 @@ spec:
         spec:
           restartPolicy: Never
           containers:
-            - name: python-schedule
+            - name: python
               image: "{{ .Values.werf.image.schedule }}"
               workingDir: /app
               env:
                 - name: REDIS_HOST
-                  value: "{{ .Values.redis.host }}"
-                - name: REDIS_PASSWORD
-                  value: "{{ .Values.redis.password }}"
-                - name: REDIS_DB
-                  value: "{{ .Values.redis.db }}"
+                  value: '{{ .Release.Name }}-redis-master'

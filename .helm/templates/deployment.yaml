@@ -16,18 +16,14 @@ spec:
         app: app
     spec:
       containers:
-        - name: python
+        - name: python-socketio
           image: '{{ .Values.werf.image.app }}'
           workingDir: /app
           env:
             - name: EKP_PLUGIN_ID
               value: {{ .Chart.Name }}
             - name: REDIS_HOST
-              value: '{{ .Values.redis.host }}'
-            - name: REDIS_PASSWORD
-              value: '{{ .Values.redis.password }}'
-            - name: REDIS_DB
-              value: '{{ .Values.redis.db }}'
+              value: '{{ .Release.Name }}-redis-master'
           ports:
             - containerPort: 3001
               protocol: TCP
