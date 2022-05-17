@@ -6,6 +6,7 @@ from ekp_sdk import BaseContainer
 from db.contract_logs_repo import ContractLogsRepo
 
 from db.contract_transactions_repo import ContractTransactionsRepo
+from db.market_transactions_repo import MarketTransactionsRepo
 from sync.market_decoder_service import MarketDecoderService
 from sync.transaction_sync_service import TransactionSyncService
 
@@ -24,6 +25,10 @@ class AppContainer(BaseContainer):
             mg_client=self.mg_client,
         )
 
+        self.market_transactions_repo = MarketTransactionsRepo(
+            mg_client=self.mg_client,
+        )
+        
         self.sync_service = TransactionSyncService(
             contract_logs_repo=self.contract_logs_repo,
             contract_transactions_repo=self.contract_transactions_repo,
@@ -36,6 +41,7 @@ class AppContainer(BaseContainer):
             contract_logs_repo=self.contract_logs_repo,
             contract_transactions_repo=self.contract_transactions_repo,
             etherscan_service=self.etherscan_service,
+            market_transactions_repo=self.market_transactions_repo,
             web3_service=self.web3_service,
         )
 
@@ -59,16 +65,16 @@ if __name__ == '__main__':
         '0x1f36bef063ee6fcefeca070159d51a3b36bc68d6'
     ]
     
-    # futures = []
+    futures = []
     
-    # for contract_address in contract_addresses:
-    #     futures.append(container.sync_service.sync_transactions(contract_address))
+    for contract_address in contract_addresses:
+        futures.append(container.sync_service.sync_transactions(contract_address))
     
-    # for log_address in log_addresses:
-    #     futures.append(container.sync_service.sync_logs(log_address))
+    for log_address in log_addresses:
+        futures.append(container.sync_service.sync_logs(log_address))
         
-    # loop.run_until_complete(
-    #     asyncio.gather(*futures)
-    # )
+    loop.run_until_complete(
+        asyncio.gather(*futures)
+    )
 
     asyncio.run(container.market_decoder_service.decode_market_trans())

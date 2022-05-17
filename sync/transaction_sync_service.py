@@ -54,7 +54,7 @@ class TransactionSyncService:
 
                 models.append(tran)
 
-            self.contract_transactions_repo.bulk_write(models)
+            self.contract_transactions_repo.save(models)
 
             if (len(trans) < self.page_size):
                 break
@@ -102,8 +102,8 @@ class TransactionSyncService:
 
                 models.append(log)
 
-            self.contract_logs_repo.bulk_write(models)
-            self.contract_transactions_repo.bulk_write_logs(models)
+            self.contract_logs_repo.save(models)
+            self.contract_transactions_repo.save_logs(models)
 
             if (len(logs) < 1000):
                 break

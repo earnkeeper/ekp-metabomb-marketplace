@@ -1,11 +1,15 @@
+import sys
 from ast import literal_eval
+from datetime import datetime
+from decimal import Decimal
 
 from db.contract_logs_repo import ContractLogsRepo
 from db.contract_transactions_repo import ContractTransactionsRepo
-from ekp_sdk.services import CacheService, EtherscanService, Web3Service, CoingeckoService
+from db.market_transactions_repo import MarketTransactionsRepo
+from ekp_sdk.services import (CacheService, CoingeckoService, EtherscanService,
+                              Web3Service)
 from web3 import Web3
-from datetime import datetime
-from decimal import Decimal 
+from bson.decimal128 import Decimal128
 
 COMMON_BOX_CONTRACT_ADDRESS = "0x1f36bef063ee6fcefeca070159d51a3b36bc68d6"
 PREMIUM_BOX_CONTRACT_ADDRESS = "0x2076626437c3bb9273998a5e4f96438abe467f1c"
@@ -16,45 +20,72 @@ TOKEN_TRANSFER_TOPIC = "0xd61e22991e1ab43a17e1ba8ddb78b72a4ffc0d7f455c8536073a6b
 class MarketDecoderService:
     def __init__(
         self,
-        contract_transactions_repo: ContractTransactionsRepo,
-        contract_logs_repo: ContractLogsRepo,
-        etherscan_service: EtherscanService,
         cache_service: CacheService,
         coingecko_service: CoingeckoService,
-        web3_service: Web3Service
+        contract_logs_repo: ContractLogsRepo,
+        contract_transactions_repo: ContractTransactionsRepo,
+        etherscan_service: EtherscanService,
+        market_transactions_repo: MarketTransactionsRepo,
+        web3_service: Web3Service,
     ):
         self.cache_service = cache_service
         self.coingecko_service = coingecko_service
         self.contract_logs_repo = contract_logs_repo
         self.contract_transactions_repo = contract_transactions_repo
         self.etherscan_service = etherscan_service
+        self.market_transactions_repo = market_transactions_repo
         self.web3_service = web3_service
         self.page_size = 2000
 
     async def decode_market_trans(self):
-        # latest_block = self.market_trans_repo.find_latest_block()
-        latest_block = 0
-        next_trans = self.contract_transactions_repo.find_since_block_number(
-            latest_block)
+        print("✨ Decoding market transactions..")
 
-        for next_tran in next_trans:
-            input = next_tran["input"]
-            block_number = next_tran["blockNumber"]
+        latest_block = self.market_transactions_repo.find_latest_block_number()
 
-            if (len(input) < 10):
+        while True:
+            next_trans = self.contract_transactions_repo.find_since_block_number(
+                latest_block,
+                self.page_size
+            )
+
+            if not len(next_trans):
+                break
+
+            buys = []            
+            
+            for next_tran in next_trans:
+                input = next_tran["input"]
+                block_number = next_tran["blockNumber"]
+
+                if (len(input) < 10):
+                    latest_block = block_number
+                    continue
+
+
+                if input.startswith("0x38edf988"):
+                    buy = await self.__decode_market_buy(next_tran)
+                    if buy:
+                        buys.append(buy)
+
                 latest_block = block_number
-                continue
+            
+            if len(buys):
+                self.market_transactions_repo.save(buys)
+            
+            if len(next_trans) < self.page_size:
+                break
 
-            if input.startswith("0x38edf988"):
-                await self.__decode_market_buy(next_tran)
+        
+
+        print("✅ Finished decoding market transactions..")
 
     async def __decode_market_buy(self, tran):
         if "logs" not in tran:
-            return
+            return None
 
-        logs = tran["logs"].values()
-        
+        hash = tran["hash"]
         timestamp = tran["timeStamp"]
+        block_number = tran["blockNumber"]
         date_str = datetime.utcfromtimestamp(timestamp).strftime("%d-%m-%Y")
 
         bnb_cache_key = f"bnb_price_{date_str}"
@@ -69,10 +100,12 @@ class MarketDecoderService:
         seller = None
         token_id = 0
 
+        logs = tran["logs"].values()
+
         for log in logs:
             address = log["address"]
-            topics = log["topics"]
             data = log["data"]
+            topics = log["topics"]
 
             if address == MTB_CONTRACT_ADDRESS:
                 dec = Web3.fromWei(literal_eval(data), 'ether')
@@ -85,28 +118,27 @@ class MarketDecoderService:
                 name = "Premium Box"
 
         if name is None:
-            print(f'🚨 {log["address"]}')
+            print(f'🚨 missing name here {hash}', file=sys.stderr)
 
         distributions.sort()
-        
+
         bnb_cost = Web3.fromWei(tran["gasUsed"] * tran["gasPrice"], 'ether')
-        price = int(sum(distributions))
+        price = sum(distributions)
         fees = price - distributions[-1]
 
-        buy = {
-            "bnbCost": bnb_cost,
-            "bnbCostUsd": round(bnb_cost * Decimal(bnb_usd_price),4),
+        return {
+            "bnbCost": float(bnb_cost),
+            "bnbCostUsd": float(bnb_cost) * bnb_usd_price,
+            "blockNumber": block_number,
             "buyer": tran["from"],
-            "fees": fees,
-            "feesUsd": round(fees * Decimal(mtb_usd_price),2),
-            "hash": log["transactionHash"],
+            "fees": float(fees),
+            "feesUsd": float(fees) * mtb_usd_price,
+            "hash": hash,
             "nftName": name,
             "nftType": "Hero Box",
-            "price": price,
-            "priceUsd": round(price * Decimal(mtb_usd_price),2),
+            "price": float(price),
+            "priceUsd": float(price) * mtb_usd_price,
             "seller": seller,
             "timestamp": timestamp,
             "tokenId": token_id,
         }
-
-        print(buy)
