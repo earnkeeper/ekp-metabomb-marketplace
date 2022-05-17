@@ -1,3 +1,2 @@
-gql[all]
 ekp-sdk==0.2.1
-python-dateutil
+gql[all]

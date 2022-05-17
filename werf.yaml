@@ -2,9 +2,9 @@ configVersion: 1
 project: metabomb-marketplace
 ---
 image: app
-dockerfile: Dockerfile
+dockerfile: Dockerfile.app
 context: .
 ---
-image: schedule
-dockerfile: Dockerfile.schedule
+image: sync
+dockerfile: Dockerfile.sync
 context: .

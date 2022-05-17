@@ -22,6 +22,16 @@ spec:
           env:
             - name: EKP_PLUGIN_ID
               value: {{ .Chart.Name }}
+            - name: MONGO_URI
+              value: "{{ .Values.mongodb.uri }}"
+            - name: MONGO_DB_NAME
+              value: "{{ .Values.mongodb.dbName }}"
+            - name: ETHERSCAN_API_KEY
+              value: "{{ .Values.etherscan.apiKey }}"
+            - name: ETHERSCAN_BASE_URL
+              value: "{{ .Values.etherscan.baseUrl }}"
+            - name: WEB3_PROVIDER_URL
+              value: "{{ .Values.web3.providerUrl }}"
             - name: REDIS_HOST
               value: '{{ .Release.Name }}-redis-master'
           ports:

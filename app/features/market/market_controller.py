@@ -15,28 +15,28 @@ class MarketController:
         self.market_service = market_service
         self.path = 'marketplace'
 
-    def on_connect(self, sid):
-        self.client_service.emit_menu(
+    async def on_connect(self, sid):
+        await self.client_service.emit_menu(
             sid,
             'cil-cart',
             'Marketplace',
             self.path
         )
-        self.client_service.emit_page(
+        await self.client_service.emit_page(
             sid,
             self.path,
             page(COLLECTION_NAME)
         )
 
-    def on_client_state_changed(self, sid, event):
-        self.client_service.emit_busy(sid, COLLECTION_NAME)
+    async def on_client_state_changed(self, sid, event):
+        await self.client_service.emit_busy(sid, COLLECTION_NAME)
 
-        listings = self.market_service.get_documents()
+        listings = await self.market_service.get_documents()
 
-        self.client_service.emit_documents(
+        await self.client_service.emit_documents(
             sid,
             COLLECTION_NAME,
             listings
         )
 
-        self.client_service.emit_done(sid, COLLECTION_NAME)
+        await self.client_service.emit_done(sid, COLLECTION_NAME)

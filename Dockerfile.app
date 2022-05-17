@@ -6,10 +6,9 @@ COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
 
-COPY ./features ./features
-COPY ./sdk ./sdk
+COPY ./app ./app
+COPY ./db ./db
 COPY ./static ./static
-COPY ./util ./util
-COPY ./server.py ./server.py
+COPY ./main_app.py ./main_app.py
 
-CMD [ "python3", "server.py" ]
+CMD [ "python3", "main_app.py" ]
