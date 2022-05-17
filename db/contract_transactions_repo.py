@@ -23,6 +23,13 @@ class ContractTransactionsRepo:
             .sort("blockNumber", -1).limit(1)
         )
 
+    def find_since_block_number(self, block_number):
+        return list(
+            self.collection
+            .find({"blockNumber": {"$gte": block_number}})
+            .sort("blockNumber")
+        )
+
     def bulk_write(self, trans):
         self.collection.bulk_write(
             list(map(lambda tran: UpdateOne(
@@ -32,11 +39,10 @@ class ContractTransactionsRepo:
     def bulk_write_logs(self, logs):
 
         def format_write(log):
-            logs_dict = {}
-            logs_dict[str(log["logIndex"])] = log
+            log_index = log["logIndex"]
             return UpdateOne(
                 {"hash": log["transactionHash"]},
-                {"$set": { "logs": logs_dict } },
+                {"$set": {f"logs.{log_index}": log}},
                 True
             )
 

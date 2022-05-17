@@ -6,7 +6,8 @@ from ekp_sdk import BaseContainer
 from db.contract_logs_repo import ContractLogsRepo
 
 from db.contract_transactions_repo import ContractTransactionsRepo
-from tran_sync.transaction_sync_service import TransactionSyncService
+from sync.market_decoder_service import MarketDecoderService
+from sync.transaction_sync_service import TransactionSyncService
 
 
 class AppContainer(BaseContainer):
@@ -24,9 +25,18 @@ class AppContainer(BaseContainer):
         )
 
         self.sync_service = TransactionSyncService(
-            contract_transactions_repo=self.contract_transactions_repo,
             contract_logs_repo=self.contract_logs_repo,
+            contract_transactions_repo=self.contract_transactions_repo,
             etherscan_service=self.etherscan_service
+        )
+        
+        self.market_decoder_service = MarketDecoderService(
+            cache_service=self.cache_service,
+            coingecko_service=self.coingecko_service,
+            contract_logs_repo=self.contract_logs_repo,
+            contract_transactions_repo=self.contract_transactions_repo,
+            etherscan_service=self.etherscan_service,
+            web3_service=self.web3_service,
         )
 
 
@@ -49,14 +59,16 @@ if __name__ == '__main__':
         '0x1f36bef063ee6fcefeca070159d51a3b36bc68d6'
     ]
     
-    futures = []
+    # futures = []
     
-    for contract_address in contract_addresses:
-        futures.append(container.sync_service.sync_transactions(contract_address))
+    # for contract_address in contract_addresses:
+    #     futures.append(container.sync_service.sync_transactions(contract_address))
     
-    for log_address in log_addresses:
-        futures.append(container.sync_service.sync_logs(log_address))
+    # for log_address in log_addresses:
+    #     futures.append(container.sync_service.sync_logs(log_address))
         
-    loop.run_until_complete(
-        asyncio.gather(*futures)
-    )
+    # loop.run_until_complete(
+    #     asyncio.gather(*futures)
+    # )
+
+    asyncio.run(container.market_decoder_service.decode_market_trans())
