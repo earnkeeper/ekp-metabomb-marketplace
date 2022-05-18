@@ -21,7 +21,7 @@ def tabs_row(LISTINGS_COLLECTION_NAME, HISTORY_COLLECTION_NAME):
                 children=[history_page(HISTORY_COLLECTION_NAME)]
             ),
             Tab(
-                label="Listings",
+                label="Listings (TESTNET)",
                 children=[listings_page(LISTINGS_COLLECTION_NAME)]
             )
         ]

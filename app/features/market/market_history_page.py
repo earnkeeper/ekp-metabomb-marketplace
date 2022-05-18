@@ -1,12 +1,15 @@
 from app.utils.game_constants import HERO_BOX_NAME_CONTRACT
-from ekp_sdk.ui import (Col, Column, Container, Datatable, Image, Link, Row,
-                        Span, collection, commify, documents, format_age,
-                        format_currency, format_mask_address, format_template,
-                        is_busy, switch_case)
+from ekp_sdk.ui import (Col, Column, Container, Datatable, Image, Link,
+                        Paragraphs, Row, Span, collection, commify, documents,
+                        format_age, format_currency, format_mask_address,
+                        format_template, is_busy, switch_case, Div)
 
 
 def history_page(HISTORY_COLLECTION_NAME):
     return Container([
+        Paragraphs(["Browse the last 1000 sales from the market place right here.",
+                   "Check out our discord for real time notifications of new listings"]),
+        Div([], class_name="mb-2"),
         table_row(HISTORY_COLLECTION_NAME)
     ])
 
@@ -34,6 +37,7 @@ def table_row(HISTORY_COLLECTION_NAME):
                 sortable=True,
                 searchable=True,
                 cell=name_cell(),
+                min_width="200px"
             ),
             Column(
                 id="price",
@@ -45,6 +49,11 @@ def table_row(HISTORY_COLLECTION_NAME):
                 id="type",
                 omit=True,
                 format=format_currency("$.priceFiat", "$.fiatSymbol")
+            ),
+            Column(
+                id="spacer",
+                title="",
+                width="2px"
             ),
         ]
     )
