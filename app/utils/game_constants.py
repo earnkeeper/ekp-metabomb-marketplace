@@ -17,3 +17,7 @@ def class_names():
         4: "Ranger",
     }
 
+HERO_BOX_NAME_CONTRACT = {
+    "Common Box": "0x1f36bef063ee6fcefeca070159d51a3b36bc68d6",
+    "Premium Box": "0x2076626437c3bb9273998a5e4f96438abe467f1c",
+}

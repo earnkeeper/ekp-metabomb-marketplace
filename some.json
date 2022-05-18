@@ -1,0 +1,54 @@
+{
+    "hash": "",
+    "blockNumber": ""
+    ...
+}
+
+{
+    "hash": "",
+    "blockNumber": "",
+    "logs": {
+        "logIndex": "1"
+    }
+    ...
+}
+
+{
+    "hash": "",
+    "blockNumber": "",
+    "logs": {
+        "logIndex": "2"
+    }
+    ...
+}
+
+{
+    "hash": "",
+    "blockNumber": "",
+    "logs": {
+        "1": {
+            "logIndex": "1"
+        }
+    }
+    ...
+}
+
+"logs"
+"logs"
+
+"logs.1"
+"logs.2"
+
+{
+    "hash": "",
+    "blockNumber": "",
+    "logs": {
+        "1": {
+            "logIndex": "1"
+        },
+        "2": {
+            "logIndex": "2"
+        }
+    }
+    ...
+}

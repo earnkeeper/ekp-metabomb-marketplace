@@ -21,6 +21,21 @@ class MarketTransactionsRepo:
         self.collection.create_index("timestamp")
         self.collection.create_index("tokenId")
     
+    def find_all(self, limit):
+        start = time.perf_counter()
+        
+        results = list(
+            self.collection
+            .find()
+            .sort("timestamp")
+            .limit(limit)
+        )
+        
+        print(f"⏱  [MarketTransactionsRepo.find_all({len(results)})] {time.perf_counter() - start:0.3f}s")
+        
+        return results
+        
+            
     def find_latest_block_number(self):
         results = list(
             self.collection

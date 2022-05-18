@@ -8,7 +8,6 @@ def page_title(icon, title):
                 class_name='col-auto pr-0 my-auto',
                 children=[
                     Icon(
-                        size="lg",
                         name=icon
                     )
                 ],
@@ -16,7 +15,7 @@ def page_title(icon, title):
             Col(
                 class_name="my-auto",
                 children=[
-                    Span(title, "font-large-1")
+                    Span(title, "font-medium-4")
                 ]
             ),
         ],

@@ -2,7 +2,8 @@ from decouple import AutoConfig
 from ekp_sdk import BaseContainer
 
 from app.features.market.market_controller import MarketController
-from app.features.market.market_service import MarketService
+from app.features.market.market_history_service import MarketHistoryService
+from app.features.market.market_listings_service import MarketListingsService
 from db.market_transactions_repo import MarketTransactionsRepo
 
 
@@ -20,13 +21,19 @@ class AppContainer(BaseContainer):
 
         # FEATURES - MARKET
 
-        self.market_service = MarketService(
+        self.market_listings_service = MarketListingsService(
             cache_service=self.cache_service,
+        )
+
+        self.market_history_service = MarketHistoryService(
+            market_transactions_repo=self.market_transactions_repo,
+            coingecko_service=self.coingecko_service
         )
 
         self.market_controller = MarketController(
             client_service=self.client_service,
-            market_service=self.market_service
+            market_listings_service=self.market_listings_service,
+            market_history_service=self.market_history_service
         )
 
 

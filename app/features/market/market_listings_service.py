@@ -3,7 +3,7 @@ import time
 from ekp_sdk.services import CacheService
 
 
-class MarketService:
+class MarketListingsService:
     def __init__(
         self,
         cache_service: CacheService
@@ -18,9 +18,9 @@ class MarketService:
 
         now = time.time()
 
-        return list(map(lambda doc: self.format_document(doc, now), docs))
+        return list(map(lambda doc: self.map_document(doc, now), docs))
 
-    def format_document(self, doc, now):
+    def map_document(self, doc, now):
         return {
             "id": doc["id"],
             "updated": now,
