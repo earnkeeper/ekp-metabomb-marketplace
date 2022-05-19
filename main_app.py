@@ -23,6 +23,7 @@ class AppContainer(BaseContainer):
 
         self.market_listings_service = MarketListingsService(
             cache_service=self.cache_service,
+            coingecko_service=self.coingecko_service
         )
 
         self.market_history_service = MarketHistoryService(

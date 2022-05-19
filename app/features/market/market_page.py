@@ -17,12 +17,12 @@ def tabs_row(LISTINGS_COLLECTION_NAME, HISTORY_COLLECTION_NAME):
     return Tabs(
         [
             Tab(
+                label="Listings",
+                children=[listings_page(LISTINGS_COLLECTION_NAME)]
+            ),
+            Tab(
                 label="History",
                 children=[history_page(HISTORY_COLLECTION_NAME)]
             ),
-            Tab(
-                label="Listings (TESTNET)",
-                children=[listings_page(LISTINGS_COLLECTION_NAME)]
-            )
         ]
     )

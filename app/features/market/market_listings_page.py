@@ -1,19 +1,22 @@
-from ekp_sdk.ui import (Badge, Button, Card, Col, Column, Container,
-                            Datatable, Div, Form, Fragment, Hr, Icon, Image,
-                            Paragraphs, Row, Select, Span, collection, commify,
-                            documents, format_currency, format_template,
-                            is_busy, switch_case)
-from app.utils.game_constants import class_names, rarity_names
-from app.utils.page_title import page_title
+from app.utils.game_constants import (HERO_BOX_NAME_CONTRACT,
+                                      HERO_BOX_NAME_IMAGE, MTB_ICON)
+from click import style
+from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
+                        Paragraphs, Row, Span, collection, commify, documents,
+                        format_currency, format_mask_address, format_percent,
+                        format_template, is_busy, switch_case)
 
 
 def listings_page(LISTINGS_COLLECTION_NAME):
     return Container(
         children=[
             Paragraphs(
-                ["The Metabomb marketplace is launching soon!",
-                 "We are ready to fill it with all the Play to Earn metrics you need. Watch this space 👀"],
+                [
+                    "The live Metabomb marketplace! Think it looks the same as the offical one, look again 👀",
+                    "Compare every price to the 24 hour average and check prices in your currency (select at top of page)",
+                ],
             ),
+            Div([], "mb-3"),
             market_row(LISTINGS_COLLECTION_NAME),
         ]
     )
@@ -23,124 +26,110 @@ def market_row(LISTINGS_COLLECTION_NAME):
     return Datatable(
         data=documents(LISTINGS_COLLECTION_NAME),
         busy_when=is_busy(collection(LISTINGS_COLLECTION_NAME)),
-        default_view="grid",
-        default_sort_field_id="name",
+        default_sort_field_id="price",
         pagination_per_page=18,
         disable_list_view=True,
-        grid_view={
-            "tileWidth": [12, 6, 4, 3],
-            "tile": grid_tile()
-        },
+        search_hint="Search by token id, seller address or token name...",
         filters=[
-            {"columnId": "rarity", "icon": "cil-spa"},
-            {"columnId": "hero_class", "icon": "cil-shield-alt"},
-            {"columnId": "level", "icon": "cil-chevron-double-up"},
+            {"columnId": "name", "icon": "cil-spa"},
         ],
         columns=[
             Column(
+                id="id",
+                title="Token",
+                sortable=True,
+                searchable=True,
+                width="100px",
+                cell=__id_cell,
+            ),
+            Column(
+                id="seller",
+                sortable=True,
+                searchable=True,
+                width="140px",
+                cell=__seller_cell
+            ),
+            Column(
                 id="name",
                 sortable=True,
-                searchable=True
+                searchable=True,
+                min_width="320px",
+                cell=__name_cell
             ),
             Column(
-                id="hero_class",
-                value=switch_case("$.hero_class", class_names()),
-                title="Class"
+                id="price",
+                title="MTB",
+                format=commify("$.price"),
+                width="120px",
+                right=True,
+                sortable=True,
             ),
             Column(
-                id="rarity",
-                value=switch_case("$.rarity", rarity_names()),
-                omit=True
+                id="priceFiat",
+                title="Fiat",
+                format=format_currency("$.priceFiat", "$.fiatSymbol"),
+                width="120px",
+                right=True,
+                sortable=True,
             ),
             Column(
-                id="rarity_num",
-                title="Rarity",
-                format=switch_case("$.rarity", rarity_names()),
-                sortable=True
+                id="avgPriceFiat",
+                title="Vs 24h Avg",
+                width="120px",
+                right=True,
+                sortable=True,
+                cell=__avg_price_cell
             ),
             Column(
-                id="level",
-                sortable=True
-            ),
-        ]
-    )
-
-
-def grid_tile():
-    return Card(
-        class_name='m-0',
-        children=[
-            Row(
-                class_name="mb-1 font-small-3",
-                children=[
-                    Col(
-                        class_name='text-center col-12',
-                        children=[
-                            Image(
-                                style={
-                                    "height": "156px"
-                                },
-                                class_name="mt-4 mb-2",
-                                src=format_template(
-                                    "https://market.metabomb.io/gifs/char-gif/{{ image_id }}.gif",
-                                    {
-                                        "image_id": "$.display_id"
-                                    }
-                                )
-                            ),
-                        ]
-                    ),
-                    Col(
-                        children=[
-                            table(
-                                [
-                                    ["Name", "$.name"],
-                                    ["Class", switch_case(
-                                        "$.hero_class", class_names())],
-                                    ["Rarity", switch_case(
-                                        "$.rarity", rarity_names())],
-                                    ["Level", "$.level"],
-                                ],
-                            )
-                        ]
-                    )
-
-                ]
+                id="spacer",
+                title="",
+                width="2px"
             )
         ]
     )
 
 
-def table(rows):
-    return Row(
-
-        children=list(map(lambda row: table_row(row), rows))
-
-    )
+__avg_price_cell = Span(
+    format_percent("$.pcAboveAvgFiat"),
+    switch_case("$.deal", {"yes": "text-success", "no": "text-danger"})
+),
 
 
-def table_row(row):
-    return Fragment(
-        children=[
-            Col(
-                class_name='col-12',
-                children=[Hr()]
-            ),
-            Col(
-                children=[
-                    Span(
-                        class_name="ml-1",
-                        content=row[0]
-                    )
-                ]
-            ),
-            Col(
-                children=[
-                    Span(
-                        class_name="float-right mr-1",
-                        content=row[1]
-                    )
-                ]
+__id_cell = Link(
+    href=format_template(
+        "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
+        {
+            "contractAddress": switch_case("$.name", HERO_BOX_NAME_CONTRACT),
+            "tokenId": "$.tokenId"
+        }
+    ),
+    external=True,
+    content="$.id"
+)
+
+__seller_cell = Link(
+    href=format_template(
+        "https://bscscan.com/address/{{ seller }}",
+        {
+            "seller": "$.seller",
+        }
+    ),
+    external=True,
+    content=format_mask_address("$.seller")
+)
+
+
+def image_text_cell(src, text):
+    return Row([
+        Col("col-auto my-auto", [
+            Image(
+                src=src,
+                style={"height": "20px"}
             )
-        ]
-    )
+        ]),
+        Col("pl-0 my-auto", [Span(text)])
+    ])
+
+
+__name_cell = image_text_cell(switch_case(
+    "$.name", HERO_BOX_NAME_IMAGE), "$.name")

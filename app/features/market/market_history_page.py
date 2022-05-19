@@ -1,8 +1,9 @@
-from app.utils.game_constants import HERO_BOX_NAME_CONTRACT
-from ekp_sdk.ui import (Col, Column, Container, Datatable, Image, Link,
+from app.utils.game_constants import (HERO_BOX_NAME_CONTRACT,
+                                      HERO_BOX_NAME_IMAGE, MTB_ICON)
+from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         Paragraphs, Row, Span, collection, commify, documents,
                         format_age, format_currency, format_mask_address,
-                        format_template, is_busy, switch_case, Div)
+                        format_template, is_busy, switch_case)
 
 
 def history_page(HISTORY_COLLECTION_NAME):
@@ -21,8 +22,7 @@ def table_row(HISTORY_COLLECTION_NAME):
         default_sort_field_id="timestamp",
         default_sort_asc=False,
         filters=[
-            {"columnId": "name", "icon": "cil-spa"},
-            {"columnId": "type", "icon": "cil-3d"},
+            {"columnId": "item", "icon": "cil-spa"},
         ],
         columns=[
             Column(
@@ -32,7 +32,8 @@ def table_row(HISTORY_COLLECTION_NAME):
                 width="120px"
             ),
             Column(
-                id="name",
+                id="item",
+                value="$.name",
                 title="Item",
                 sortable=True,
                 searchable=True,
@@ -89,7 +90,7 @@ def name_cell():
                 class_name="my-auto col-auto pr-0",
                 children=[
                     Image(
-                        src="https://app.metabomb.io/gifs/herobox-gif/normal-box.gif",
+                        src=switch_case("$.name", HERO_BOX_NAME_IMAGE),
                         style={"height": "38px"}
                     )
                 ]
@@ -148,12 +149,12 @@ def price_cell():
             class_name="col-12 text-right font-small-1",
             children=[
                 Row([
-                    Col([]),
+                    Col(),
                     Col(
                         class_name="col-auto p-0 my-auto",
                         children=[
                             Image(
-                                src="https://app.metabomb.io/icons/mtb-token.png",
+                                src=MTB_ICON,
                                 style={"height": "10px",
                                        "marginRight": "3px", "marginTop": "-2px"}
                             )

@@ -2,7 +2,7 @@ from app.features.market.market_history_service import MarketHistoryService
 from app.features.market.market_listings_service import MarketListingsService
 from app.features.market.market_page import page
 from ekp_sdk.services import ClientService
-from ekp_sdk.util import client_currency
+from ekp_sdk.util import client_currency, client_path
 
 LISTINGS_COLLECTION_NAME = "metabomb_market_listings"
 HISTORY_COLLECTION_NAME = "metabomb_market_history"
@@ -34,11 +34,17 @@ class MarketController:
         )
 
     async def on_client_state_changed(self, sid, event):
+
+        path = client_path(event)
+
+        if (path != self.path):
+            return
+
         await self.client_service.emit_busy(sid, LISTINGS_COLLECTION_NAME)
         await self.client_service.emit_busy(sid, HISTORY_COLLECTION_NAME)
-        
+
         currency = client_currency(event)
-        
+
         # History
         history_documents = await self.market_history_service.get_documents(currency)
 
@@ -47,10 +53,10 @@ class MarketController:
             HISTORY_COLLECTION_NAME,
             history_documents
         )
-        
+
         # Listings
-        
-        listing_documents = await self.market_listings_service.get_documents()
+
+        listing_documents = await self.market_listings_service.get_documents(currency, history_documents)
 
         await self.client_service.emit_documents(
             sid,

@@ -61,19 +61,55 @@ class MarketListingSyncService():
 
     def params(self, page, count):
         return {
-            "f5": 0,
-            "token_id": -1,
-            "page": page,
-            "count": count,
-            "sort": 0,
-            "sort_type": 3,
-            "box_type": [
-                0,
-                1,
-                2,
-                3,
-                4,
-                5
-            ],
-            "forSale": 2
+            "input": {
+                "f5": 0,
+                "rarity": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
+                "class_hero": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "power": [
+                    1,
+                    18
+                ],
+                "speed": [
+                    1,
+                    18
+                ],
+                "health": [
+                    1,
+                    18
+                ],
+                "stamina": [
+                    1,
+                    18
+                ],
+                "bomb_num": [
+                    1,
+                    4
+                ],
+                "bomb_range": [
+                    1,
+                    4
+                ],
+                "level": [
+                    0,
+                    6
+                ],
+                "page": page,
+                "count": count,
+                "sort": 0,
+                "sort_type": 1,
+                "forSale": 2
+            }
         }
