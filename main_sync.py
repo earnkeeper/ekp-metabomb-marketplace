@@ -110,8 +110,6 @@ if __name__ == '__main__':
         container.market_decoder_service.decode_market_trans()
     )
 
-    # Only run sync on one environment
-    if container.PYTHON_ENV == 'staging':
-        loop.run_until_complete(
-            container.notification_service.process_notifications()
-        )
+    loop.run_until_complete(
+        container.notification_service.process_notifications()
+    )
