@@ -31,6 +31,6 @@ spec:
                 - name: REDIS_URI
                   value: 'redis://{{ .Release.Name }}-redis-master'
                 - name: DISCORD_BASE_URL
-                  value: "{{ .Values.discord.baseUrl }}"                
+                  value: "{{ .Values.discord.baseUrl }}"
                 - name: DISCORD_CHANNEL_ID
-                  value: "{{ .Values.discord.channelId }}"                
+                  value: "{{ .Values.discord.channelId }}"
