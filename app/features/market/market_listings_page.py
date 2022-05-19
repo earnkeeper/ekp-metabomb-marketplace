@@ -1,6 +1,5 @@
 from app.utils.game_constants import (HERO_BOX_NAME_CONTRACT,
-                                      HERO_BOX_NAME_IMAGE, MTB_ICON)
-from click import style
+                                      HERO_BOX_NAME_IMAGE)
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         Paragraphs, Row, Span, collection, commify, documents,
                         format_currency, format_mask_address, format_percent,
