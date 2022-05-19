@@ -6,7 +6,6 @@ from app.features.market.market_history_service import MarketHistoryService
 from app.features.market.market_listings_service import MarketListingsService
 from app.features.market.market_summary_service import MarketSummaryService
 from db.market_transactions_repo import MarketTransactionsRepo
-from sync.notification_service import NotificationService
 
 
 class AppContainer(BaseContainer):
