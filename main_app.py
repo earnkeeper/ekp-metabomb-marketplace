@@ -5,6 +5,7 @@ from app.features.market.market_controller import MarketController
 from app.features.market.market_history_service import MarketHistoryService
 from app.features.market.market_listings_service import MarketListingsService
 from db.market_transactions_repo import MarketTransactionsRepo
+from sync.notification_service import NotificationService
 
 
 class AppContainer(BaseContainer):
@@ -35,6 +36,7 @@ class AppContainer(BaseContainer):
             market_listings_service=self.market_listings_service,
             market_history_service=self.market_history_service
         )
+
 
 
 if __name__ == '__main__':

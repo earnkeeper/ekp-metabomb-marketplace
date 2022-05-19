@@ -34,7 +34,6 @@ class MarketTransactionsRepo:
         print(f"⏱  [MarketTransactionsRepo.find_all({len(results)})] {time.perf_counter() - start:0.3f}s")
         
         return results
-        
             
     def find_latest_block_number(self):
         results = list(
