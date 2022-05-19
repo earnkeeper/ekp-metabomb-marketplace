@@ -35,6 +35,11 @@ def market_row(LISTINGS_COLLECTION_NAME):
         columns=[
             Column(
                 id="id",
+                sortable=True,
+                width="100px",
+            ),
+            Column(
+                id="tokenId",
                 title="Token",
                 sortable=True,
                 searchable=True,
@@ -103,7 +108,7 @@ __id_cell = Link(
         }
     ),
     external=True,
-    content="$.id"
+    content="$.tokenId"
 )
 
 __seller_cell = Link(

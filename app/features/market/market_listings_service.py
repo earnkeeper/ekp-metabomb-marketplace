@@ -74,7 +74,7 @@ class MarketListingsService:
                 
         return {
             "fiatSymbol": currency["symbol"],
-            "id": listing["id"],
+            "id": int(listing["id"]),
             "name": name,
             "avgPrice": avg_price_24h,
             "avgPriceFiat": avg_price_fiat_24h,
@@ -84,7 +84,7 @@ class MarketListingsService:
             "price": price,
             "priceFiat": price * rate,
             "seller": listing["user"]["wallet_address"],
-            "tokenId": listing["token_id"],
+            "tokenId": int(listing["token_id"]),
             "type": listing["__typename"],
             "updated": now,
         }
