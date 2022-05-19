@@ -9,10 +9,8 @@ from gql.transport.aiohttp import AIOHTTPTransport
 class MarketListingsService:
     def __init__(
         self,
-        cache_service: CacheService,
         coingecko_service: CoingeckoService
     ):
-        self.cache_service = cache_service
         self.coingecko_service = coingecko_service
 
     async def get_documents(self, currency, history_documents):

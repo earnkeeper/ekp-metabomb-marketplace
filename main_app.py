@@ -4,6 +4,7 @@ from ekp_sdk import BaseContainer
 from app.features.market.market_controller import MarketController
 from app.features.market.market_history_service import MarketHistoryService
 from app.features.market.market_listings_service import MarketListingsService
+from app.features.market.market_summary_service import MarketSummaryService
 from db.market_transactions_repo import MarketTransactionsRepo
 
 
@@ -22,7 +23,6 @@ class AppContainer(BaseContainer):
         # FEATURES - MARKET
 
         self.market_listings_service = MarketListingsService(
-            cache_service=self.cache_service,
             coingecko_service=self.coingecko_service
         )
 
@@ -31,10 +31,13 @@ class AppContainer(BaseContainer):
             coingecko_service=self.coingecko_service
         )
 
+        self.market_summary_service = MarketSummaryService()
+
         self.market_controller = MarketController(
             client_service=self.client_service,
             market_listings_service=self.market_listings_service,
-            market_history_service=self.market_history_service
+            market_history_service=self.market_history_service,
+            market_summary_service=self.market_summary_service
         )
 
 
