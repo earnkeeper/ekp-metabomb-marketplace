@@ -37,7 +37,7 @@ spec:
             - name: DISCORD_BASE_URL
               value: "{{ .Values.discord.baseUrl }}"
             - name: DISCORD_CHANNEL_ID
-              value: '{{ eq .Values.werf.env "staging" | ternary .Values.discord.channelId.staging .Values.discord.channelId.staging._default }}'
+              value: '{{ eq .Values.werf.env "staging" | ternary .Values.discord.channelId.staging .Values.discord.channelId._default }}'
           ports:
             - containerPort: 3001
               protocol: TCP
