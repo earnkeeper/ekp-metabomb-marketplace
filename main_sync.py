@@ -22,6 +22,7 @@ class AppContainer(BaseContainer):
 
         DISCORD_BASE_URL = config("DISCORD_BASE_URL")
         DISCORD_CHANNEL_ID = config("DISCORD_CHANNEL_ID")
+        self.PYTHON_ENV = config("PYTHON_ENV")
 
         # DB
 
@@ -109,6 +110,8 @@ if __name__ == '__main__':
         container.market_decoder_service.decode_market_trans()
     )
 
-    loop.run_until_complete(
-        container.notification_service.process_notifications()
-    )
+    # Only run sync on one environment
+    if container.PYTHON_ENV == 'staging':
+        loop.run_until_complete(
+            container.notification_service.process_notifications()
+        )

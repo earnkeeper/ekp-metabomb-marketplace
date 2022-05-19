@@ -23,9 +23,9 @@ spec:
             - name: EK_PLUGIN_ID
               value: {{ .Chart.Name }}
             - name: MONGO_URI
-              value: "{{ .Values.mongodb.uri }}"
+              value: "{{ .Values.mongodb.uri }}/{{ .Release.Name }}"
             - name: MONGO_DB_NAME
-              value: "{{ .Values.mongodb.dbName }}"
+              value: "{{ .Release.Name }}"
             - name: ETHERSCAN_API_KEY
               value: "{{ .Values.etherscan.apiKey }}"
             - name: ETHERSCAN_BASE_URL
