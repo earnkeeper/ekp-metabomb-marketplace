@@ -1,2 +1,2 @@
-ekp-sdk==0.4.1
+ekp-sdk==0.4.2
 gql[aiohttp]==3.2.0
