@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: sync
 spec:
-  schedule: "*/10 * * * *"
+  schedule: "* * * * *"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -30,3 +30,7 @@ spec:
                   value: "{{ .Values.web3.providerUrl }}"
                 - name: REDIS_URI
                   value: 'redis://{{ .Release.Name }}-redis-master'
+                - name: DISCORD_BASE_URL
+                  value: "{{ .Values.discord.baseUrl }}"                
+                - name: DISCORD_CHANNEL_ID
+                  value: "{{ .Values.discord.channelId }}"                

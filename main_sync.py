@@ -1,7 +1,7 @@
 
 import asyncio
 
-from decouple import AutoConfig, config
+from decouple import AutoConfig
 from ekp_sdk import BaseContainer
 
 from db.contract_logs_repo import ContractLogsRepo
@@ -10,7 +10,6 @@ from db.market_listings_repo import MarketListingsRepo
 from db.market_transactions_repo import MarketTransactionsRepo
 from db.state_repo import StateRepo
 from sync.market_decoder_service import MarketDecoderService
-from sync.market_listing_sync_service import MarketListingSyncService
 from sync.notification_service import NotificationService
 from sync.transaction_sync_service import TransactionSyncService
 
@@ -21,8 +20,11 @@ class AppContainer(BaseContainer):
 
         super().__init__(config)
 
+        DISCORD_BASE_URL = config("DISCORD_BASE_URL")
+        DISCORD_CHANNEL_ID = config("DISCORD_CHANNEL_ID")
+
         # DB
-        
+
         self.contract_transactions_repo = ContractTransactionsRepo(
             mg_client=self.mg_client,
         )
@@ -34,7 +36,7 @@ class AppContainer(BaseContainer):
         self.market_transactions_repo = MarketTransactionsRepo(
             mg_client=self.mg_client,
         )
-        
+
         self.market_listings_repo = MarketListingsRepo(
             mg_client=self.mg_client,
         )
@@ -42,7 +44,6 @@ class AppContainer(BaseContainer):
         self.state_repo = StateRepo(
             mg_client=self.mg_client,
         )
-
 
         # Services
 
@@ -63,13 +64,12 @@ class AppContainer(BaseContainer):
             web3_service=self.web3_service,
         )
 
-        self.market_listing_sync_service = MarketListingSyncService(
-            cache_service=self.cache_service,
-        )
-        
         self.notification_service = NotificationService(
             market_listings_repo=self.market_listings_repo,
-            state_repo=self.state_repo
+            state_repo=self.state_repo,
+            rest_client=self.rest_client,
+            discord_base_url=DISCORD_BASE_URL,
+            discord_channel_id=DISCORD_CHANNEL_ID,
         )
 
 
@@ -101,9 +101,6 @@ if __name__ == '__main__':
     for log_address in log_addresses:
         futures.append(container.sync_service.sync_logs(log_address))
 
-    futures.append(
-        container.market_listing_sync_service.sync_market_listings())
-
     loop.run_until_complete(
         asyncio.gather(*futures)
     )
@@ -111,7 +108,7 @@ if __name__ == '__main__':
     loop.run_until_complete(
         container.market_decoder_service.decode_market_trans()
     )
-    
+
     loop.run_until_complete(
         container.notification_service.process_notifications()
     )
