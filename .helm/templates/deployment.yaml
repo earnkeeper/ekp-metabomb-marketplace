@@ -23,9 +23,9 @@ spec:
             - name: EK_PLUGIN_ID
               value: {{ .Chart.Name }}
             - name: MONGO_URI
-              value: "{{ .Values.mongodb.uri }}/{{ .Release.Name }}"
+              value: "{{ .Values.mongodb.uri }}"
             - name: MONGO_DB_NAME
-              value: "{{ .Release.Name }}"
+              value: '{{ eq .Values.werf.env "staging" | ternary .Values.mongodb.dbName.staging .Values.mongodb.dbName._default }}'
             - name: ETHERSCAN_API_KEY
               value: "{{ .Values.etherscan.apiKey }}"
             - name: ETHERSCAN_BASE_URL
