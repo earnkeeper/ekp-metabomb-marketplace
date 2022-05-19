@@ -10,7 +10,6 @@ from db.market_listings_repo import MarketListingsRepo
 from db.market_transactions_repo import MarketTransactionsRepo
 from db.state_repo import StateRepo
 from sync.market_decoder_service import MarketDecoderService
-from sync.notification_service import NotificationService
 from sync.transaction_sync_service import TransactionSyncService
 
 
@@ -19,10 +18,6 @@ class AppContainer(BaseContainer):
         config = AutoConfig('.env')
 
         super().__init__(config)
-
-        DISCORD_BASE_URL = config("DISCORD_BASE_URL")
-        DISCORD_CHANNEL_ID = config("DISCORD_CHANNEL_ID")
-        self.PYTHON_ENV = config("PYTHON_ENV")
 
         # DB
 
@@ -65,14 +60,6 @@ class AppContainer(BaseContainer):
             web3_service=self.web3_service,
         )
 
-        self.notification_service = NotificationService(
-            market_listings_repo=self.market_listings_repo,
-            state_repo=self.state_repo,
-            rest_client=self.rest_client,
-            discord_base_url=DISCORD_BASE_URL,
-            discord_channel_id=DISCORD_CHANNEL_ID,
-        )
-
 
 if __name__ == '__main__':
     container = AppContainer()
@@ -108,8 +95,4 @@ if __name__ == '__main__':
 
     loop.run_until_complete(
         container.market_decoder_service.decode_market_trans()
-    )
-
-    loop.run_until_complete(
-        container.notification_service.process_notifications()
     )

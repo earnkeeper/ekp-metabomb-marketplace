@@ -3,7 +3,7 @@ import json
 from ast import literal_eval
 
 from ekp_sdk.services import CacheService, CoingeckoService, Web3Service
-from sync.notification_service import NotificationService
+from listener.notification_service import NotificationService
 from web3 import Web3
 
 COMMON_BOX_CONTRACT_ADDRESS = "0x1f36bef063ee6fcefeca070159d51a3b36bc68d6"

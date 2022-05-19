@@ -3,7 +3,7 @@ from decouple import AutoConfig
 from ekp_sdk import BaseContainer
 
 from listener.listener_service import ListenerService
-from sync.notification_service import NotificationService
+from listener.notification_service import NotificationService
 
 
 class AppContainer(BaseContainer):
