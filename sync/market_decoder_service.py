@@ -1,7 +1,6 @@
 import sys
 from ast import literal_eval
 from datetime import datetime
-from decimal import Decimal
 
 from db.contract_logs_repo import ContractLogsRepo
 from db.contract_transactions_repo import ContractTransactionsRepo
@@ -13,6 +12,7 @@ from web3 import Web3
 
 COMMON_BOX_CONTRACT_ADDRESS = "0x1f36bef063ee6fcefeca070159d51a3b36bc68d6"
 PREMIUM_BOX_CONTRACT_ADDRESS = "0x2076626437c3bb9273998a5e4f96438abe467f1c"
+ULTRA_BOX_CONTRACT_ADDRESS = "0x9341faed0b86208c64ae6f9d62031b1f8a203240"
 MTB_CONTRACT_ADDRESS = "0x2bad52989afc714c653da8e5c47bf794a8f7b11d"
 TOKEN_TRANSFER_TOPIC = "0xd61e22991e1ab43a17e1ba8ddb78b72a4ffc0d7f455c8536073a6b8a9ffc0c4e"
 LIST_TOKEN_TOPIC = "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925"
@@ -73,9 +73,9 @@ class MarketDecoderService:
                         buys.append(buy)
 
                 if input.startswith("0x36f7992b"):
-                    sell = await self.__decode_market_sell(next_tran)
-                    if sell:
-                        sells.append(sell)
+                    listing = await self.__decode_market_listing(next_tran)
+                    if listing:
+                        sells.append(listing)
 
                 latest_block = block_number
 
@@ -127,6 +127,9 @@ class MarketDecoderService:
             if address == PREMIUM_BOX_CONTRACT_ADDRESS and topics[0] == TOKEN_TRANSFER_TOPIC:
                 token_id = literal_eval(topics[1])
                 name = "Premium Box"
+            if address == ULTRA_BOX_CONTRACT_ADDRESS and topics[0] == TOKEN_TRANSFER_TOPIC:
+                token_id = literal_eval(topics[1])
+                name = "Ultra Box"
 
         if name is None:
             print(f'🚨 missing name here {hash}', file=sys.stderr)
@@ -154,7 +157,7 @@ class MarketDecoderService:
             "tokenId": token_id,
         }
 
-    async def __decode_market_sell(self, tran):
+    async def __decode_market_listing(self, tran):
         if "logs" not in tran:
             return None
 
@@ -186,6 +189,9 @@ class MarketDecoderService:
             if address == PREMIUM_BOX_CONTRACT_ADDRESS and topics[0] == LIST_TOKEN_TOPIC:
                 token_id = literal_eval(topics[3])
                 name = "Premium Box"
+            if address == ULTRA_BOX_CONTRACT_ADDRESS and topics[0] == LIST_TOKEN_TOPIC:
+                token_id = literal_eval(topics[3])
+                name = "Ultra Box"
             if topics[0] == SET_TOKEN_PRICE_TOPIC and len(data) >= 66:
                 price = Web3.fromWei(literal_eval(data[0:66]), 'ether')
 

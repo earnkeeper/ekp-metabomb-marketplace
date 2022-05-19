@@ -13,6 +13,14 @@
       "justMyCode": true
     },
     {
+      "name": "Python: Listener",
+      "type": "python",
+      "request": "launch",
+      "program": "./main_listener.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
       "name": "Python: Sync",
       "type": "python",
       "request": "launch",
