@@ -1,0 +1,167 @@
+{
+  "data": {
+    "box_market": {
+      "error": 0,
+      "count": 232,
+      "boxes": [
+        {
+          "id": "3740",
+          "token_id": "2836",
+          "user": {
+            "wallet_address": "0xc8074E65df626adBa6FC3D4Ad92a14f5792D8DC1",
+            "__typename": "User"
+          },
+          "box_type": 0,
+          "price": 1100000,
+          "for_sale": 1,
+          "chain_process": 0,
+          "__typename": "Box"
+        },
+        {
+          "id": "1032",
+          "token_id": "899",
+          "user": {
+            "wallet_address": "0x8fb28c71e3bebd21e04da63df6215e83ac8570db",
+            "__typename": "User"
+          },
+          "box_type": 0,
+          "price": 1000000,
+          "for_sale": 1,
+          "chain_process": 0,
+          "__typename": "Box"
+        },
+        {
+          "id": "639",
+          "token_id": "571",
+          "user": {
+            "wallet_address": "0x37Ce5FCbfD4Fb33067Dd58de38f7AcD7979B5183",
+            "__typename": "User"
+          },
+          "box_type": 0,
+          "price": 500000,
+          "for_sale": 1,
+          "chain_process": 0,
+          "__typename": "Box"
+        },
+        {
+          "id": "3",
+          "token_id": "2",
+          "user": {
+            "wallet_address": "0x3d9b9bf10fa4b549f7470dc64853ff606089c8c6",
+            "__typename": "User"
+          },
+          "box_type": 2,
+          "price": 150000,
+          "for_sale": 1,
+          "chain_process": 0,
+          "__typename": "Box"
+        },
+        {
+          "id": "2159",
+          "token_id": "73",
+          "user": {
+            "wallet_address": "0xAd44C8120187F70677731E3965EcEa10bC199CD5",
+            "__typename": "User"
+          },
+          "box_type": 2,
+          "price": 150000,
+          "for_sale": 1,
+          "chain_process": 0,
+          "__typename": "Box"
+        },
+        {
+          "id": "2411",
+          "token_id": "126",
+          "user": {
+            "wallet_address": "0x4bDeAb2E80D71D6eF6A5A605A8A725c2113A39A3",
+            "__typename": "User"
+          },
+          "box_type": 2,
+          "price": 120000,
+          "for_sale": 1,
+          "chain_process": 0,
+          "__typename": "Box"
+        },
+        {
+          "id": "2828",
+          "token_id": "246",
+          "user": {
+            "wallet_address": "0x6021a327f68cd58ebf4eb0f01e7f93b96443aa3d",
+            "__typename": "User"
+          },
+          "box_type": 2,
+          "price": 120000,
+          "for_sale": 1,
+          "chain_process": 0,
+          "__typename": "Box"
+        },
+        {
+          "id": "53",
+          "token_id": "52",
+          "user": {
+            "wallet_address": "0x4bDeAb2E80D71D6eF6A5A605A8A725c2113A39A3",
+            "__typename": "User"
+          },
+          "box_type": 2,
+          "price": 119000,
+          "for_sale": 1,
+          "chain_process": 0,
+          "__typename": "Box"
+        },
+        {
+          "id": "937",
+          "token_id": "17",
+          "user": {
+            "wallet_address": "0x304cc6F7dd07d238E437D029375AD63C6F376B80",
+            "__typename": "User"
+          },
+          "box_type": 1,
+          "price": 100000,
+          "for_sale": 1,
+          "chain_process": 0,
+          "__typename": "Box"
+        },
+        {
+          "id": "1917",
+          "token_id": "1464",
+          "user": {
+            "wallet_address": "0x0e0d5129720d166280f841bc6ba7693e1a3ec5db",
+            "__typename": "User"
+          },
+          "box_type": 0,
+          "price": 100000,
+          "for_sale": 1,
+          "chain_process": 0,
+          "__typename": "Box"
+        },
+        {
+          "id": "1510",
+          "token_id": "314",
+          "user": {
+            "wallet_address": "0x15f7af6ac8ad739de7f72b07c2e137644aa41989",
+            "__typename": "User"
+          },
+          "box_type": 1,
+          "price": 100000,
+          "for_sale": 1,
+          "chain_process": 0,
+          "__typename": "Box"
+        },
+        {
+          "id": "2996",
+          "token_id": "2274",
+          "user": {
+            "wallet_address": "0xf4060d428345c21e88bf8b58e1ddea53bf5020f6",
+            "__typename": "User"
+          },
+          "box_type": 0,
+          "price": 100000,
+          "for_sale": 1,
+          "chain_process": 0,
+          "__typename": "Box"
+        }
+      ],
+      "__typename": "BoxMarketResponse"
+    }
+  }
+}
