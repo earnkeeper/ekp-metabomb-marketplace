@@ -14,15 +14,15 @@ class NotificationService:
         self.discord_base_url = discord_base_url
         self.discord_channel_id = discord_channel_id
 
-    async def send_notification(self, listing):
+    async def send_notification(self, listing, floor_listing):
         seller = listing["seller"]
-        masked_seller = seller[0:5]}...{seller[-3:]
+        masked_seller = f"{seller[0:5]}...{seller[-3:]}"
         name = listing["nftName"]
         imageUrl = self.__HERO_BOX_NAME_IMAGE[name]
         embed = {
             "type": "rich",
-            "title": "New Hero Box Listed!",
-            "description": f'{masked_seller} has listed a {name} at lower than floor price!\n\n👀',
+            "title": "Metabomb Floor Alert!",
+            "description": f'**{masked_seller}** has listed a **{name}** at lower than floor price!\n\n👀\n\n',
             "url": "https://app.metabomb.io/trade/boxes",
             "color": 16215296,
             "image": {"url": imageUrl},
@@ -40,6 +40,11 @@ class NotificationService:
                 {
                     "name": "USD",
                     "value": f'$ {format(round(listing["priceUsd"],2))}',
+                    "inline": True
+                },
+                {
+                    "name": "Floor USD",
+                    "value": f'$ {format(round(floor_listing["price_usdc"],2))}',
                     "inline": True
                 },
             ]

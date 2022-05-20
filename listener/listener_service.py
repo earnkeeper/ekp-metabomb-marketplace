@@ -63,7 +63,7 @@ class ListenerService:
                        '0x000000000000000000000000553a463f365c74eda00b7e5aaf080b066d4ca03c'
                        ],
             'data':
-            '0x00000000000000000000000000000000000000000000043c33c1937564800000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000084d5442482d505245000000000000000000000000000000000000000000000000',
+            '0x00000000000000000000000000000000000000000000003c33c1937564800000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000084d5442482d505245000000000000000000000000000000000000000000000000',
             'blockNumber': 17937471,
             'transactionHash': '0xe4896e51f2508f1b817ea1e5a179e3cee61bdc2104f469443822db8cd75cb1ec',
             'transactionIndex': 45,
@@ -133,12 +133,12 @@ class ListenerService:
         box_type_listings = filter(
             lambda x: x["box_type"] == listing["nftName"], current_listings)
 
-        box_type_prices = map(lambda x: x["price_mtb"], box_type_listings)
+        box_type_listings_sorted = sorted(box_type_listings, key=lambda x: x["price_mtb"])
 
-        floor_price = min(box_type_prices)
+        floor_listing = box_type_listings_sorted[0]
 
-        if (listing["price"] < floor_price):
-            await self.notification_service.send_notification(listing)
+        if (listing["price"] < floor_listing["price_mtb"]):
+            await self.notification_service.send_notification(listing, floor_listing)
         else:
             print(
-                f'⚠️ not notifying listing, price ({int(listing["price"])}) is not lower than floor price ({floor_price})')
+                f'⚠️ not notifying listing, price ({int(listing["price"])}) is not lower than floor price ({floor_listing["price_mtb"]})')
