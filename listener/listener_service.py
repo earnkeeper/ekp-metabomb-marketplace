@@ -3,8 +3,10 @@ import json
 from ast import literal_eval
 
 from ekp_sdk.services import CacheService, CoingeckoService, Web3Service
-from listener.notification_service import NotificationService
+from shared.metabomb_api_service import MetabombApiService
 from web3 import Web3
+
+from listener.notification_service import NotificationService
 
 COMMON_BOX_CONTRACT_ADDRESS = "0x1f36bef063ee6fcefeca070159d51a3b36bc68d6"
 PREMIUM_BOX_CONTRACT_ADDRESS = "0x2076626437c3bb9273998a5e4f96438abe467f1c"
@@ -17,10 +19,12 @@ class ListenerService:
         cache_service: CacheService,
         coingecko_service: CoingeckoService,
         notification_service: NotificationService,
+        metabomb_api_service: MetabombApiService,
         web3_service: Web3Service,
     ):
         self.cache_service = cache_service
         self.coingecko_service = coingecko_service
+        self.metabomb_api_service = metabomb_api_service
         self.notification_service = notification_service
         self.web3_service = web3_service
 
@@ -50,7 +54,8 @@ class ListenerService:
             )
         )
 
-    def test(self):
+    async def test(self):
+
         example = {
             'address': '0x2076626437c3Bb9273998A5E4F96438aBE467F1C',
             'topics': ['0xe04eefd2590e9186abb360fc0848592add67dcef57f68a4110a6922c4793f7e0',
@@ -67,21 +72,18 @@ class ListenerService:
             'removed': False
         }
 
-        async def test():
-            listing = await self.decode_market_list(example)
-            await self.notification_service.send_notification(listing)
-        
-        asyncio.run(test())
+        listing = await self.decode_market_listing(example)
+        await self.process_market_listing(listing)
 
     async def filter_loop(self, filter, poll_interval):
         while True:
             for new_event in filter.get_new_entries():
-                listing = await self.decode_market_list(json.loads(Web3.toJSON(new_event)))
-                await self.notification_service.send_notification(listing)
+                listing = await self.decode_market_listing(json.loads(Web3.toJSON(new_event)))
+                await self.process_market_listing(listing)
 
             await asyncio.sleep(poll_interval)
 
-    async def decode_market_list(self, log):
+    async def decode_market_listing(self, log):
         address = log["address"].lower()
 
         data = log["data"]
@@ -124,3 +126,19 @@ class ListenerService:
         }
 
         return listing
+
+    async def process_market_listing(self, listing):
+        current_listings = await self.cache_service.wrap("listener_market_listings", lambda: self.metabomb_api_service.get_current_listings(), ex=60)
+
+        box_type_listings = filter(
+            lambda x: x["box_type"] == listing["nftName"], current_listings)
+
+        box_type_prices = map(lambda x: x["price_mtb"], box_type_listings)
+
+        floor_price = min(box_type_prices)
+
+        if (listing["price"] < floor_price):
+            await self.notification_service.send_notification(listing)
+        else:
+            print(
+                f'⚠️ not notifying listing, price ({int(listing["price"])}) is not lower than floor price ({floor_price})')

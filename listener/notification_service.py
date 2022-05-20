@@ -16,32 +16,22 @@ class NotificationService:
 
     async def send_notification(self, listing):
         seller = listing["seller"]
+        masked_seller = seller[0:5]}...{seller[-3:]
         name = listing["nftName"]
         imageUrl = self.__HERO_BOX_NAME_IMAGE[name]
         embed = {
             "type": "rich",
             "title": "New Hero Box Listed!",
-            "description": "A new Hero Box has been added to the Metabomb Marketplace\n\n👀",
+            "description": f'{masked_seller} has listed a {name} at lower than floor price!\n\n👀',
             "url": "https://app.metabomb.io/trade/boxes",
             "color": 16215296,
             "image": {"url": imageUrl},
             "fields": [
                 {
-                    "name": "Name",
-                    "value": name,
-                    "inline": True
-                },
-                {
                     "name": "Token Id",
                     "value": str(listing["tokenId"]),
                     "inline": True
                 },
-                {
-                    "name": "Seller",
-                    "value": f'{seller[0:5]}...{seller[-3:]}',
-                    "inline": True
-                },
-
                 {
                     "name": "MTB",
                     "value": format(int(listing["price"]), ",d"),
