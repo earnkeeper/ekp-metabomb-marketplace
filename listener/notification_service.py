@@ -2,8 +2,6 @@ from ekp_sdk.services import RestClient
 
 
 class NotificationService:
-    __STATE_ID = "notifications"
-
     def __init__(
         self,
         rest_client: RestClient,
