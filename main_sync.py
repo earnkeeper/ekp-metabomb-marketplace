@@ -3,14 +3,13 @@ import asyncio
 
 from decouple import AutoConfig
 from ekp_sdk import BaseContainer
+from ekp_sdk.db import ContractLogsRepo, ContractTransactionsRepo
+from ekp_sdk.services.transaction_sync_service import TransactionSyncService
 
-from db.contract_logs_repo import ContractLogsRepo
-from db.contract_transactions_repo import ContractTransactionsRepo
 from db.market_listings_repo import MarketListingsRepo
 from db.market_transactions_repo import MarketTransactionsRepo
 from db.state_repo import StateRepo
 from sync.market_decoder_service import MarketDecoderService
-from sync.transaction_sync_service import TransactionSyncService
 
 
 class AppContainer(BaseContainer):
@@ -84,10 +83,13 @@ if __name__ == '__main__':
 
     for contract_address in contract_addresses:
         futures.append(
-            container.sync_service.sync_transactions(contract_address))
+            container.sync_service.sync_transactions(contract_address)
+        )
 
     for log_address in log_addresses:
-        futures.append(container.sync_service.sync_logs(log_address))
+        futures.append(
+            container.sync_service.sync_logs(log_address)
+        )
 
     loop.run_until_complete(
         asyncio.gather(*futures)
