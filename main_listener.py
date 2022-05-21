@@ -5,4 +5,4 @@ if __name__ == '__main__':
 
     print("🚀 Application Start")
 
-    container.listener_service.listener()
+    container.listener_service.listen()
