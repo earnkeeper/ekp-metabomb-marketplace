@@ -128,7 +128,7 @@ class ListenerService:
         return listing
 
     async def process_market_listing(self, listing):
-        current_listings = await self.cache_service.wrap("listener_market_listings", lambda: self.metabomb_api_service.get_current_listings(), ex=60)
+        current_listings = await self.cache_service.wrap("listener_market_listings", lambda: self.metabomb_api_service.get_market_boxes(), ex=60)
 
         box_type_listings = filter(
             lambda x: x["box_type"] == listing["nftName"], current_listings)
