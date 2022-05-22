@@ -1,10 +1,8 @@
-import time
-
 from db.market_transactions_repo import MarketTransactionsRepo
 from ekp_sdk.services import CoingeckoService
 
 
-class MarketHistoryService:
+class BoxesHistoryService:
     def __init__(
         self,
         market_transactions_repo: MarketTransactionsRepo,

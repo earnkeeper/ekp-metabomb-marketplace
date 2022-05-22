@@ -6,13 +6,12 @@ from ekp_sdk.ui import (Card, Col, Container, Div, Image, Row, Span, Tab, Tabs,
                         format_currency, format_template, switch_case)
 
 
-def page(BOX_LISTINGS_COLLECTION_NAME, BOX_HISTORY_COLLECTION_NAME, BOX_SUMMARY_COLLECTION_NAME):
+def page(LISTINGS_COLLECTION_NAME, HISTORY_COLLECTION_NAME, SUMMARY_COLLECTION_NAME):
     return Container(
         children=[
             page_title('shopping-cart', 'Marketplace'),
-            summary_row(BOX_SUMMARY_COLLECTION_NAME),
-            tabs_row(BOX_LISTINGS_COLLECTION_NAME,
-                     BOX_HISTORY_COLLECTION_NAME),
+            summary_row(SUMMARY_COLLECTION_NAME),
+            tabs_row(LISTINGS_COLLECTION_NAME, HISTORY_COLLECTION_NAME),
         ]
     )
 

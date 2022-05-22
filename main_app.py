@@ -4,9 +4,9 @@ from app.features.dashboard.dashboard_controller import DashboardController
 from app.features.dashboard.dashboard_opens_service import DashboardOpensService
 
 from app.features.market.market_controller import MarketController
-from app.features.market.market_history_service import MarketHistoryService
-from app.features.market.market_listings_service import MarketListingsService
-from app.features.market.market_summary_service import MarketSummaryService
+from app.features.market.boxes.history.boxes_history_service import BoxesHistoryService
+from app.features.market.boxes.listings.boxes_listings_service import BoxesListingsService
+from app.features.market.boxes.boxes_summary_service import BoxesSummaryService
 from db.box_opens_repo import BoxOpensRepo
 from db.market_transactions_repo import MarketTransactionsRepo
 
@@ -29,22 +29,22 @@ class AppContainer(BaseContainer):
 
         # FEATURES - MARKET
 
-        self.market_listings_service = MarketListingsService(
+        self.market_listings_service = BoxesListingsService(
             coingecko_service=self.coingecko_service
         )
 
-        self.market_history_service = MarketHistoryService(
+        self.market_history_service = BoxesHistoryService(
             market_transactions_repo=self.market_transactions_repo,
             coingecko_service=self.coingecko_service
         )
 
-        self.market_summary_service = MarketSummaryService()
+        self.market_summary_service = BoxesSummaryService()
 
         self.market_controller = MarketController(
             client_service=self.client_service,
-            market_listings_service=self.market_listings_service,
-            market_history_service=self.market_history_service,
-            market_summary_service=self.market_summary_service
+            boxes_listings_service=self.market_listings_service,
+            boxes_history_service=self.market_history_service,
+            boxes_summary_service=self.market_summary_service
         )
 
         # FEATURES - DASHBOARD

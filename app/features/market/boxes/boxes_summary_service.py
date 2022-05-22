@@ -1,7 +1,7 @@
 from datetime import datetime
 
 
-class MarketSummaryService:
+class BoxesSummaryService:
     def get_documents(self, listing_documents, history_documents, currency):
         floor_prices = {
             "Common Box": None,
