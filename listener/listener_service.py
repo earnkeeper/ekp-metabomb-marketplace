@@ -75,14 +75,14 @@ class ListenerService:
 
     async def filter_loop(self, filter, poll_interval):
         while True:
-            try:
+            # try:
                 for new_event in filter.get_new_entries():
                     listing = await self.decode_market_listing(json.loads(Web3.toJSON(new_event)))
                     await self.process_market_listing(listing)
 
                 await asyncio.sleep(poll_interval)
-            except Exception as e:
-                logging.error("🚨 error while listening for events", e)
+            # except Exception as e:
+            #     logging.error("🚨 error while listening for events", e)
 
     async def decode_market_listing(self, log_dto: Web3LogDto) -> MarketListing:
         log: Log = self.mapper_service.map_web3_log_dto_to_domain(log_dto)

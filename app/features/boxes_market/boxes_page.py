@@ -1,18 +1,28 @@
-from app.features.market.boxes.history.boxes_history_tab import history_page
-from app.features.market.boxes.listings.boxes_listings_tab import listings_page
+from app.features.boxes_market.history.boxes_history_tab import history_tab
+from app.features.boxes_market.listings.boxes_listings_tab import listings_tab
 from app.utils.game_constants import HERO_BOX_NAME_IMAGE
 from app.utils.page_title import page_title
 from ekp_sdk.ui import (Card, Col, Container, Div, Image, Row, Span, Tab, Tabs,
                         format_currency, format_template, switch_case)
 
 
-def page(BOX_LISTINGS_COLLECTION_NAME, BOX_HISTORY_COLLECTION_NAME, BOX_SUMMARY_COLLECTION_NAME):
+def boxes_page(LISTINGS_COLLECTION_NAME, HISTORY_COLLECTION_NAME, SUMMARY_COLLECTION_NAME):
     return Container(
         children=[
-            page_title('shopping-cart', 'Marketplace'),
-            summary_row(BOX_SUMMARY_COLLECTION_NAME),
-            tabs_row(BOX_LISTINGS_COLLECTION_NAME,
-                     BOX_HISTORY_COLLECTION_NAME),
+            page_title('shopping-cart', 'Boxes Market'),
+            summary_row(SUMMARY_COLLECTION_NAME),
+            Tabs(
+                [
+                    Tab(
+                        label="Listings",
+                        children=[listings_tab(LISTINGS_COLLECTION_NAME)]
+                    ),
+                    Tab(
+                        label="History",
+                        children=[history_tab(HISTORY_COLLECTION_NAME)]
+                    ),
+                ]
+            ),
         ]
     )
 
@@ -75,20 +85,5 @@ def summary_card(boxId):
 
                     ])
                 ])
-        ]
-    )
-
-
-def tabs_row(LISTINGS_COLLECTION_NAME, HISTORY_COLLECTION_NAME):
-    return Tabs(
-        [
-            Tab(
-                label="Listings",
-                children=[listings_page(LISTINGS_COLLECTION_NAME)]
-            ),
-            Tab(
-                label="History",
-                children=[history_page(HISTORY_COLLECTION_NAME)]
-            ),
         ]
     )

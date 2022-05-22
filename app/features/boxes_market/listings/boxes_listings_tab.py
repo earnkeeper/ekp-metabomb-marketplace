@@ -6,7 +6,7 @@ from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         format_template, is_busy, switch_case)
 
 
-def listings_page(LISTINGS_COLLECTION_NAME):
+def listings_tab(LISTINGS_COLLECTION_NAME):
     return Container(
         children=[
             Paragraphs(

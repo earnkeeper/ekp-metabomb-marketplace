@@ -3,7 +3,7 @@ from ast import literal_eval
 from datetime import datetime
 
 from db.market_listings_repo import MarketListingsRepo
-from db.market_transactions_repo import MarketTransactionsRepo
+from db.box_ import MarketTransactionsRepo
 from ekp_sdk.db import ContractLogsRepo, ContractTransactionsRepo
 from ekp_sdk.services import (CacheService, CoingeckoService, EtherscanService,
                               Web3Service)

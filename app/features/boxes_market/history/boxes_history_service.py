@@ -1,4 +1,4 @@
-from db.market_transactions_repo import MarketTransactionsRepo
+from db.box_ import MarketTransactionsRepo
 from ekp_sdk.services import CoingeckoService
 
 

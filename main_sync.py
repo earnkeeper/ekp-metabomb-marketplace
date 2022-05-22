@@ -8,7 +8,7 @@ from ekp_sdk.services import TransactionSyncService
 from db.box_opens_repo import BoxOpensRepo
 
 from db.market_listings_repo import MarketListingsRepo
-from db.market_transactions_repo import MarketTransactionsRepo
+from db.box_ import MarketTransactionsRepo
 from db.state_repo import StateRepo
 from shared.metabomb_api_service import MetabombApiService
 from sync.box_open_decoder_service import BoxOpenDecoderService

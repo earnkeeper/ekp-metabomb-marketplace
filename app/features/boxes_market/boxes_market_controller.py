@@ -1,9 +1,9 @@
-from app.features.market.boxes.boxes_summary_service import BoxesSummaryService
-from app.features.market.boxes.history.boxes_history_service import \
+from app.features.boxes_market.boxes_page import boxes_page
+from app.features.boxes_market.boxes_summary_service import BoxesSummaryService
+from app.features.boxes_market.history.boxes_history_service import \
     BoxesHistoryService
-from app.features.market.boxes.listings.boxes_listings_service import \
+from app.features.boxes_market.listings.boxes_listings_service import \
     BoxesListingsService
-from app.features.market.market_page import page
 from ekp_sdk.services import ClientService
 from ekp_sdk.util import client_currency, client_path
 
@@ -12,7 +12,7 @@ BOX_HISTORY_COLLECTION_NAME = "metabomb_box_history"
 BOX_SUMMARY_COLLECTION_NAME = "metabomb_box_summary"
 
 
-class MarketController:
+class BoxesMarketController:
     def __init__(
         self,
         client_service: ClientService,
@@ -24,20 +24,27 @@ class MarketController:
         self.boxes_listings_service = boxes_listings_service
         self.boxes_history_service = boxes_history_service
         self.boxes_summary_service = boxes_summary_service
-        self.path = 'marketplace'
+        self.path = 'boxes'
+        self.aliases = ['marketplace']
+        self.short_link = 'metabomb-box-market'
 
     async def on_connect(self, sid):
         await self.client_service.emit_menu(
             sid,
             'cil-cart',
-            'Marketplace',
-            self.path
+            'Box Market',
+            self.path,
+            self.aliases,
+            self.short_link
         )
         await self.client_service.emit_page(
             sid,
             self.path,
-            page(BOX_LISTINGS_COLLECTION_NAME,
-                 BOX_HISTORY_COLLECTION_NAME, BOX_SUMMARY_COLLECTION_NAME)
+            boxes_page(
+                BOX_LISTINGS_COLLECTION_NAME,
+                BOX_HISTORY_COLLECTION_NAME,
+                BOX_SUMMARY_COLLECTION_NAME
+            )
         )
 
     async def on_client_state_changed(self, sid, event):
