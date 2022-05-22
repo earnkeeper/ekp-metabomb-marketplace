@@ -19,7 +19,7 @@ class DashboardOpensService:
             3: {"node": 3, "name": "Legend", "value": 0},
             4: {"node": 4, "name": "Mythic", "value": 0},
             5: {"node": 5, "name": "Meta", "value": 0},
-            6: {"node": root_index, "name": f"{box_type}es Opened", "value": 0, "color": "yellow"},
+            6: {"node": root_index, "name": f"Opened", "value": 0, "color": "yellow"},
         }
 
         links = {
@@ -45,10 +45,10 @@ class DashboardOpensService:
                 nodes[i]["value"] * 100 / nodes[root_index]["value"], 2
             )
             nodes[i]["value"] = pc
-            nodes[i]["name"] = f'{total} x {nodes[i]["name"]} ({pc}%)'
+            nodes[i]["name"] = f'{format(total, ",d")} x {nodes[i]["name"]} ({pc}%)'
 
         total = nodes[root_index]["value"]
-        nodes[root_index]["name"] = f'{total} x {nodes[root_index]["name"]}'
+        nodes[root_index]["name"] = f'{format(total, ",d")} {nodes[root_index]["name"]}'
 
         doc = {
             "id": box_type,
