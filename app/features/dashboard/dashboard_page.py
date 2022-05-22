@@ -7,6 +7,8 @@ def page(OPENS_COLLECTION_NAME):
     return Container(
         children=[
             page_title('box', 'Dashboard'),
+            Span('Actual Hero Drop Rates', 'font-medium-4 font-weight-bold'),
+            Span('We are scanning the binance chain in REAL TIME, so that you know the ACTUAL hero drop rates. Check them out below 👀', "d-block mb-2 mt-1"),
             Row([
                 Col("col-12 col-md-6", [
                     opens_chart_row(
@@ -50,7 +52,7 @@ def opens_chart_row(OPENS_COLLECTION_NAME, doc_index, box_type):
                     ),
                     Col(
                         "col-auto my-auto", [
-                            Span("Drop Rates %", "font-medium-3 font-weight-bold")
+                            Span(box_type, "font-medium-3 font-weight-bold")
                         ]
                     ),
 

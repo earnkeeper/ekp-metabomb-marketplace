@@ -1,43 +1,41 @@
-from db.box_opens_repo import BoxOpensRepo
 from datetime import datetime
+
+from app.utils.game_constants import rarity_names
+from db.box_opens_repo import BoxOpensRepo
+
 
 class DashboardOpensService:
     def __init__(
         self,
-        box_opens_repo: BoxOpensRepo
+        box_opens_repo: BoxOpensRepo,
     ):
         self.box_opens_repo = box_opens_repo
 
+    def get_document(self, box_type, opens, now, rarities):
+        root_index = len(rarities)
 
-    def get_document(self, box_type, opens, now):
-        root_index = 6
+        nodes = []
+        links = []
 
-        nodes = {
-            0: {"node": 0, "name": "Common", "value": 0},
-            1: {"node": 1, "name": "Rare", "value": 0},
-            2: {"node": 2, "name": "Epic", "value": 0},
-            3: {"node": 3, "name": "Legend", "value": 0},
-            4: {"node": 4, "name": "Mythic", "value": 0},
-            5: {"node": 5, "name": "Meta", "value": 0},
-            6: {"node": root_index, "name": f"Opened", "value": 0, "color": "yellow"},
-        }
+        names = rarity_names()
 
-        links = {
-            0: {"source": root_index, "target": 0, "value": 0},
-            1: {"source": root_index, "target": 1, "value": 0},
-            2: {"source": root_index, "target": 2, "value": 0},
-            3: {"source": root_index, "target": 3, "value": 0},
-            4: {"source": root_index, "target": 4, "value": 0},
-            5: {"source": root_index, "target": 5, "value": 0},
-        }
+        i = 0
+
+        for rarity in rarities:
+            nodes.append({"name": names[rarity], "value": 0})
+            links.append({"source": root_index, "target": i, "value": 0})
+            i += 1
+
+        nodes.append({"name": f"Opened", "value": 0, "color": "yellow"}),
 
         for open in opens:
             if open["box_type"] != box_type:
                 continue
 
             nodes[root_index]["value"] += 1
-            nodes[open["hero_rarity"]]["value"] += 1
-            links[open["hero_rarity"]]["value"] += 1
+            i = rarities.index(open["hero_rarity"])
+            nodes[i]["value"] += 1
+            links[i]["value"] += 1
 
         for i in range(root_index):
             total = nodes[i]["value"]
@@ -53,17 +51,17 @@ class DashboardOpensService:
         doc = {
             "id": box_type,
             "updated": now,
-            "nodes": list(nodes.values()),
-            "links": list(links.values())
+            "nodes": nodes,
+            "links": links
         }
-        
-        return doc        
+
+        return doc
 
     async def get_documents(self):
         opens = self.box_opens_repo.find_since_block_number(0, 10000)
         now = datetime.now().timestamp()
         return [
-            self.get_document("Common Box", opens, now),
-            self.get_document("Premium Box", opens, now),
-            self.get_document("Ultra Box", opens, now),
+            self.get_document("Common Box", opens, now, [0, 1, 2]),
+            self.get_document("Premium Box", opens, now, [0, 1, 2, 3]),
+            self.get_document("Ultra Box", opens, now, [1, 2, 3, 4]),
         ]
