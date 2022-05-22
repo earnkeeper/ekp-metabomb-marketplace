@@ -1,5 +1,6 @@
 import asyncio
 import json
+import logging
 from ast import literal_eval
 
 from ekp_sdk.services import CacheService, CoingeckoService, Web3Service
@@ -54,36 +55,22 @@ class ListenerService:
             )
         )
 
-    async def test(self):
-
-        example = {
-            'address': '0x2076626437c3Bb9273998A5E4F96438aBE467F1C',
-            'topics': ['0xe04eefd2590e9186abb360fc0848592add67dcef57f68a4110a6922c4793f7e0',
-                       '0x00000000000000000000000000000000000000000000000000000000000000a4',
-                       '0x000000000000000000000000553a463f365c74eda00b7e5aaf080b066d4ca03c'
-                       ],
-            'data':
-            '0x00000000000000000000000000000000000000000000003c33c1937564800000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000084d5442482d505245000000000000000000000000000000000000000000000000',
-            'blockNumber': 17937471,
-            'transactionHash': '0xe4896e51f2508f1b817ea1e5a179e3cee61bdc2104f469443822db8cd75cb1ec',
-            'transactionIndex': 45,
-            'blockHash': '0x2b6d3df7b0e0ce5d46814a684ad3a54a2bbf719cca6f2e272ae88ab3143aabf9',
-            'logIndex': 203,
-            'removed': False
-        }
-
-        listing = await self.decode_market_listing(example)
-        await self.process_market_listing(listing)
-
     async def filter_loop(self, filter, poll_interval):
         while True:
-            for new_event in filter.get_new_entries():
-                listing = await self.decode_market_listing(json.loads(Web3.toJSON(new_event)))
-                await self.process_market_listing(listing)
+            try:
+                for new_event in filter.get_new_entries():
+                    listing = await self.decode_market_listing(json.loads(Web3.toJSON(new_event)))
+                    await self.process_market_listing(listing)
 
-            await asyncio.sleep(poll_interval)
+                await asyncio.sleep(poll_interval)
+            except Exception as e:
+                logging.error("🚨 error while listening for events", e)
 
     async def decode_market_listing(self, log):
+        hash = log["transactionHash"]
+
+        logging.info(f"🐛 Decoding log: {hash}")
+
         address = log["address"].lower()
 
         data = log["data"]
@@ -91,7 +78,6 @@ class ListenerService:
         if len(data) < 66:
             return
 
-        hash = log["transactionHash"]
         block_number = log["blockNumber"]
         tran = await self.web3_service.get_transaction(hash)
         block = await self.web3_service.get_block(block_number)
@@ -128,17 +114,22 @@ class ListenerService:
         return listing
 
     async def process_market_listing(self, listing):
+        logging.info(f"🐛 Processing listing: {listing['hash']}")
+
         current_listings = await self.cache_service.wrap("listener_market_listings", lambda: self.metabomb_api_service.get_market_boxes(), ex=60)
 
         box_type_listings = filter(
             lambda x: x["box_type"] == listing["nftName"], current_listings)
 
-        box_type_listings_sorted = sorted(box_type_listings, key=lambda x: x["price_mtb"])
+        box_type_listings_sorted = sorted(
+            box_type_listings, key=lambda x: x["price_mtb"])
 
         floor_listing = box_type_listings_sorted[0]
 
         if (listing["price"] < floor_listing["price_mtb"]):
             await self.notification_service.send_notification(listing, floor_listing)
+            logging.info(f"📣 Listing sent to discord: {listing['hash']}")            
         else:
-            print(
-                f'⚠️ not notifying listing, price ({int(listing["price"])}) is not lower than floor price ({floor_listing["price_mtb"]})')
+            logging.warn(
+                f'⚠️ not notifying listing, price ({int(listing["price"])}) is not lower than floor price ({floor_listing["price_mtb"]})'
+            )
