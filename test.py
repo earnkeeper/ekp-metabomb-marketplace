@@ -1,11 +1,8 @@
 
-from web3.auto import Web3, w3
-from decouple import config
+from ast import literal_eval
+from web3 import Web3
 
 
-provider_url = config("WEB3_PROVIDER_URL")
 
-w3 = Web3(Web3.HTTPProvider(provider_url))
-
-
-print(w3.eth.get_block(17937338))
+value = Web3.fromWei(literal_eval("0x00000000000000000000000000000000000000000000010f0cf064dd59200000"), 'ether')
+print(value)

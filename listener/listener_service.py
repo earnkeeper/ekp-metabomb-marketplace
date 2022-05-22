@@ -12,6 +12,7 @@ from listener.notification_service import NotificationService
 COMMON_BOX_CONTRACT_ADDRESS = "0x1f36bef063ee6fcefeca070159d51a3b36bc68d6"
 PREMIUM_BOX_CONTRACT_ADDRESS = "0x2076626437c3bb9273998a5e4f96438abe467f1c"
 ULTRA_BOX_CONTRACT_ADDRESS = "0x9341faed0b86208c64ae6f9d62031b1f8a203240"
+HERO_CONTRACT_ADDRESS = "0x05f0d89931eb06d4596af209de4a9779cef73cde"
 
 
 class ListenerService:
@@ -45,6 +46,11 @@ class ListenerService:
             "topics": ["0xe04eefd2590e9186abb360fc0848592add67dcef57f68a4110a6922c4793f7e0"]
         })
 
+        hero_filter = self.web3_service.get_filter({
+            "address": Web3.toChecksumAddress(HERO_CONTRACT_ADDRESS),
+            "topics": ["0x27bae1fb91b142a2956e7482d5370a469a66deae9cc45d8b0ec35067a54a18ad"]
+        })
+
         loop = asyncio.get_event_loop()
 
         loop.run_until_complete(
@@ -52,6 +58,7 @@ class ListenerService:
                 self.filter_loop(common_filter, 2),
                 self.filter_loop(premium_filter, 2),
                 self.filter_loop(ultra_filter, 2),
+                self.filter_loop(hero_filter, 2),
             )
         )
 
@@ -85,26 +92,41 @@ class ListenerService:
         timestamp = block["timestamp"]
         topics = log["topics"]
 
-        mtb_cache_key = f"mtb_price_events"
-        mtb_usd_price = await self.cache_service.wrap(mtb_cache_key, lambda: self.coingecko_service.get_latest_price("metabomb", "usd"), ex=60)
+        mtb_usd_price = await self.cache_service.wrap("mtb_price_events", lambda: self.coingecko_service.get_latest_price("metabomb", "usd"), ex=60)
 
         price = Web3.fromWei(literal_eval(data[0:66]), 'ether')
         token_id = literal_eval(topics[1])
-
+        nft_type = "Hero Box"
+        hero = None
         name = None
+        image_src = None
+
         if address == COMMON_BOX_CONTRACT_ADDRESS:
             name = "Common Box"
+            image_src = self.__HERO_BOX_NAME_IMAGE[name]
         if address == PREMIUM_BOX_CONTRACT_ADDRESS:
             name = "Premium Box"
+            image_src = self.__HERO_BOX_NAME_IMAGE[name]
         if address == ULTRA_BOX_CONTRACT_ADDRESS:
             name = "Ultra Box"
+            image_src = self.__HERO_BOX_NAME_IMAGE[name]
+        if address == HERO_CONTRACT_ADDRESS:
+            nft_type = "Hero"
+            hero = await self.metabomb_api_service.get_hero(token_id)
+            print(hero)
+            hero["class"] = self.__HERO_CLASS_MAP[hero["hero_class"]]
+            rarity = self.__HERO_RARITY_MAP[hero["rarity"]]
+            name = f"{rarity} Lv {hero['level'] + 1} Hero"
+            image_src = f"https://app.metabomb.io/gifs/char-gif/{hero['display_id']}.gif"
 
         listing = {
             "blockNumber": block_number,
             "seller": tran["from"],
+            "imageSrc": image_src,
             "hash": hash,
             "nftName": name,
-            "nftType": "Hero Box",
+            "nftType": nft_type,
+            "hero": hero,
             "price": float(price),
             "priceUsd": float(price) * mtb_usd_price,
             "timestamp": timestamp,
@@ -116,7 +138,7 @@ class ListenerService:
     async def process_market_listing(self, listing):
         logging.info(f"🐛 Processing listing: {listing['hash']}")
 
-        current_listings = await self.cache_service.wrap("listener_market_listings", lambda: self.metabomb_api_service.get_market_boxes(), ex=60)
+        current_listings = await self.cache_service.wrap("metabomb_market_boxes", lambda: self.metabomb_api_service.get_market_boxes(), ex=60)
 
         box_type_listings = filter(
             lambda x: x["box_type"] == listing["nftName"], current_listings)
@@ -128,8 +150,30 @@ class ListenerService:
 
         if (listing["price"] < floor_listing["price_mtb"]):
             await self.notification_service.send_notification(listing, floor_listing)
-            logging.info(f"📣 Listing sent to discord: {listing['hash']}")            
+            logging.info(f"📣 Listing sent to discord: {listing['hash']}")
         else:
             logging.warn(
                 f'⚠️ not notifying listing, price ({int(listing["price"])}) is not lower than floor price ({floor_listing["price_mtb"]})'
             )
+
+    __HERO_RARITY_MAP = {
+        0: "Common",
+        1: "Rare",
+        2: "Epic",
+        3: "Legend",
+        4: "Mythic",
+        5: "Meta",
+    }
+    __HERO_CLASS_MAP = {
+        0: "?",
+        1: "?",
+        2: "?",
+        3: "?",
+        4: "Ranger",
+        5: "?",
+    }
+    __HERO_BOX_NAME_IMAGE = {
+        "Common Box": "https://app.metabomb.io/gifs/herobox-gif/normal-box.gif",
+        "Premium Box": "https://app.metabomb.io/gifs/herobox-gif/premium-box.gif",
+        "Ultra Box": "https://app.metabomb.io/gifs/herobox-gif/ultra-box.gif"
+    }

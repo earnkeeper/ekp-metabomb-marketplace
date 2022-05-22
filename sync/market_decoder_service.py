@@ -67,12 +67,12 @@ class MarketDecoderService:
                     continue
 
                 if input.startswith("0x38edf988"):
-                    buy = await self.__decode_market_buy(next_tran)
+                    buy = await self.__decode_box_buy(next_tran)
                     if buy:
                         buys.append(buy)
 
                 if input.startswith("0x36f7992b"):
-                    listing = await self.__decode_market_listing(next_tran)
+                    listing = await self.__decode_box_listing(next_tran)
                     if listing:
                         sells.append(listing)
 
@@ -89,7 +89,7 @@ class MarketDecoderService:
 
         print("✅ Finished decoding market transactions..")
 
-    async def __decode_market_buy(self, tran):
+    async def __decode_box_buy(self, tran):
         if "logs" not in tran:
             return None
 
@@ -156,7 +156,7 @@ class MarketDecoderService:
             "tokenId": token_id,
         }
 
-    async def __decode_market_listing(self, tran):
+    async def __decode_box_listing(self, tran):
         if "logs" not in tran:
             return None
 

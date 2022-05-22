@@ -50,6 +50,27 @@ class MetabombApiService:
 
             return dtos
 
+    async def get_hero(self, token_id):
+        url = self.base_url
+
+        print(f"🐛 {url}")
+
+        start = time.perf_counter()
+
+        transport = AIOHTTPTransport(url=url)
+
+        async with Client(transport=transport) as client:
+            gql_result = await client.execute(
+                self.__HERO_QUERY,
+                variable_values={"id": str(token_id)}
+            )
+
+            print(f"⏱  [{url}] {time.perf_counter() - start:0.3f}s")
+
+            hero = gql_result["hero"]
+
+            return hero
+
     async def get_market_heroes(self):
         url = self.base_url
 
@@ -135,6 +156,34 @@ class MetabombApiService:
             }
         """)
 
+    __HERO_QUERY = gql("""
+        query hero($id: ID!) {
+            hero(id: $id) {
+                id
+                user_id
+                name
+                display_id
+                rarity
+                level
+                hero_class
+                for_sale
+                price
+                power
+                health
+                speed
+                stamina
+                bomb_num
+                bomb_range
+                user {
+                id
+                name
+                user_name
+                __typename
+                }
+                __typename
+            }
+        }
+        """)
     __BOX_TYPES = {
         0: "Common Box",
         1: "Premium Box",
