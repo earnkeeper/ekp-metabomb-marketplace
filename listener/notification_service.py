@@ -44,7 +44,7 @@ class NotificationService:
 
         name = "Unknown NFT"
         image_url = None
-        title_url = "https://app.metabomb.io"
+        title_url = ""
 
         if new_listing["hero"] is not None:
             hero: Hero = new_listing["hero"]
@@ -88,35 +88,47 @@ class NotificationService:
                 "value": hero["hero_class_name"],
                 "inline": True
             })
-
-        if floor_listing is not None:
-            fields.append({
-                "name": "Floor MTB",
-                "value": f'$ {format(int(floor_listing["price_mtb"]))}',
-                "inline": True
-            })
-            fields.append({
-                "name": "Floor USD",
-                "value": f'$ {format(round(floor_listing["price_usdc"],2))}',
-                "inline": True
-            })
-
+            
         if new_listing["box"] is not None:
             box: HeroBox = new_listing["box"]
             name = box["name"]
             image_url = self.mapper_service.get_hero_box_url(box["type"])
+            title_url = "https://app.metabomb.io/trade/boxes"
+            
+            fields.append({
+                "name": "Type",
+                "value": box["name"],
+                "inline": True
+            })
+
+        if floor_listing is not None:
+            fields.append({
+                "name": "Floor MTB",
+                "value": f'{format(int(floor_listing["price_mtb"]), ",")}',
+                "inline": True
+            })
+            fields.append({
+                "name": "Floor USD",
+                "value": f'$ {format(round(floor_listing["price_usdc"],2), ",")}',
+                "inline": True
+            })
 
         seller = new_listing["seller"]
+        
         masked_seller = f"{seller[0:5]}...{seller[-3:]}"
 
         embed = {
             "type": "rich",
             "title": "Metabomb Floor Alert!",
-            "description": f'**{masked_seller}** has listed a **{name}** at lower than floor price!\n\n👀\n\n',
-            "url": title_url,
+            "description": f'**{masked_seller}** has listed a **{name}** at lower than floor price!\n\n{title_url}\n\n👀\n\n',
+            "url": "https://earnkeeper.io/game/metabomb/marketplace",
             "color": 16215296,
             "image": {"url": image_url},
-            "fields": fields
+            "fields": fields,
+            "footer": {
+                "text": 'Brought to you by EarnKeeper.io, the leading P2E Analytics platform',
+                "icon_url": "https://earnkeeper.io/logos/earnkeeper_logo.png"
+            }
         }
 
         await self.rest_client.post(

@@ -139,7 +139,7 @@ class ListenerService:
             "price_usdc": float(price) * mtb_rate,
             "seller": tran['from'],
             "token_id": token_id,
-            "updated": datetime.now(),
+            "updated": datetime.now().timestamp(),
         }
 
         return listing
@@ -179,21 +179,25 @@ class ListenerService:
                 ex=60
             )
 
-            current_listings: List[MarketListing] = await self.mapper_service.map_market_hero_dto_to_domain(dtos)
+            current_listings: List[MarketListing] = await self.mapper_service.map_market_hero_dtos_to_domain(dtos)
 
-            filtered_listings = filter(
-                lambda current_listing: (current_listing['hero']['rarity'] == new_listing['hero']['rarity']) and (
-                    current_listing['hero']['level'] == new_listing['hero']['level']),
-                current_listings
+            filtered_listings = list(
+                filter(
+                    lambda current_listing: (current_listing['hero']['rarity'] == new_listing['hero']['rarity']) and (
+                        current_listing['hero']['level'] == new_listing['hero']['level']) and (current_listing["for_sale"]),
+                    current_listings
+                )
             )
 
             floor_listing = self.__get_floor_listing(filtered_listings)
 
-            # if (new_listing["price_mtb"] >= floor_listing["price_mtb"]):
-            #     logging.warn(
-            #         f'⚠️ not notifying listing, price ({int(new_listing["price_mtb"])}) is not lower than floor price ({floor_listing["price_mtb"]})'
-            #     )
-            #     return
+            print(floor_listing)
+
+            if (new_listing["price_mtb"] >= floor_listing["price_mtb"]):
+                logging.warn(
+                    f'⚠️ not notifying listing, price ({int(new_listing["price_mtb"])}) is not lower than floor price ({floor_listing["price_mtb"]})'
+                )
+                return
 
         await self.notification_service.send_notification(new_listing, floor_listing)
 
