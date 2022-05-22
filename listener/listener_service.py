@@ -1,9 +1,18 @@
 import asyncio
+from datetime import datetime
 import json
 import logging
 from ast import literal_eval
+from typing import List
 
+from ekp_sdk.domain import Log
+from ekp_sdk.dto import Web3LogDto
 from ekp_sdk.services import CacheService, CoingeckoService, Web3Service
+from shared.domain.hero import Hero
+from shared.domain.hero_box import HeroBox
+from shared.domain.market_listing import MarketListing
+from shared.dto.hero_dto import HeroDto
+from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
 from web3 import Web3
 
@@ -21,11 +30,13 @@ class ListenerService:
         cache_service: CacheService,
         coingecko_service: CoingeckoService,
         notification_service: NotificationService,
+        mapper_service: MapperService,
         metabomb_api_service: MetabombApiService,
         web3_service: Web3Service,
     ):
         self.cache_service = cache_service
         self.coingecko_service = coingecko_service
+        self.mapper_service = mapper_service
         self.metabomb_api_service = metabomb_api_service
         self.notification_service = notification_service
         self.web3_service = web3_service
@@ -73,111 +84,98 @@ class ListenerService:
             except Exception as e:
                 logging.error("🚨 error while listening for events", e)
 
-    async def decode_market_listing(self, log):
-        hash = log["transactionHash"]
+    async def decode_market_listing(self, log_dto: Web3LogDto) -> MarketListing:
+        log: Log = self.mapper_service.map_web3_log_dto_to_domain(log_dto)
+
+        hash = log["transaction_hash"]
 
         logging.info(f"🐛 Decoding log: {hash}")
-
-        address = log["address"].lower()
 
         data = log["data"]
 
         if len(data) < 66:
+            logging.warn(f"⚠️ Skipping tran due to missing data field: {hash}")
             return
 
-        block_number = log["blockNumber"]
-        tran = await self.web3_service.get_transaction(hash)
+        address = log["address"].lower()
+        topics = log["topics"]
+        hero: Hero = None
+        box_type = None
+        token_id = literal_eval(topics[1])
+        
+        if address == COMMON_BOX_CONTRACT_ADDRESS:
+            box_type = 0
+        if address == PREMIUM_BOX_CONTRACT_ADDRESS:
+            box_type = 1
+        if address == ULTRA_BOX_CONTRACT_ADDRESS:
+            box_type = 2
+        if address == HERO_CONTRACT_ADDRESS:
+            hero_dto: HeroDto = await self.metabomb_api_service.get_hero(token_id)
+            hero = self.mapper_service.map_hero_dto_to_domain(hero_dto)
+
+        box: HeroBox = None
+        if box_type:
+            box = {
+                "type": box_type,
+                "name": self.mapper_service.HERO_BOX_TYPE_TO_NAME[box_type]
+            }
+
+        block_number = log["block_number"]
         block = await self.web3_service.get_block(block_number)
 
-        timestamp = block["timestamp"]
-        topics = log["topics"]
-
-        mtb_usd_price = await self.cache_service.wrap("mtb_price_events", lambda: self.coingecko_service.get_latest_price("metabomb", "usd"), ex=60)
-
+        mtb_rate = await self.mapper_service.get_mtb_rate()
         price = Web3.fromWei(literal_eval(data[0:66]), 'ether')
-        token_id = literal_eval(topics[1])
-        nft_type = "Hero Box"
-        hero = None
-        name = None
-        image_src = None
+        timestamp = block["timestamp"]
+        tran = await self.web3_service.get_transaction(hash)
 
-        if address == COMMON_BOX_CONTRACT_ADDRESS:
-            name = "Common Box"
-            image_src = self.__HERO_BOX_NAME_IMAGE[name]
-        if address == PREMIUM_BOX_CONTRACT_ADDRESS:
-            name = "Premium Box"
-            image_src = self.__HERO_BOX_NAME_IMAGE[name]
-        if address == ULTRA_BOX_CONTRACT_ADDRESS:
-            name = "Ultra Box"
-            image_src = self.__HERO_BOX_NAME_IMAGE[name]
-        if address == HERO_CONTRACT_ADDRESS:
-            nft_type = "Hero"
-            hero = await self.metabomb_api_service.get_hero(token_id)
-            print(hero)
-            hero["class"] = self.__HERO_CLASS_MAP[hero["hero_class"]]
-            rarity = self.__HERO_RARITY_MAP[hero["rarity"]]
-            name = f"{rarity} Lv {hero['level'] + 1} Hero"
-            image_src = f"https://app.metabomb.io/gifs/char-gif/{hero['display_id']}.gif"
-
-        listing = {
-            "blockNumber": block_number,
-            "seller": tran["from"],
-            "imageSrc": image_src,
+        listing: MarketListing = {
+            "box": box,
+            "for_sale": True,
             "hash": hash,
-            "nftName": name,
-            "nftType": nft_type,
             "hero": hero,
-            "price": float(price),
-            "priceUsd": float(price) * mtb_usd_price,
-            "timestamp": timestamp,
-            "tokenId": token_id,
+            "id": token_id,
+            "listed": timestamp,
+            "price_mtb": float(price),
+            "price_usdc": float(price) * mtb_rate,
+            "seller": tran['from'],
+            "token_id": token_id,
+            "updated": datetime.now(),
         }
 
         return listing
 
-    async def process_market_listing(self, listing):
-        logging.info(f"🐛 Processing listing: {listing['hash']}")
+    async def process_market_listing(self, new_listing: MarketListing):
+        logging.info(f"🐛 Processing listing: {new_listing['hash']}")
 
         floor_listing == None
 
-        if listing["nftType"] == "Hero Box":
-            current_listings = await self.cache_service.wrap("metabomb_market_boxes", lambda: self.metabomb_api_service.get_market_boxes(), ex=60)
+        if new_listing["nftType"] == "Hero Box":
 
-            box_type_listings = filter(
-                lambda x: x["box_type"] == listing["nftName"], current_listings)
+            dtos = await self.cache_service.wrap(
+                "metabomb_market_boxes",
+                lambda: self.metabomb_api_service.get_market_boxes(),
+                ex=60
+            )
 
-            box_type_listings_sorted = sorted(
-                box_type_listings, key=lambda x: x["price_mtb"])
+            current_listings: List[MarketListing] = await self.mapper_service.map_box_dtos_to_domain(dtos)
 
-            floor_listing = box_type_listings_sorted[0]
+            filtered_listings = filter(
+                lambda current_listing: current_listing['box']['type'] == new_listing['box']['type'],
+                current_listings
+            )
 
-            if (listing["price"] >= floor_listing["price_mtb"]):
+            sorted_listings = sorted(
+                filtered_listings,
+                key=lambda filtered_listing: filtered_listing["price_mtb"]
+            )
+
+            floor_listing = sorted_listings[0]
+
+            if (new_listing["price_mtb"] >= floor_listing["price_mtb"]):
                 logging.warn(
-                    f'⚠️ not notifying listing, price ({int(listing["price"])}) is not lower than floor price ({floor_listing["price_mtb"]})'
+                    f'⚠️ not notifying listing, price ({int(new_listing["price_mtb"])}) is not lower than floor price ({floor_listing["price_mtb"]})'
                 )
                 return
 
-        await self.notification_service.send_notification(listing, floor_listing)
-        logging.info(f"📣 Listing sent to discord: {listing['hash']}")
-
-    __HERO_RARITY_MAP = {
-        0: "Common",
-        1: "Rare",
-        2: "Epic",
-        3: "Legend",
-        4: "Mythic",
-        5: "Meta",
-    }
-    __HERO_CLASS_MAP = {
-        0: "?",
-        1: "?",
-        2: "?",
-        3: "?",
-        4: "Ranger",
-        5: "?",
-    }
-    __HERO_BOX_NAME_IMAGE = {
-        "Common Box": "https://app.metabomb.io/gifs/herobox-gif/normal-box.gif",
-        "Premium Box": "https://app.metabomb.io/gifs/herobox-gif/premium-box.gif",
-        "Ultra Box": "https://app.metabomb.io/gifs/herobox-gif/ultra-box.gif"
-    }
+        await self.notification_service.send_notification(new_listing, floor_listing)
+        logging.info(f"📣 Listing sent to discord: {new_listing['hash']}")

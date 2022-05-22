@@ -168,4 +168,3 @@ nodemon.json
 .werf_secret_key
 .secrets
 clear-values.yaml
-tmp

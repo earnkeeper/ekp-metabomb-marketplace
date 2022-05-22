@@ -1,116 +1,62 @@
 import time
-from datetime import datetime
 from typing import List
 
-from ekp_sdk.services import CacheService, CoingeckoService
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
 
-from shared.dto.market_listing_dto import MarketListingDto
+from shared.dto.box_market_listing_dto import BoxMarketListingDto
+from shared.dto.hero_dto import HeroDto
+from shared.dto.hero_market_listing_dto import HeroMarketListingDto
 
 
 class MetabombApiService:
     def __init__(
-        self,
-        coingecko_service: CoingeckoService
+        self
     ):
-        self.coingecko_service = coingecko_service
         self.base_url = "https://api.metabomb.io/graphql/"
 
-    async def get_market_boxes(self) -> List[MarketListingDto]:
-        url = self.base_url
+    async def get_market_boxes(self) -> List[BoxMarketListingDto]:
 
-        print(f"🐛 {url}")
-
-        start = time.perf_counter()
-
-        transport = AIOHTTPTransport(url=url)
-
-        now = datetime.now().timestamp()
-
-        mtb_rate = await self.coingecko_service.get_latest_price("metabomb", "usd")
-
-        async with Client(transport=transport) as client:
-            gql_result = await client.execute(
-                self.__MARKET_BOX_QUERY,
-                variable_values=self.__market_box_params(1, 5000)
-            )
-
-            print(f"⏱  [{url}] {time.perf_counter() - start:0.3f}s")
-
-            listings = gql_result["box_market"]["boxes"]
-
-            dtos = []
-
-            for listing in listings:
-
-                dto = self.__map_dto(listing, mtb_rate, now)
-
-                dtos.append(dto)
-
-            return dtos
-
-    async def get_hero(self, token_id):
-        url = self.base_url
-
-        print(f"🐛 {url}")
-
-        start = time.perf_counter()
-
-        transport = AIOHTTPTransport(url=url)
-
-        async with Client(transport=transport) as client:
-            gql_result = await client.execute(
-                self.__HERO_QUERY,
-                variable_values={"id": str(token_id)}
-            )
-
-            print(f"⏱  [{url}] {time.perf_counter() - start:0.3f}s")
-
-            hero = gql_result["hero"]
-
-            return hero
-
-    async def get_market_heroes(self):
-        url = self.base_url
-
-        print(f"🐛 {url}")
-
-        start = time.perf_counter()
-
-        transport = AIOHTTPTransport(url=url)
-
-        async with Client(transport=transport) as client:
-            gql_result = await client.execute(
-                self.__MARKET_HERO_QUERY,
-                variable_values=self.__market_hero_params(1, 5000)
-            )
-
-            print(f"⏱  [{url}] {time.perf_counter() - start:0.3f}s")
-
-            listings = gql_result["hero_market"]["heroes"]
-
-            return listings
-
-    def __map_dto(self, listing, mtb_rate, now):
-
-        price_mtb = listing["price"]
-        price_usdc = price_mtb * mtb_rate
-
-        dto = MarketListingDto(
-            box_type=self.__BOX_TYPES[listing["box_type"]],
-            chain_process=listing["chain_process"],
-            for_sale=listing["for_sale"] == 1,
-            id=listing["id"],
-            price_mtb=price_mtb,
-            price_usdc=price_usdc,
-            token_id=listing["token_id"],
-            type=listing["__typename"],
-            updated=now,
-            wallet_address=listing["user"]["wallet_address"],
+        return await self.__gql_get(
+            self.__MARKET_BOX_QUERY,
+            self.__market_box_params(1, 5000),
+            lambda x: x["box_market"]["boxes"]
         )
 
-        return dto
+    async def get_hero(self, token_id) -> HeroDto:
+
+        return await self.__gql_get(
+            self.__HERO_QUERY,
+            {"id": str(token_id)},
+            lambda x: x["hero"]
+        )
+
+    async def get_market_heroes(self) -> List[HeroMarketListingDto]:
+
+        return await self.__gql_get(
+            self.__MARKET_HERO_QUERY,
+            self.__market_hero_params(1, 5000),
+            lambda x: x["hero_market"]["heroes"]
+        )
+
+    async def __gql_get(self, query, variables, fn=lambda x: x):
+        url = self.base_url
+
+        print(f"🐛 {url}")
+
+        start = time.perf_counter()
+
+        transport = AIOHTTPTransport(url=url)
+
+        async with Client(transport=transport) as client:
+            gql_result = await client.execute(
+                query,
+                variable_values=variables
+            )
+
+            print(f"⏱  [{url}] {time.perf_counter() - start:0.3f}s")
+
+            return fn(gql_result)
 
     __MARKET_BOX_QUERY = gql("""
         query box_market($input: BoxMarketInput!) {
@@ -184,11 +130,6 @@ class MetabombApiService:
             }
         }
         """)
-    __BOX_TYPES = {
-        0: "Common Box",
-        1: "Premium Box",
-        2: "Ultra Box"
-    }
 
     def __market_box_params(self, page, count):
         return {

@@ -1,41 +1,56 @@
 from ekp_sdk.services import RestClient
+from shared.domain.hero import Hero
+from shared.domain.hero_box import HeroBox
+from shared.domain.market_listing import MarketListing
+from shared.mapper_service import MapperService
 
 
 class NotificationService:
     def __init__(
         self,
         rest_client: RestClient,
+        mapper_service: MapperService,
         discord_base_url,
         discord_channel_id
     ):
         self.rest_client = rest_client
         self.discord_base_url = discord_base_url
         self.discord_channel_id = discord_channel_id
+        self.mapper_service = mapper_service
 
-    async def send_notification(self, listing, floor_listing=None):
-        seller = listing["seller"]
-        masked_seller = f"{seller[0:5]}...{seller[-3:]}"
-        name = listing["nftName"]
+    async def send_notification(
+        self,
+        new_listing: MarketListing,
+        floor_listing: MarketListing
+    ):
+
         fields = [
             {
                 "name": "Token Id",
-                "value": str(listing["tokenId"]),
+                "value": str(new_listing["token_id"]),
                 "inline": True
             },
             {
                 "name": "MTB",
-                "value": format(int(listing["price"]), ",d"),
+                "value": format(int(new_listing["price_mtb"]), ",d"),
                 "inline": True
             },
             {
                 "name": "USD",
-                "value": f'$ {format(round(listing["priceUsd"],2))}',
+                "value": f'$ {format(round(new_listing["price_usdc"],2))}',
                 "inline": True
             },
         ]
 
-        if "hero" in listing:
-            hero = listing["hero"]
+        name = "Unknown NFT"
+        image_url = None
+        title_url = "https://app.metabomb.io"
+
+        if new_listing["hero"] is not None:
+            hero: Hero = new_listing["hero"]
+            name = f"{hero['rarity_name']} Lv {hero['level'] + 1} Hero"
+            image_url = self.mapper_service.get_hero_image_url(hero["id"])
+            title_url = f"https://app.metabomb.io/hero/{hero['id']}"
 
             fields.append({
                 "name": "Power",
@@ -70,7 +85,7 @@ class NotificationService:
 
             fields.append({
                 "name": "Class",
-                "value": hero["class"],
+                "value": hero["hero_class_name"],
                 "inline": True
             })
 
@@ -86,14 +101,21 @@ class NotificationService:
                 "inline": True
             })
 
+        if new_listing["box"] is not None:
+            box: HeroBox = new_listing["box"]
+            name = box["name"]
+            image_url = self.mapper_service.get_hero_box_url(box["type"])
+
+        seller = new_listing["seller"]
+        masked_seller = f"{seller[0:5]}...{seller[-3:]}"
 
         embed = {
             "type": "rich",
             "title": "Metabomb Floor Alert!",
             "description": f'**{masked_seller}** has listed a **{name}** at lower than floor price!\n\n👀\n\n',
-            "url": "https://app.metabomb.io",
+            "url": title_url,
             "color": 16215296,
-            "image": {"url": listing["imageSrc"]},
+            "image": {"url": image_url},
             "fields": fields
         }
 
