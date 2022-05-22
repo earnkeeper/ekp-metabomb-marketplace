@@ -1,8 +1,8 @@
 import asyncio
-from datetime import datetime
 import json
 import logging
 from ast import literal_eval
+from datetime import datetime
 from typing import List
 
 from ekp_sdk.domain import Log
@@ -102,7 +102,7 @@ class ListenerService:
         hero: Hero = None
         box_type = None
         token_id = literal_eval(topics[1])
-        
+
         if address == COMMON_BOX_CONTRACT_ADDRESS:
             box_type = 0
         if address == PREMIUM_BOX_CONTRACT_ADDRESS:
@@ -147,9 +147,9 @@ class ListenerService:
     async def process_market_listing(self, new_listing: MarketListing):
         logging.info(f"🐛 Processing listing: {new_listing['hash']}")
 
-        floor_listing == None
+        floor_listing = None
 
-        if new_listing["nftType"] == "Hero Box":
+        if new_listing["box"] is not None:
 
             dtos = await self.cache_service.wrap(
                 "metabomb_market_boxes",
@@ -178,4 +178,5 @@ class ListenerService:
                 return
 
         await self.notification_service.send_notification(new_listing, floor_listing)
+
         logging.info(f"📣 Listing sent to discord: {new_listing['hash']}")

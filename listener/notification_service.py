@@ -49,7 +49,7 @@ class NotificationService:
         if new_listing["hero"] is not None:
             hero: Hero = new_listing["hero"]
             name = f"{hero['rarity_name']} Lv {hero['level'] + 1} Hero"
-            image_url = self.mapper_service.get_hero_image_url(hero["id"])
+            image_url = self.mapper_service.get_hero_image_url(hero["display_id"])
             title_url = f"https://app.metabomb.io/hero/{hero['id']}"
 
             fields.append({
