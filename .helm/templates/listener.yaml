@@ -16,7 +16,7 @@ spec:
         app: listener
     spec:
       containers:
-        - name: python-socketio
+        - name: python
           image: '{{ .Values.werf.image.listener }}'
           workingDir: /app
           env:
@@ -28,6 +28,3 @@ spec:
               value: "{{ .Values.discord.baseUrl }}"
             - name: DISCORD_CHANNEL_ID
               value: '{{ eq .Values.werf.env "staging" | ternary .Values.discord.channelId.staging .Values.discord.channelId._default }}'
-          ports:
-            - containerPort: 3001
-              protocol: TCP
