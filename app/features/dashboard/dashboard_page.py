@@ -1,20 +1,43 @@
 from app.utils.page_title import page_title
-from ekp_sdk.ui import (Card, Col, Container, Chart, Image, Row, Span, Tab, Tabs,
-                        format_currency, format_template, switch_case, documents)
+from ekp_sdk.ui import Chart, Col, Container, Row
 
 
 def page(OPENS_COLLECTION_NAME):
     return Container(
         children=[
             page_title('box', 'Dashboard'),
-            opens_chart_row(OPENS_COLLECTION_NAME)
+            Row([
+                Col("col-xs-12 col-md-6", [
+                    opens_chart_row(
+                        OPENS_COLLECTION_NAME,
+                        0,
+                        "Common Box Drop Percents"
+                    ),
+                ]),
+                Col("col-xs-12 col-md-6", [
+                    opens_chart_row(
+                        OPENS_COLLECTION_NAME,
+                        1,
+                        "Premium Box Drop Percents"
+                    ),
+                ]),
+                Col("col-xs-12 col-md-6", [
+                    opens_chart_row(
+                        OPENS_COLLECTION_NAME,
+                        2,
+                        "Ultra Box Drop Percents"
+                    ),
+                ])
+            ])
         ]
     )
 
 
-def opens_chart_row(OPENS_COLLECTION_NAME):
+def opens_chart_row(OPENS_COLLECTION_NAME, doc_index, title):
     return Chart(
-        data=f"$.{OPENS_COLLECTION_NAME}[0]",
+        data=f"$.{OPENS_COLLECTION_NAME}[{doc_index}]",
         type="sankey",
-        title="Common Box Heroes",
+        title=title,
+        class_name="mx-2 my-0",
+        height=300
     )

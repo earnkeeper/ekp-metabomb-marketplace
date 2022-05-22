@@ -95,7 +95,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
 
 __avg_price_cell = Span(
     format_percent("$.pcAboveAvgFiat"),
-    switch_case("$.deal", {"yes": "text-success", "no": "text-danger"})
+    switch_case("$.deal", {"no": "text-success", "yes": "text-danger"})
 ),
 
 
