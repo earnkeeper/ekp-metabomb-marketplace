@@ -3,16 +3,15 @@ import asyncio
 
 from decouple import AutoConfig
 from ekp_sdk import BaseContainer
-from ekp_sdk.db import ContractLogsRepo, ContractTransactionsRepo
-from ekp_sdk.services import TransactionSyncService
 from db.box_opens_repo import BoxOpensRepo
 
-from db.market_listings_repo import MarketListingsRepo
-from db.box_ import MarketTransactionsRepo
+from db.market_sales_repo import MarketSalesRepo
 from db.state_repo import StateRepo
+from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
 from sync.box_open_decoder_service import BoxOpenDecoderService
-from sync.market_decoder_service import MarketDecoderService
+from sync.box_sale_decoder_service import BoxSaleDecoderService
+from sync.hero_sale_decoder_service import HeroSaleDecoderService
 
 
 class AppContainer(BaseContainer):
@@ -23,11 +22,7 @@ class AppContainer(BaseContainer):
 
         # DB
 
-        self.market_transactions_repo = MarketTransactionsRepo(
-            mg_client=self.mg_client,
-        )
-
-        self.market_listings_repo = MarketListingsRepo(
+        self.market_transactions_repo = MarketSalesRepo(
             mg_client=self.mg_client,
         )
 
@@ -41,8 +36,11 @@ class AppContainer(BaseContainer):
         
         # Services
         
-        self.metabomb_api_service = MetabombApiService(
-            coingecko_service=self.coingecko_service
+        self.metabomb_api_service = MetabombApiService()
+
+        self.mapper_service = MapperService(
+            cache_service=self.cache_service,
+            coingecko_service=self.coingecko_service,
         )
 
         self.box_open_decoder_service = BoxOpenDecoderService(
@@ -51,15 +49,20 @@ class AppContainer(BaseContainer):
             metabomb_api_service=self.metabomb_api_service
         )
 
-        self.market_decoder_service = MarketDecoderService(
+        self.box_sale_decoder_service = BoxSaleDecoderService(
             cache_service=self.cache_service,
             coingecko_service=self.coingecko_service,
-            contract_logs_repo=self.contract_logs_repo,
             contract_transactions_repo=self.contract_transactions_repo,
-            etherscan_service=self.etherscan_service,
-            market_transactions_repo=self.market_transactions_repo,
-            market_listings_repo=self.market_listings_repo,
-            web3_service=self.web3_service,
+            market_sales_repo=self.market_transactions_repo,
+            mapper_service=self.mapper_service,
+        )
+
+
+        self.hero_sale_decoder_service = HeroSaleDecoderService(
+            cache_service=self.cache_service,
+            coingecko_service=self.coingecko_service,
+            contract_transactions_repo=self.contract_transactions_repo,
+            market_sales_repo=self.market_transactions_repo,
         )
 
 
@@ -102,7 +105,11 @@ if __name__ == '__main__':
     )
 
     loop.run_until_complete(
-        container.market_decoder_service.decode_market_trans()
+        container.box_sale_decoder_service.decode_box_sales()
+    )
+
+    loop.run_until_complete(
+        container.hero_sale_decoder_service.decode_hero_sales()
     )
 
     loop.run_until_complete(

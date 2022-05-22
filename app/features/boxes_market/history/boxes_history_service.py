@@ -1,11 +1,11 @@
-from db.box_ import MarketTransactionsRepo
+from db.market_sales_repo import MarketSalesRepo
 from ekp_sdk.services import CoingeckoService
 
 
 class BoxesHistoryService:
     def __init__(
         self,
-        market_transactions_repo: MarketTransactionsRepo,
+        market_transactions_repo: MarketSalesRepo,
         coingecko_service: CoingeckoService
     ):
         self.market_transactions_repo = market_transactions_repo

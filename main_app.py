@@ -12,7 +12,7 @@ from app.features.dashboard.dashboard_opens_service import \
     DashboardOpensService
 from app.features.heroes_market.heroes_market_controller import HeroesMarketController
 from db.box_opens_repo import BoxOpensRepo
-from db.box_ import MarketTransactionsRepo
+from db.market_sales_repo import MarketSalesRepo
 
 
 class AppContainer(BaseContainer):
@@ -27,7 +27,7 @@ class AppContainer(BaseContainer):
             mg_client=self.mg_client,
         )
 
-        self.market_transactions_repo = MarketTransactionsRepo(
+        self.market_transactions_repo = MarketSalesRepo(
             mg_client=self.mg_client,
         )
 
