@@ -1,10 +1,13 @@
 from decouple import AutoConfig
 from ekp_sdk import BaseContainer
+from app.features.dashboard.dashboard_controller import DashboardController
+from app.features.dashboard.dashboard_opens_service import DashboardOpensService
 
 from app.features.market.market_controller import MarketController
 from app.features.market.market_history_service import MarketHistoryService
 from app.features.market.market_listings_service import MarketListingsService
 from app.features.market.market_summary_service import MarketSummaryService
+from db.box_opens_repo import BoxOpensRepo
 from db.market_transactions_repo import MarketTransactionsRepo
 
 
@@ -15,6 +18,10 @@ class AppContainer(BaseContainer):
         super().__init__(config)
 
         # DB
+        
+        self.box_opens_repo = BoxOpensRepo(
+            mg_client=self.mg_client,
+        )
 
         self.market_transactions_repo = MarketTransactionsRepo(
             mg_client=self.mg_client,
@@ -40,11 +47,22 @@ class AppContainer(BaseContainer):
             market_summary_service=self.market_summary_service
         )
 
+        # FEATURES - DASHBOARD
+
+        self.dashboard_opens_service = DashboardOpensService(
+            box_opens_repo=self.box_opens_repo
+        )
+
+        self.dashboard_controller = DashboardController(
+            client_service=self.client_service,
+            dashboard_opens_service=self.dashboard_opens_service,
+        )
 
 
 if __name__ == '__main__':
     container = AppContainer()
 
     container.client_service.add_controller(container.market_controller)
+    container.client_service.add_controller(container.dashboard_controller)
 
     container.client_service.listen()
