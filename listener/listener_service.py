@@ -138,23 +138,27 @@ class ListenerService:
     async def process_market_listing(self, listing):
         logging.info(f"🐛 Processing listing: {listing['hash']}")
 
-        current_listings = await self.cache_service.wrap("metabomb_market_boxes", lambda: self.metabomb_api_service.get_market_boxes(), ex=60)
+        floor_listing == None
 
-        box_type_listings = filter(
-            lambda x: x["box_type"] == listing["nftName"], current_listings)
+        if listing["nftType"] == "Hero Box":
+            current_listings = await self.cache_service.wrap("metabomb_market_boxes", lambda: self.metabomb_api_service.get_market_boxes(), ex=60)
 
-        box_type_listings_sorted = sorted(
-            box_type_listings, key=lambda x: x["price_mtb"])
+            box_type_listings = filter(
+                lambda x: x["box_type"] == listing["nftName"], current_listings)
 
-        floor_listing = box_type_listings_sorted[0]
+            box_type_listings_sorted = sorted(
+                box_type_listings, key=lambda x: x["price_mtb"])
 
-        if (listing["price"] < floor_listing["price_mtb"]):
-            await self.notification_service.send_notification(listing, floor_listing)
-            logging.info(f"📣 Listing sent to discord: {listing['hash']}")
-        else:
-            logging.warn(
-                f'⚠️ not notifying listing, price ({int(listing["price"])}) is not lower than floor price ({floor_listing["price_mtb"]})'
-            )
+            floor_listing = box_type_listings_sorted[0]
+
+            if (listing["price"] >= floor_listing["price_mtb"]):
+                logging.warn(
+                    f'⚠️ not notifying listing, price ({int(listing["price"])}) is not lower than floor price ({floor_listing["price_mtb"]})'
+                )
+                return
+
+        await self.notification_service.send_notification(listing, floor_listing)
+        logging.info(f"📣 Listing sent to discord: {listing['hash']}")
 
     __HERO_RARITY_MAP = {
         0: "Common",

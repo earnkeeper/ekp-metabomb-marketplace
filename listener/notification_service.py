@@ -76,6 +76,11 @@ class NotificationService:
 
         if floor_listing is not None:
             fields.append({
+                "name": "Floor MTB",
+                "value": f'$ {format(int(floor_listing["price_mtb"]))}',
+                "inline": True
+            })
+            fields.append({
                 "name": "Floor USD",
                 "value": f'$ {format(round(floor_listing["price_usdc"],2))}',
                 "inline": True
