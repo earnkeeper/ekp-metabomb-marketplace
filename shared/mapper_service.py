@@ -2,15 +2,14 @@ import asyncio
 from datetime import datetime
 from typing import List
 
-from ekp_sdk.services import CacheService, CoingeckoService, BaseMapperService
+from ekp_sdk.services import BaseMapperService, CacheService, CoingeckoService
 
 from shared.domain.hero import Hero
 from shared.domain.hero_box import HeroBox
-
 from shared.domain.market_listing import MarketListing
 from shared.dto.box_market_listing_dto import BoxMarketListingDto
 from shared.dto.hero_dto import HeroDto
-
+from shared.dto.hero_market_listing_dto import HeroMarketListingDto
 
 
 class MapperService(BaseMapperService):
@@ -52,21 +51,19 @@ class MapperService(BaseMapperService):
     def get_hero_box_url(self, box_type):
         return self.HERO_BOX_TYPE_TO_IMAGE_URL[box_type]
 
-
-
-    async def map_box_dtos_to_domain(self, dtos: List[BoxMarketListingDto]) -> List[MarketListing]:
+    async def map_market_box_dtos_to_domain(self, dtos: List[BoxMarketListingDto]) -> List[MarketListing]:
         mtb_rate = await self.get_mtb_rate()
 
         futures = []
 
         for dto in dtos:
-            futures.append(self.map_box_dto_to_domain(dto, mtb_rate))
+            futures.append(self.map_market_box_dto_to_domain(dto, mtb_rate))
 
         listings = await asyncio.gather(*futures)
 
         return listings
 
-    async def map_box_dto_to_domain(self, dto: BoxMarketListingDto, mtb_rate: int = None) -> MarketListing:
+    async def map_market_box_dto_to_domain(self, dto: BoxMarketListingDto, mtb_rate: int = None) -> MarketListing:
         box: HeroBox = {
             'type': dto['box_type'],
             'name': self.HERO_BOX_TYPE_TO_NAME[dto['box_type']]
@@ -83,6 +80,44 @@ class MapperService(BaseMapperService):
             'price_usdc': dto['price'] * mtb_rate,
             'seller': dto['user']['wallet_address'],
             'token_id': dto['token_id'],
+            'updated': datetime.now(),
+        }
+
+        return market_listing
+
+    async def map_market_hero_dtos_to_domain(self, dtos: List[HeroMarketListingDto]) -> List[MarketListing]:
+        mtb_rate = await self.get_mtb_rate()
+
+        futures = []
+
+        for dto in dtos:
+            futures.append(self.map_market_hero_dto_to_domain(dto, mtb_rate))
+
+        listings = await asyncio.gather(*futures)
+
+        return listings
+    
+    async def map_market_hero_dto_to_domain(self, dto: HeroMarketListingDto, mtb_rate: int = None) -> MarketListing:
+        hero: Hero = {
+            'id': dto['id'],
+            'display_id': dto['display_id'],
+            'hero_class': dto['hero_class'],
+            'hero_class_name': self.HERO_CLASS_TO_NAME[dto['hero_class']],
+            'level': dto['level'],
+            'rarity': dto['rarity'],
+            'rarity_name': self.HERO_RARITY_TO_NAME[dto['rarity']],
+        }
+
+        if mtb_rate is None:
+            mtb_rate = await self.get_mtb_rate()
+
+        market_listing: MarketListing = {
+            'hero': hero,
+            'for_sale': dto['for_sale'] == 1,
+            'id': dto['id'],
+            'price_mtb': dto['price'],
+            'price_usdc': dto['price'] * mtb_rate,
+            'token_id': dto['id'],
             'updated': datetime.now(),
         }
 

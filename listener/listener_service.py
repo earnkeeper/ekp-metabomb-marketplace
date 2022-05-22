@@ -157,19 +157,14 @@ class ListenerService:
                 ex=60
             )
 
-            current_listings: List[MarketListing] = await self.mapper_service.map_box_dtos_to_domain(dtos)
+            current_listings: List[MarketListing] = await self.mapper_service.map_market_box_dtos_to_domain(dtos)
 
             filtered_listings = filter(
                 lambda current_listing: current_listing['box']['type'] == new_listing['box']['type'],
                 current_listings
             )
 
-            sorted_listings = sorted(
-                filtered_listings,
-                key=lambda filtered_listing: filtered_listing["price_mtb"]
-            )
-
-            floor_listing = sorted_listings[0]
+            floor_listing = self.__get_floor_listing(filtered_listings)
 
             if (new_listing["price_mtb"] >= floor_listing["price_mtb"]):
                 logging.warn(
@@ -177,6 +172,38 @@ class ListenerService:
                 )
                 return
 
+        if new_listing["hero"] is not None:
+            dtos = await self.cache_service.wrap(
+                "metabomb_market_heroes",
+                lambda: self.metabomb_api_service.get_market_heroes(),
+                ex=60
+            )
+
+            current_listings: List[MarketListing] = await self.mapper_service.map_market_hero_dto_to_domain(dtos)
+
+            filtered_listings = filter(
+                lambda current_listing: (current_listing['hero']['rarity'] == new_listing['hero']['rarity']) and (
+                    current_listing['hero']['level'] == new_listing['hero']['level']),
+                current_listings
+            )
+
+            floor_listing = self.__get_floor_listing(filtered_listings)
+
+            # if (new_listing["price_mtb"] >= floor_listing["price_mtb"]):
+            #     logging.warn(
+            #         f'⚠️ not notifying listing, price ({int(new_listing["price_mtb"])}) is not lower than floor price ({floor_listing["price_mtb"]})'
+            #     )
+            #     return
+
         await self.notification_service.send_notification(new_listing, floor_listing)
 
         logging.info(f"📣 Listing sent to discord: {new_listing['hash']}")
+
+    def __get_floor_listing(self, listings: List[MarketListing]):
+
+        sorted_listings = sorted(
+            listings,
+            key=lambda filtered_listing: filtered_listing["price_mtb"]
+        )
+
+        return sorted_listings[0]

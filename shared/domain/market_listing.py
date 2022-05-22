@@ -14,6 +14,6 @@ class MarketListing(TypedDict):
     listed: NotRequired[int]
     price_mtb: int
     price_usdc: float
-    seller: str
+    seller: NotRequired[str]
     token_id: str
     updated: int
