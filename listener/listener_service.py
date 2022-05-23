@@ -114,7 +114,7 @@ class ListenerService:
             hero = self.mapper_service.map_hero_dto_to_domain(hero_dto)
 
         box: HeroBox = None
-        if box_type:
+        if box_type is not None:
             box = {
                 "type": box_type,
                 "name": self.mapper_service.HERO_BOX_TYPE_TO_NAME[box_type]
