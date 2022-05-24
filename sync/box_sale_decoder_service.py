@@ -1,7 +1,7 @@
+import logging
 import sys
 from ast import literal_eval
 from datetime import datetime
-from logging import Logger
 
 from db.market_sale_model import MarketSaleModel
 from db.market_sales_repo import MarketSalesRepo
@@ -72,10 +72,12 @@ class BoxSaleDecoderService:
         print("✅ Finished hero box sales..")
 
     async def __decode_box_sale(self, tran):
+        hash = tran["hash"]
+        
         if "logs" not in tran:
+            logging.warn(f'⚠️ skipping box decode, no logs: {hash}')
             return None
 
-        hash = tran["hash"]
         timestamp = tran["timeStamp"]
         block_number = tran["blockNumber"]
         date_str = datetime.utcfromtimestamp(timestamp).strftime("%d-%m-%Y")
@@ -113,7 +115,7 @@ class BoxSaleDecoderService:
                 box_type = 2
 
         if box_type is None:
-            Logger.error(f'🚨 could not find box type for sale: {hash}')
+            logging.warn(f'⚠️ could not find box type for sale: {hash}')
 
         distributions.sort()
 

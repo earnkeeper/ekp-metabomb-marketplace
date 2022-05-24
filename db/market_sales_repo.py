@@ -28,7 +28,7 @@ class MarketSalesRepo:
             .limit(limit)
         )
         
-        print(f"⏱  [MarketTransactionsRepo.find_all({len(results)})] {time.perf_counter() - start:0.3f}s")
+        print(f"⏱  [MarketSalesRepo.find_all({len(results)})] {time.perf_counter() - start:0.3f}s")
         
         return results
             
@@ -49,8 +49,8 @@ class MarketSalesRepo:
         start = time.perf_counter()
         
         self.collection.bulk_write(
-            list(map(lambda tran: UpdateOne({"hash": tran["hash"]}, {"$set": tran}, True), models))
+            list(map(lambda model: UpdateOne({"hash": model["hash"]}, {"$set": model}, True), models))
         )
         
-        print(f"⏱  [MarketTransactionsRepo.save({len(models)})] {time.perf_counter() - start:0.3f}s")
+        print(f"⏱  [MarketSalesRepo.save({len(models)})] {time.perf_counter() - start:0.3f}s")
         

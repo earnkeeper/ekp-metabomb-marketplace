@@ -1,5 +1,6 @@
 from ast import literal_eval
 from datetime import datetime
+import logging
 from typing import List
 
 from db.market_sale_model import MarketSaleModel
@@ -82,10 +83,11 @@ class HeroSaleDecoderService:
         print("✅ Finished hero sales..")
 
     async def __decode_hero_sale(self, tran, current_listings_map):
+        hash = tran["hash"]
         if "logs" not in tran:
+            logging.warn(f'⚠️ skipping hero decode, no logs: {hash}')
             return None
 
-        hash = tran["hash"]
         timestamp = tran["timeStamp"]
         block_number = tran["blockNumber"]
         date_str = datetime.utcfromtimestamp(timestamp).strftime("%d-%m-%Y")
@@ -97,7 +99,6 @@ class HeroSaleDecoderService:
         mtb_usd_price = await self.cache_service.wrap(mtb_cache_key, lambda: self.coingecko_service.get_historic_price("metabomb", date_str, "usd"))
 
         distributions = []
-        name = None
         price = 0
         seller = None
         token_id = 0
