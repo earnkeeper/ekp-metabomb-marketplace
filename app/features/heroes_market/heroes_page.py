@@ -6,7 +6,7 @@ from app.utils.page_title import page_title
 def heroes_page(HISTORY_COLLECTION_NAME):
     return Container(
         children=[
-            page_title('shopping-cart', 'Boxes Market'),
+            page_title('shopping-cart', 'Heroes Market'),
             # summary_row(SUMMARY_COLLECTION_NAME),
             Tabs(
                 [
