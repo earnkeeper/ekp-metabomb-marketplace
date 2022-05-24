@@ -38,7 +38,7 @@ class AppContainer(BaseContainer):
         )
 
         self.market_history_service = BoxesHistoryService(
-            market_transactions_repo=self.market_transactions_repo,
+            market_sales_repo=self.market_transactions_repo,
             coingecko_service=self.coingecko_service
         )
 
