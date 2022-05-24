@@ -7,7 +7,10 @@ from db.market_sales_repo import MarketSalesRepo
 from ekp_sdk.db import ContractTransactionsRepo
 from ekp_sdk.services import CacheService, CoingeckoService
 from shared.domain.market_listing import MarketListing
+from shared.mapper_service import MapperService
 from web3 import Web3
+
+from shared.metabomb_api_service import MetabombApiService
 
 HERO_CONTRACT_ADDRESS = "0x05f0d89931eb06d4596af209de4a9779cef73cde"
 MTB_CONTRACT_ADDRESS = "0x2bad52989afc714c653da8e5c47bf794a8f7b11d"
@@ -19,13 +22,17 @@ class HeroSaleDecoderService:
         cache_service: CacheService,
         coingecko_service: CoingeckoService,
         contract_transactions_repo: ContractTransactionsRepo,
+        mapper_service: MapperService,
         market_sales_repo: MarketSalesRepo,
+        metabomb_api_service: MetabombApiService,
     ):
         self.cache_service = cache_service
         self.coingecko_service = coingecko_service
         self.contract_transactions_repo = contract_transactions_repo
+        self.mapper_service = mapper_service
         self.market_sales_repo = market_sales_repo
-
+        self.metabomb_api_service = metabomb_api_service
+        
         self.page_size = 2000
 
     async def decode_hero_sales(self):
@@ -37,7 +44,7 @@ class HeroSaleDecoderService:
             ex=60
         )
 
-        current_listings: List[MarketListing] = await self.mapper_service.map_market_hero_dto_to_domain(dtos)
+        current_listings: List[MarketListing] = await self.mapper_service.map_market_hero_dtos_to_domain(dtos)
 
         current_listings_map = {}
 
@@ -48,7 +55,7 @@ class HeroSaleDecoderService:
             next_trans = self.contract_transactions_repo.find_since_block_number(
                 latest_block,
                 self.page_size,
-                "0xc010adef"
+                "0xc010adef",
             )
 
             if not len(next_trans):
@@ -71,6 +78,8 @@ class HeroSaleDecoderService:
 
             if len(next_trans) < self.page_size:
                 break
+            
+        print("✅ Finished hero sales..")
 
     async def __decode_hero_sale(self, tran, current_listings_map):
         if "logs" not in tran:
@@ -122,6 +131,7 @@ class HeroSaleDecoderService:
             "fees": float(fees),
             "feesUsd": float(fees) * mtb_usd_price,
             "hash": hash,
+            "hero": hero,
             "nftType": "hero",
             "price": float(price),
             "priceUsd": float(price) * mtb_usd_price,

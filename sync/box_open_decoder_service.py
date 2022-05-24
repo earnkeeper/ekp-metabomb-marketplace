@@ -63,7 +63,7 @@ class BoxOpenDecoderService:
             if len(next_trans) < self.page_size:
                 break
 
-    print("✅ Finished decoding box opens..")
+        print("✅ Finished decoding box opens..")
 
     def __decode_model(self, tran, heroes_map):
         

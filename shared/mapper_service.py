@@ -103,7 +103,6 @@ class MapperService(BaseMapperService):
         return listings
     
     async def map_market_hero_dto_to_domain(self, dto: HeroMarketListingDto, mtb_rate: int = None) -> MarketListing:
-        print(dto)
         hero: Hero = {
             'id': dto['id'],
             'display_id': dto['display_id'],

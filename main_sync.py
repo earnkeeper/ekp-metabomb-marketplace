@@ -57,12 +57,13 @@ class AppContainer(BaseContainer):
             mapper_service=self.mapper_service,
         )
 
-
         self.hero_sale_decoder_service = HeroSaleDecoderService(
             cache_service=self.cache_service,
             coingecko_service=self.coingecko_service,
             contract_transactions_repo=self.contract_transactions_repo,
             market_sales_repo=self.market_transactions_repo,
+            mapper_service=self.mapper_service,
+            metabomb_api_service=self.metabomb_api_service
         )
 
 

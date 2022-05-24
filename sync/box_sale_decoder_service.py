@@ -45,7 +45,7 @@ class BoxSaleDecoderService:
             next_trans = self.contract_transactions_repo.find_since_block_number(
                 latest_block,
                 self.page_size,
-                "0x38edf988"
+                "0x38edf988",
             )
 
             if not len(next_trans):
@@ -69,7 +69,7 @@ class BoxSaleDecoderService:
             if len(next_trans) < self.page_size:
                 break
 
-        print("✅ Finished decoding market transactions..")
+        print("✅ Finished hero box sales..")
 
     async def __decode_box_sale(self, tran):
         if "logs" not in tran:
