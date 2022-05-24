@@ -11,6 +11,7 @@ from app.features.dashboard.dashboard_controller import DashboardController
 from app.features.dashboard.dashboard_opens_service import \
     DashboardOpensService
 from app.features.heroes_market.heroes_market_controller import HeroesMarketController
+from app.features.heroes_market.history.heroes_history_service import HeroesHistoryService
 from db.box_opens_repo import BoxOpensRepo
 from db.market_sales_repo import MarketSalesRepo
 
@@ -27,7 +28,7 @@ class AppContainer(BaseContainer):
             mg_client=self.mg_client,
         )
 
-        self.market_transactions_repo = MarketSalesRepo(
+        self.market_sales_repo = MarketSalesRepo(
             mg_client=self.mg_client,
         )
 
@@ -38,7 +39,7 @@ class AppContainer(BaseContainer):
         )
 
         self.market_history_service = BoxesHistoryService(
-            market_sales_repo=self.market_transactions_repo,
+            market_sales_repo=self.market_sales_repo,
             coingecko_service=self.coingecko_service
         )
 
@@ -53,9 +54,14 @@ class AppContainer(BaseContainer):
 
         # FEATURES - HEROES MARKET
 
+        self.heroes_history_service = HeroesHistoryService(
+            market_sales_repo=self.market_sales_repo,
+            coingecko_service=self.coingecko_service
+        )
 
         self.heroes_market_controller = HeroesMarketController(
             client_service=self.client_service,
+            heroes_history_service=self.heroes_history_service
         )
         # FEATURES - DASHBOARD
 
