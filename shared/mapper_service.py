@@ -51,6 +51,9 @@ class MapperService(BaseMapperService):
     def get_hero_box_url(self, box_type):
         return self.HERO_BOX_TYPE_TO_IMAGE_URL[box_type]
 
+    def map_hero_name(self, rarity_name, level):
+        return f'{rarity_name} Lv {int(level) + 1} Hero'
+    
     async def map_market_box_dtos_to_domain(self, dtos: List[BoxMarketListingDto]) -> List[MarketListing]:
         mtb_rate = await self.get_mtb_rate()
 

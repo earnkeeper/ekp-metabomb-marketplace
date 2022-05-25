@@ -12,8 +12,11 @@ from app.features.dashboard.dashboard_opens_service import \
     DashboardOpensService
 from app.features.heroes_market.heroes_market_controller import HeroesMarketController
 from app.features.heroes_market.history.heroes_history_service import HeroesHistoryService
+from app.features.heroes_market.listings.heroes_listings_service import HeroListingsService
 from db.box_opens_repo import BoxOpensRepo
 from db.market_sales_repo import MarketSalesRepo
+from shared.mapper_service import MapperService
+from shared.metabomb_api_service import MetabombApiService
 
 
 class AppContainer(BaseContainer):
@@ -21,6 +24,13 @@ class AppContainer(BaseContainer):
         config = AutoConfig(".env")
 
         super().__init__(config)
+
+        self.metabomb_api_service = MetabombApiService()
+
+        self.mapper_service = MapperService(
+            cache_service=self.cache_service,
+            coingecko_service=self.coingecko_service,
+        )
 
         # DB
 
@@ -34,11 +44,11 @@ class AppContainer(BaseContainer):
 
         # FEATURES - BOXES MARKET
 
-        self.market_listings_service = BoxesListingsService(
+        self.boxes_listings_service = BoxesListingsService(
             coingecko_service=self.coingecko_service
         )
 
-        self.market_history_service = BoxesHistoryService(
+        self.boxes_history_service = BoxesHistoryService(
             market_sales_repo=self.market_sales_repo,
             coingecko_service=self.coingecko_service
         )
@@ -47,22 +57,31 @@ class AppContainer(BaseContainer):
 
         self.boxes_market_controller = BoxesMarketController(
             client_service=self.client_service,
-            boxes_listings_service=self.market_listings_service,
-            boxes_history_service=self.market_history_service,
+            boxes_listings_service=self.boxes_listings_service,
+            boxes_history_service=self.boxes_history_service,
             boxes_summary_service=self.market_summary_service
         )
 
         # FEATURES - HEROES MARKET
 
+        self.heroes_listings_service = HeroListingsService(
+            coingecko_service=self.coingecko_service,
+            metabomb_api_service=self.metabomb_api_service,
+            mapper_service=self.mapper_service            
+        )
+
         self.heroes_history_service = HeroesHistoryService(
             market_sales_repo=self.market_sales_repo,
-            coingecko_service=self.coingecko_service
+            coingecko_service=self.coingecko_service,
+            mapper_service=self.mapper_service
         )
 
         self.heroes_market_controller = HeroesMarketController(
             client_service=self.client_service,
-            heroes_history_service=self.heroes_history_service
+            heroes_history_service=self.heroes_history_service,
+            heroes_listings_service=self.heroes_listings_service,
         )
+        
         # FEATURES - DASHBOARD
 
         self.dashboard_opens_service = DashboardOpensService(

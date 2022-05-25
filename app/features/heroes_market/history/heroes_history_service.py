@@ -1,15 +1,19 @@
 from db.market_sales_repo import MarketSalesRepo
 from ekp_sdk.services import CoingeckoService
 
+from shared.mapper_service import MapperService
+
 
 class HeroesHistoryService:
     def __init__(
         self,
         market_sales_repo: MarketSalesRepo,
-        coingecko_service: CoingeckoService
+        coingecko_service: CoingeckoService,
+        mapper_service: MapperService
     ):
         self.market_sales_repo = market_sales_repo
         self.coingecko_service = coingecko_service
+        self.mapper_service = mapper_service
 
     async def get_documents(self, currency):
         rate = await self.coingecko_service.get_latest_price('usd-coin', currency["id"])
@@ -28,7 +32,7 @@ class HeroesHistoryService:
         hero = model['hero']['hero']
         rarity = hero['rarity_name']
         level = hero['level']
-        name = f'{rarity} Lv {level + 1} Hero'
+        name = self.mapper_service.map_hero_name(rarity, level)
         
         return {
             "bnbCost": model["bnbCost"],

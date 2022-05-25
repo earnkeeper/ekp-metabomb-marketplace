@@ -22,8 +22,8 @@ def table_row(HISTORY_COLLECTION_NAME):
         default_sort_field_id="timestamp",
         default_sort_asc=False,
         filters=[
-            {"columnId": "rarity"},
-            {"columnId": "level"},
+            {"columnId": "rarity", "icon": "cil-spa"},
+            {"columnId": "level", "icon": "cil-shield-alt"},
         ],
         columns=[
             Column(

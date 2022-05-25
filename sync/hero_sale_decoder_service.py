@@ -122,6 +122,10 @@ class HeroSaleDecoderService:
         price = sum(distributions)
         fees = price - distributions[-1]
 
+        if str(token_id) not in current_listings_map:
+            logging.warn(f'⚠️ skipping hero decode, no hero in current listings: {hash}')
+            return None
+        
         hero = current_listings_map[str(token_id)]
 
         sale: MarketSaleModel = {
