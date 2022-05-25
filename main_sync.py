@@ -42,7 +42,6 @@ class AppContainer(BaseContainer):
         # Services
         
         self.metabomb_api_service = MetabombApiService(
-            coingecko_service=self.coingecko_service
         )
 
         self.box_open_decoder_service = BoxOpenDecoderService(
