@@ -7,14 +7,9 @@ from db.market_sale_model import MarketSaleModel
 from db.market_sales_repo import MarketSalesRepo
 from ekp_sdk.db import ContractTransactionsRepo
 from ekp_sdk.services import CacheService, CoingeckoService
+from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, MTB_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS
 from shared.mapper_service import MapperService
 from web3 import Web3
-
-COMMON_BOX_CONTRACT_ADDRESS = "0x1f36bef063ee6fcefeca070159d51a3b36bc68d6"
-PREMIUM_BOX_CONTRACT_ADDRESS = "0x2076626437c3bb9273998a5e4f96438abe467f1c"
-ULTRA_BOX_CONTRACT_ADDRESS = "0x9341faed0b86208c64ae6f9d62031b1f8a203240"
-
-MTB_CONTRACT_ADDRESS = "0x2bad52989afc714c653da8e5c47bf794a8f7b11d"
 
 TOKEN_TRANSFER_TOPIC = "0xd61e22991e1ab43a17e1ba8ddb78b72a4ffc0d7f455c8536073a6b8a9ffc0c4e"
 

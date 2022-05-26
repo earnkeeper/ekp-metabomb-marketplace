@@ -2,11 +2,8 @@ from db.box_opens_repo import BoxOpensRepo
 from ekp_sdk.db import ContractTransactionsRepo
 from shared.metabomb_api_service import MetabombApiService
 from ast import literal_eval
+from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS
 
-COMMON_BOX_CONTRACT_ADDRESS = "0x1f36bef063ee6fcefeca070159d51a3b36bc68d6"
-PREMIUM_BOX_CONTRACT_ADDRESS = "0x2076626437c3bb9273998a5e4f96438abe467f1c"
-ULTRA_BOX_CONTRACT_ADDRESS = "0x9341faed0b86208c64ae6f9d62031b1f8a203240"
-HERO_CONTRACT_ADDRESS = "0x05f0d89931eb06d4596af209de4a9779cef73cde"
 TOKEN_TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
 
 

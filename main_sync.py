@@ -7,9 +7,10 @@ from db.box_opens_repo import BoxOpensRepo
 
 from db.market_sales_repo import MarketSalesRepo
 from db.state_repo import StateRepo
+from shared.constants import HERO_CONTRACT_ADDRESS, MTB_CONTRACT_ADDRESS
 from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
-from sync.box_open_decoder_service import BoxOpenDecoderService
+from sync.box_open_decoder_service import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS, BoxOpenDecoderService
 from sync.box_sale_decoder_service import BoxSaleDecoderService
 from sync.hero_sale_decoder_service import HeroSaleDecoderService
 
@@ -75,18 +76,18 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
 
     contract_addresses = [
-        "0x05f0d89931eb06d4596af209de4a9779cef73cde", # MetaBombHero
-        '0x1f36bef063ee6fcefeca070159d51a3b36bc68d6', # Common Box
-        '0x2076626437c3bb9273998a5e4f96438abe467f1c', # Premium Box
-        '0x9341faed0b86208c64ae6f9d62031b1f8a203240', # Ultra Box
+        HERO_CONTRACT_ADDRESS,
+        COMMON_BOX_CONTRACT_ADDRESS,
+        PREMIUM_BOX_CONTRACT_ADDRESS,
+        ULTRA_BOX_CONTRACT_ADDRESS,
     ]
 
     log_addresses = [
-        "0x05f0d89931eb06d4596af209de4a9779cef73cde", # MetaBombHero
-        '0x1f36bef063ee6fcefeca070159d51a3b36bc68d6', # Common Box
-        '0x2076626437c3bb9273998a5e4f96438abe467f1c', # Premium Box
-        '0x9341faed0b86208c64ae6f9d62031b1f8a203240', # Ultra Box
-        '0x2bad52989afc714c653da8e5c47bf794a8f7b11d', # MetaBombToken
+        HERO_CONTRACT_ADDRESS,
+        COMMON_BOX_CONTRACT_ADDRESS,
+        PREMIUM_BOX_CONTRACT_ADDRESS,
+        ULTRA_BOX_CONTRACT_ADDRESS,
+        MTB_CONTRACT_ADDRESS
     ]
 
     futures = []

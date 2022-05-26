@@ -7,14 +7,12 @@ from db.market_sale_model import MarketSaleModel
 from db.market_sales_repo import MarketSalesRepo
 from ekp_sdk.db import ContractTransactionsRepo
 from ekp_sdk.services import CacheService, CoingeckoService
+from shared.constants import HERO_CONTRACT_ADDRESS, MTB_CONTRACT_ADDRESS
 from shared.domain.market_listing import MarketListing
 from shared.mapper_service import MapperService
 from web3 import Web3
 
 from shared.metabomb_api_service import MetabombApiService
-
-HERO_CONTRACT_ADDRESS = "0x05f0d89931eb06d4596af209de4a9779cef73cde"
-MTB_CONTRACT_ADDRESS = "0x2bad52989afc714c653da8e5c47bf794a8f7b11d"
 
 
 class HeroSaleDecoderService:

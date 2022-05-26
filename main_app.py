@@ -13,6 +13,10 @@ from app.features.dashboard.dashboard_opens_service import \
 from app.features.heroes_market.heroes_market_controller import HeroesMarketController
 from app.features.heroes_market.history.heroes_history_service import HeroesHistoryService
 from app.features.heroes_market.listings.heroes_listings_service import HeroListingsService
+from app.features.inventory.player.inventory_controller import InventoryController
+from app.features.inventory.player.inventory_service import InventoryService
+from app.features.inventory.players.players_controller import InventoryPlayersController
+from app.features.inventory.players.players_service import InventoryPlayersService
 from db.box_opens_repo import BoxOpensRepo
 from db.market_sales_repo import MarketSalesRepo
 from shared.mapper_service import MapperService
@@ -93,6 +97,35 @@ class AppContainer(BaseContainer):
             dashboard_opens_service=self.dashboard_opens_service,
         )
 
+        # FEATURES - INVENTORY - PLAYERS
+
+        self.inventory_players_service = InventoryPlayersService(
+            moralis_api_service = self.moralis_api_service,
+            cache_service=self.cache_service,
+            metabomb_api_service=self.metabomb_api_service,
+            coingecko_service=self.coingecko_service,
+            mapper_service=self.mapper_service
+        )
+
+        self.inventory_players_controller = InventoryPlayersController(
+            client_service=self.client_service,
+            inventory_players_service=self.inventory_players_service
+        )
+
+        # FEATURES - INVENTORY
+
+        self.inventory_service = InventoryService(
+            moralis_api_service = self.moralis_api_service,
+            cache_service=self.cache_service,
+            metabomb_api_service=self.metabomb_api_service,
+            coingecko_service=self.coingecko_service,
+            mapper_service=self.mapper_service
+        )
+
+        self.inventory_players_controller = InventoryController(
+            client_service=self.client_service,
+            inventory_service=self.inventory_service
+        )
 
 if __name__ == '__main__':
     container = AppContainer()
@@ -100,5 +133,6 @@ if __name__ == '__main__':
     container.client_service.add_controller(container.boxes_market_controller)
     container.client_service.add_controller(container.dashboard_controller)
     container.client_service.add_controller(container.heroes_market_controller)
+    container.client_service.add_controller(container.inventory_players_controller)
 
     container.client_service.listen()

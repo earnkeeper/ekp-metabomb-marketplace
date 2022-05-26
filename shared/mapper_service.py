@@ -104,7 +104,44 @@ class MapperService(BaseMapperService):
         listings = await asyncio.gather(*futures)
 
         return listings
+
+    async def get_hero_map(self, hero_list):
+        hero_map = {}
+        
+        for hero in hero_list:
+            token_id = str(hero["id"])
+            hero_map[token_id] = hero
+            
+        return hero_map
     
+    async def get_hero_price_map(self, hero_list):
+        hero_price_map = {}
+        
+        for hero in hero_list:
+            if not hero["for_sale"]:
+                continue
+            
+            rarity = str(hero["rarity"])
+            level = str(hero["level"])
+            price = int(hero["price"])
+            
+            if rarity not in hero_price_map:
+                hero_price_map[rarity] = {}
+            
+            if (level not in hero_price_map[rarity]) or (hero_price_map[rarity][level] > price):
+                hero_price_map[rarity][level] = price
+                
+        return hero_price_map    
+
+    def get_hero_price(self, rarity, level, hero_price_map):
+        if str(rarity) not in hero_price_map:
+            return None
+
+        if str(level) not in hero_price_map[str(rarity)]:
+            return None
+
+        return hero_price_map[str(rarity)][str(level)]
+
     async def map_market_hero_dto_to_domain(self, dto: HeroMarketListingDto, mtb_rate: int = None) -> MarketListing:
         hero: Hero = {
             'id': dto['id'],
