@@ -13,6 +13,7 @@ from app.features.dashboard.dashboard_opens_service import \
 from app.features.heroes_market.heroes_market_controller import HeroesMarketController
 from app.features.heroes_market.history.heroes_history_service import HeroesHistoryService
 from app.features.heroes_market.listings.heroes_listings_service import HeroListingsService
+from app.features.heroes_market.heroes_summary_service import HeroesSummaryService
 from db.box_opens_repo import BoxOpensRepo
 from db.market_sales_repo import MarketSalesRepo
 from shared.mapper_service import MapperService
@@ -76,10 +77,13 @@ class AppContainer(BaseContainer):
             mapper_service=self.mapper_service
         )
 
+        self.heroes_summary_service = HeroesSummaryService()
+
         self.heroes_market_controller = HeroesMarketController(
             client_service=self.client_service,
             heroes_history_service=self.heroes_history_service,
             heroes_listings_service=self.heroes_listings_service,
+            heroes_summary_service=self.heroes_summary_service
         )
         
         # FEATURES - DASHBOARD
