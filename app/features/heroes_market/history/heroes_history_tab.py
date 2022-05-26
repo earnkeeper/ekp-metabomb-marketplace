@@ -6,7 +6,7 @@ from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         format_template, is_busy, switch_case)
 
 
-def history_page(HISTORY_COLLECTION_NAME):
+def history_tab(HISTORY_COLLECTION_NAME):
     return Container([
         Paragraphs(["Browse the last 1000 sales from the market place right here.",
                    "Check out our discord for real time notifications of new listings"]),
@@ -22,7 +22,8 @@ def table_row(HISTORY_COLLECTION_NAME):
         default_sort_field_id="timestamp",
         default_sort_asc=False,
         filters=[
-            {"columnId": "item", "icon": "cil-spa"},
+            {"columnId": "rarity", "icon": "cil-spa"},
+            {"columnId": "level", "icon": "cil-shield-alt"},
         ],
         columns=[
             Column(
@@ -50,6 +51,14 @@ def table_row(HISTORY_COLLECTION_NAME):
                 id="type",
                 omit=True,
                 format=format_currency("$.priceFiat", "$.fiatSymbol")
+            ),
+            Column(
+                id="rarity",
+                omit=True,
+            ),
+            Column(
+                id="level",
+                omit=True,
             ),
             Column(
                 id="spacer",
@@ -90,7 +99,9 @@ def name_cell():
                 class_name="my-auto col-auto pr-0",
                 children=[
                     Image(
-                        src=switch_case("$.name", HERO_BOX_NAME_IMAGE),
+                        src=format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+                            "display_id": '$.display_id'
+                        }),
                         style={"height": "38px"}
                     )
                 ]

@@ -20,12 +20,14 @@ class DashboardController:
             sid,
             'box',
             'Dashboard',
-            self.path
+            self.path,
+            order=100,
+            id="metabomb_dashboard"            
         )
         await self.client_service.emit_page(
             sid,
             self.path,
-            page(OPENS_COLLECTION_NAME)
+            page(OPENS_COLLECTION_NAME),
         )
 
     async def on_client_state_changed(self, sid, event):

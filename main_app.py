@@ -1,14 +1,22 @@
 from decouple import AutoConfig
 from ekp_sdk import BaseContainer
-from app.features.dashboard.dashboard_controller import DashboardController
-from app.features.dashboard.dashboard_opens_service import DashboardOpensService
 
-from app.features.market.market_controller import MarketController
-from app.features.market.boxes.history.boxes_history_service import BoxesHistoryService
-from app.features.market.boxes.listings.boxes_listings_service import BoxesListingsService
-from app.features.market.boxes.boxes_summary_service import BoxesSummaryService
+from app.features.boxes_market.boxes_summary_service import BoxesSummaryService
+from app.features.boxes_market.history.boxes_history_service import \
+    BoxesHistoryService
+from app.features.boxes_market.listings.boxes_listings_service import \
+    BoxesListingsService
+from app.features.boxes_market.boxes_market_controller import BoxesMarketController
+from app.features.dashboard.dashboard_controller import DashboardController
+from app.features.dashboard.dashboard_opens_service import \
+    DashboardOpensService
+from app.features.heroes_market.heroes_market_controller import HeroesMarketController
+from app.features.heroes_market.history.heroes_history_service import HeroesHistoryService
+from app.features.heroes_market.listings.heroes_listings_service import HeroListingsService
 from db.box_opens_repo import BoxOpensRepo
-from db.market_transactions_repo import MarketTransactionsRepo
+from db.market_sales_repo import MarketSalesRepo
+from shared.mapper_service import MapperService
+from shared.metabomb_api_service import MetabombApiService
 
 
 class AppContainer(BaseContainer):
@@ -17,36 +25,63 @@ class AppContainer(BaseContainer):
 
         super().__init__(config)
 
+        self.metabomb_api_service = MetabombApiService()
+
+        self.mapper_service = MapperService(
+            cache_service=self.cache_service,
+            coingecko_service=self.coingecko_service,
+        )
+
         # DB
-        
+
         self.box_opens_repo = BoxOpensRepo(
             mg_client=self.mg_client,
         )
 
-        self.market_transactions_repo = MarketTransactionsRepo(
+        self.market_sales_repo = MarketSalesRepo(
             mg_client=self.mg_client,
         )
 
-        # FEATURES - MARKET
+        # FEATURES - BOXES MARKET
 
-        self.market_listings_service = BoxesListingsService(
+        self.boxes_listings_service = BoxesListingsService(
             coingecko_service=self.coingecko_service
         )
 
-        self.market_history_service = BoxesHistoryService(
-            market_transactions_repo=self.market_transactions_repo,
+        self.boxes_history_service = BoxesHistoryService(
+            market_sales_repo=self.market_sales_repo,
             coingecko_service=self.coingecko_service
         )
 
         self.market_summary_service = BoxesSummaryService()
 
-        self.market_controller = MarketController(
+        self.boxes_market_controller = BoxesMarketController(
             client_service=self.client_service,
-            boxes_listings_service=self.market_listings_service,
-            boxes_history_service=self.market_history_service,
+            boxes_listings_service=self.boxes_listings_service,
+            boxes_history_service=self.boxes_history_service,
             boxes_summary_service=self.market_summary_service
         )
 
+        # FEATURES - HEROES MARKET
+
+        self.heroes_listings_service = HeroListingsService(
+            coingecko_service=self.coingecko_service,
+            metabomb_api_service=self.metabomb_api_service,
+            mapper_service=self.mapper_service            
+        )
+
+        self.heroes_history_service = HeroesHistoryService(
+            market_sales_repo=self.market_sales_repo,
+            coingecko_service=self.coingecko_service,
+            mapper_service=self.mapper_service
+        )
+
+        self.heroes_market_controller = HeroesMarketController(
+            client_service=self.client_service,
+            heroes_history_service=self.heroes_history_service,
+            heroes_listings_service=self.heroes_listings_service,
+        )
+        
         # FEATURES - DASHBOARD
 
         self.dashboard_opens_service = DashboardOpensService(
@@ -62,7 +97,8 @@ class AppContainer(BaseContainer):
 if __name__ == '__main__':
     container = AppContainer()
 
-    container.client_service.add_controller(container.market_controller)
+    container.client_service.add_controller(container.boxes_market_controller)
     container.client_service.add_controller(container.dashboard_controller)
+    container.client_service.add_controller(container.heroes_market_controller)
 
     container.client_service.listen()

@@ -4,7 +4,7 @@
   "name": "Marketplace",
   "github": "https://github.com/earnkeeper/ekp-metabomb-marketplace",
   "image": "/static/market.jpg",
-  "mainPage": "marketplace",
+  "mainPage": "heroes",
   "description": "Preview the Enhanced Metabomb Marketplace before official release..",
   "features": ["Enhanced Marketplace"]
 }

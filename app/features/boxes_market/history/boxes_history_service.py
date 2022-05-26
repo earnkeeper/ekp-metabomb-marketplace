@@ -1,20 +1,20 @@
-from db.market_transactions_repo import MarketTransactionsRepo
+from db.market_sales_repo import MarketSalesRepo
 from ekp_sdk.services import CoingeckoService
 
 
 class BoxesHistoryService:
     def __init__(
         self,
-        market_transactions_repo: MarketTransactionsRepo,
+        market_sales_repo: MarketSalesRepo,
         coingecko_service: CoingeckoService
     ):
-        self.market_transactions_repo = market_transactions_repo
+        self.market_sales_repo = market_sales_repo
         self.coingecko_service = coingecko_service
 
     async def get_documents(self, currency):
         rate = await self.coingecko_service.get_latest_price('usd-coin', currency["id"])
 
-        models = self.market_transactions_repo.find_all(1000)
+        models = self.market_sales_repo.find_all('box', 1000)
 
         documents = []
 
@@ -32,7 +32,7 @@ class BoxesHistoryService:
             "buyer": model["buyer"],
             "fiatSymbol": currency["symbol"],
             "hash": model["hash"],
-            "name": model["nftName"],
+            "name": model["box"]["name"],
             "type": model["nftType"],
             "price": model["price"],
             "priceFiat": model["priceUsd"] * rate,

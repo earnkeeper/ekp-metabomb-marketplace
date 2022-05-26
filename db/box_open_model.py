@@ -1,7 +1,7 @@
 from typing import TypedDict
 
 
-class BoxOpen(TypedDict):
+class BoxOpenModel(TypedDict):
     address: str
     block_number: int
     box_token_id: int

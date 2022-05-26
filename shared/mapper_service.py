@@ -51,6 +51,9 @@ class MapperService(BaseMapperService):
     def get_hero_box_url(self, box_type):
         return self.HERO_BOX_TYPE_TO_IMAGE_URL[box_type]
 
+    def map_hero_name(self, rarity_name, level):
+        return f'{rarity_name} Lv {int(level) + 1} Hero'
+    
     async def map_market_box_dtos_to_domain(self, dtos: List[BoxMarketListingDto]) -> List[MarketListing]:
         mtb_rate = await self.get_mtb_rate()
 
@@ -63,11 +66,16 @@ class MapperService(BaseMapperService):
 
         return listings
 
-    async def map_market_box_dto_to_domain(self, dto: BoxMarketListingDto, mtb_rate: int = None) -> MarketListing:
+    def map_box_type_to_domain(self, box_type: int) -> HeroBox:
         box: HeroBox = {
-            'type': dto['box_type'],
-            'name': self.HERO_BOX_TYPE_TO_NAME[dto['box_type']]
+            'type': box_type,
+            'name': self.HERO_BOX_TYPE_TO_NAME[box_type]
         }
+        
+        return box
+        
+    async def map_market_box_dto_to_domain(self, dto: BoxMarketListingDto, mtb_rate: int = None) -> MarketListing:
+        box = self.map_box_type_to_domain[dto["box_type"]]
 
         if mtb_rate is None:
             mtb_rate = await self.get_mtb_rate()

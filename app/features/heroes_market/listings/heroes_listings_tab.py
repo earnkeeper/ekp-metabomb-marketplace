@@ -6,7 +6,7 @@ from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         format_template, is_busy, switch_case)
 
 
-def listings_page(LISTINGS_COLLECTION_NAME):
+def heroes_listings_tab(LISTINGS_COLLECTION_NAME):
     return Container(
         children=[
             Paragraphs(
@@ -28,30 +28,19 @@ def market_row(LISTINGS_COLLECTION_NAME):
         default_sort_field_id="price",
         pagination_per_page=18,
         disable_list_view=True,
-        search_hint="Search by token id, seller address or token name...",
+        search_hint="Search by token id or token name...",
         filters=[
-            {"columnId": "name", "icon": "cil-spa"},
+            {"columnId": "rarity_name", "icon": "cil-spa"},
+            {"columnId": "level", "icon": "cil-shield-alt"},
         ],
         columns=[
-            Column(
-                id="id",
-                sortable=True,
-                width="100px",
-            ),
             Column(
                 id="tokenId",
                 title="Token",
                 sortable=True,
                 searchable=True,
-                width="100px",
+                width="80px",
                 cell=__id_cell,
-            ),
-            Column(
-                id="seller",
-                sortable=True,
-                searchable=True,
-                width="140px",
-                cell=__seller_cell
             ),
             Column(
                 id="name",
@@ -83,6 +72,15 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 right=True,
                 sortable=True,
                 cell=__avg_price_cell
+            ),
+            Column(
+                id="rarity_name",
+                omit=True,
+                title="Rarity"
+            ),
+            Column(
+                id="level",
+                omit=True
             ),
             Column(
                 id="spacer",
@@ -135,5 +133,10 @@ def image_text_cell(src, text):
     ])
 
 
-__name_cell = image_text_cell(switch_case(
-    "$.name", HERO_BOX_NAME_IMAGE), "$.name")
+__name_cell = image_text_cell(
+
+    format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+        "display_id": '$.display_id'
+    }),
+    "$.name"
+)
