@@ -1,7 +1,10 @@
+from pprint import pprint
+
 from ekp_sdk.services import ClientService
 from ekp_sdk.util import client_currency, client_path
 
 from app.features.heroes_market.heroes_page import heroes_page
+from app.features.heroes_market.heroes_summary_service import HeroesSummaryService
 from app.features.heroes_market.history.heroes_history_service import HeroesHistoryService
 from app.features.heroes_market.listings.heroes_listings_service import HeroListingsService
 
@@ -12,14 +15,16 @@ HERO_SUMMARY_COLLECTION_NAME = "metabomb_hero_summary"
 
 class HeroesMarketController:
     def __init__(
-        self,
-        client_service: ClientService,
-        heroes_history_service: HeroesHistoryService,
-        heroes_listings_service: HeroListingsService,
+            self,
+            client_service: ClientService,
+            heroes_history_service: HeroesHistoryService,
+            heroes_listings_service: HeroListingsService,
+            heroes_summary_service: HeroesSummaryService,
     ):
         self.client_service = client_service
         self.heroes_history_service = heroes_history_service
         self.heroes_listings_service = heroes_listings_service
+        self.heroes_summary_service = heroes_summary_service
         self.path = 'heroes'
         self.short_link = 'metabomb-hero-market'
 
@@ -38,7 +43,8 @@ class HeroesMarketController:
             self.path,
             heroes_page(
                 HERO_HISTORY_COLLECTION_NAME,
-                HERO_LISTINGS_COLLECTION_NAME
+                HERO_LISTINGS_COLLECTION_NAME,
+                HERO_SUMMARY_COLLECTION_NAME
             )
         )
 
@@ -50,9 +56,9 @@ class HeroesMarketController:
 
         await self.client_service.emit_busy(sid, HERO_HISTORY_COLLECTION_NAME)
         await self.client_service.emit_busy(sid, HERO_LISTINGS_COLLECTION_NAME)
+        await self.client_service.emit_busy(sid, HERO_SUMMARY_COLLECTION_NAME)
 
         currency = client_currency(event)
-
 
         # History
         history_documents = await self.heroes_history_service.get_documents(currency)
@@ -66,6 +72,7 @@ class HeroesMarketController:
         # Listings
 
         listing_documents = await self.heroes_listings_service.get_documents(currency, history_documents)
+        # pprint(listing_documents)
 
         await self.client_service.emit_documents(
             sid,
@@ -73,6 +80,16 @@ class HeroesMarketController:
             listing_documents
         )
 
+        summary_documents = self.heroes_summary_service.get_documents(
+            listing_documents, history_documents, currency
+        )
+
+        await self.client_service.emit_documents(
+            sid,
+            HERO_SUMMARY_COLLECTION_NAME,
+            summary_documents
+        )
 
         await self.client_service.emit_done(sid, HERO_HISTORY_COLLECTION_NAME)
         await self.client_service.emit_done(sid, HERO_LISTINGS_COLLECTION_NAME)
+        await self.client_service.emit_done(sid, HERO_SUMMARY_COLLECTION_NAME)

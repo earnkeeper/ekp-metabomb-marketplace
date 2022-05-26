@@ -17,6 +17,7 @@ from app.features.inventory.player.inventory_controller import InventoryControll
 from app.features.inventory.player.inventory_service import InventoryService
 from app.features.inventory.players.players_controller import InventoryPlayersController
 from app.features.inventory.players.players_service import InventoryPlayersService
+from app.features.heroes_market.heroes_summary_service import HeroesSummaryService
 from db.box_opens_repo import BoxOpensRepo
 from db.market_sales_repo import MarketSalesRepo
 from shared.mapper_service import MapperService
@@ -80,10 +81,13 @@ class AppContainer(BaseContainer):
             mapper_service=self.mapper_service
         )
 
+        self.heroes_summary_service = HeroesSummaryService()
+
         self.heroes_market_controller = HeroesMarketController(
             client_service=self.client_service,
             heroes_history_service=self.heroes_history_service,
             heroes_listings_service=self.heroes_listings_service,
+            heroes_summary_service=self.heroes_summary_service
         )
         
         # FEATURES - DASHBOARD

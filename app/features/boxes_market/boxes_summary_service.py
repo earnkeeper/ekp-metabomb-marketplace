@@ -1,8 +1,10 @@
 from datetime import datetime
+from pprint import pprint
 
 
 class BoxesSummaryService:
     def get_documents(self, listing_documents, history_documents, currency):
+        # pprint(listing_documents)
         floor_prices = {
             "Common Box": None,
             "Premium Box": None,
