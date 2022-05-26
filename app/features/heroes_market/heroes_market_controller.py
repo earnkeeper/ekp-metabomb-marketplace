@@ -26,10 +26,12 @@ class HeroesMarketController:
     async def on_connect(self, sid):
         await self.client_service.emit_menu(
             sid,
-            'cil-cart',
+            'shopping-bag',
             'Hero Market',
             self.path,
-            short_link=self.short_link
+            short_link=self.short_link,
+            order=200,
+            id="metabomb_hero_market"
         )
         await self.client_service.emit_page(
             sid,

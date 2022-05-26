@@ -9,7 +9,7 @@ from ekp_sdk.ui import (Card, Col, Container, Div, Image, Row, Span, Tab, Tabs,
 def boxes_page(LISTINGS_COLLECTION_NAME, HISTORY_COLLECTION_NAME, SUMMARY_COLLECTION_NAME):
     return Container(
         children=[
-            page_title('shopping-cart', 'Boxes Market'),
+            page_title('shopping-bag', 'Box Market'),
             summary_row(SUMMARY_COLLECTION_NAME),
             Tabs(
                 [

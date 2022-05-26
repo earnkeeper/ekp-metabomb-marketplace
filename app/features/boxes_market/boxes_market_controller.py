@@ -31,11 +31,13 @@ class BoxesMarketController:
     async def on_connect(self, sid):
         await self.client_service.emit_menu(
             sid,
-            'cil-cart',
+            'shopping-bag',
             'Box Market',
             self.path,
             self.aliases,
-            self.short_link
+            self.short_link,
+            order=300,
+            id="metabomb_boxes_market"            
         )
         await self.client_service.emit_page(
             sid,
