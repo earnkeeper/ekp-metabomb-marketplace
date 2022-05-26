@@ -126,7 +126,7 @@ def image_text_cell(src, text):
         Col("col-auto my-auto", [
             Image(
                 src=src,
-                style={"height": "20px"}
+                style={"width": "24px"}
             )
         ]),
         Col("pl-0 my-auto", [Span(text)])

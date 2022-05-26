@@ -34,14 +34,14 @@ def summary_row(SUMMARY_COLLECTION_NAME):
                     summary_card("common"),
                 ]),
                 Col("col-auto", [
+                    summary_card("rare"),
+                ]),
+                Col("col-auto", [
                     summary_card("epic"),
                 ]),
                 Col("col-auto", [
                     summary_card("legend"),
                 ]),
-                Col("col-auto", [
-                    summary_card("rare"),
-                ])
             ])
         ]
     )
@@ -60,7 +60,7 @@ def summary_card(boxId):
                                 src=format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
                                     "display_id": '$.display_id'
                                 }),
-                                style={"height": "64px", "width": "50px"}
+                                style={"height": "64px"}
                             )
                         ]),
                         Col("col-auto pr-4", [
