@@ -17,7 +17,9 @@ class ListenerContainer(BaseContainer):
         DISCORD_BASE_URL = config("DISCORD_BASE_URL")
         DISCORD_CHANNEL_ID = config("DISCORD_CHANNEL_ID")
 
-        self.metabomb_api_service = MetabombApiService()
+        self.metabomb_api_service = MetabombApiService(
+            cache_service=self.cache_service
+        )
 
         self.mapper_service = MapperService(
             cache_service=self.cache_service,

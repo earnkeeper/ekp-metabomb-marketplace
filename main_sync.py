@@ -37,7 +37,9 @@ class AppContainer(BaseContainer):
         
         # Services
         
-        self.metabomb_api_service = MetabombApiService()
+        self.metabomb_api_service = MetabombApiService(
+            cache_service=self.cache_service
+        )
 
         self.mapper_service = MapperService(
             cache_service=self.cache_service,

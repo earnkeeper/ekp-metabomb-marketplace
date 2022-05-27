@@ -2,7 +2,7 @@ from db.box_opens_repo import BoxOpensRepo
 from ekp_sdk.db import ContractTransactionsRepo
 from shared.metabomb_api_service import MetabombApiService
 from ast import literal_eval
-from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS
+from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, HERO_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS
 
 TOKEN_TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
 
