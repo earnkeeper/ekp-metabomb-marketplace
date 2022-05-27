@@ -21,7 +21,7 @@ class InventoryPlayersController:
     async def on_connect(self, sid):
         await self.client_service.emit_menu(
             sid,
-            'box',
+            'clipboard',
             'Inventory',
             self.path,
             order=400,

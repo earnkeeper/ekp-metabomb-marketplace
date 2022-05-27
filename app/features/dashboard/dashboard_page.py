@@ -6,7 +6,7 @@ from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span
 def page(OPENS_COLLECTION_NAME):
     return Container(
         children=[
-            page_title('box', 'Dashboard'),
+            page_title('activity', 'Dashboard'),
             Span('Actual Hero Drop Rates', 'font-medium-4 font-weight-bold'),
             Span('We are scanning the binance chain in REAL TIME, so that you know the ACTUAL hero drop rates. Check them out below 👀', "d-block mb-2 mt-1"),
             Row([

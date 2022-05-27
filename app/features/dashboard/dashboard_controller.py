@@ -18,7 +18,7 @@ class DashboardController:
     async def on_connect(self, sid):
         await self.client_service.emit_menu(
             sid,
-            'box',
+            'activity',
             'Dashboard',
             self.path,
             order=100,
