@@ -2,7 +2,7 @@ from app.utils.page_title import page_title
 from ekp_sdk.ui import (Button, Card, Col, Column, Container, Datatable, Div,
                         Form, Image, Input, Row, Span, Tab, Tabs, collection,
                         documents, format_currency, format_template, is_busy,
-                        navigate, remove_form_record, commify, sum, count)
+                        navigate, remove_form_record, commify, sum, count, format_mask_address)
 
 from app.utils.summary_card import summary_card
 
@@ -119,7 +119,8 @@ def table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                 id="id",
                 title="Address",
                 searchable=True,
-                sortable=True
+                sortable=True,
+                format=format_mask_address("$.id")
             ),
             Column(
                 id="boxes",

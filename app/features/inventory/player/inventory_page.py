@@ -1,7 +1,7 @@
 from app.features.inventory.player.box_tab import box_tab
 from app.features.inventory.player.hero_tab import hero_tab
 from app.utils.page_title import page_title
-from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Tabs, Tab, count, sum, format_currency, Icon, Link, format_template, Div
+from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Tabs, Tab, count, sum, format_currency, Icon, Link, format_template, Div, format_mask_address
 
 from app.utils.summary_card import summary_card
 
@@ -30,10 +30,10 @@ def page(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME):
             ),
             Div([], "mt-1"),            
             Link(
-                content={
+                content=format_mask_address({
                     "method": "replace",
                     "params": ["$.shared.client.path", "inventory/", ""]
-                },
+                }),
                 class_name="d-block font-small-2",
                 external_icon=True,
                 external=True,
