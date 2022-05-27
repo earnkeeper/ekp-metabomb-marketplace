@@ -22,6 +22,8 @@ from db.box_opens_repo import BoxOpensRepo
 from db.market_sales_repo import MarketSalesRepo
 from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
+from shared.metabomb_coingecko_service import MetabombCoingeckoService
+from shared.metabomb_moralis_service import MetabombMoralisService
 
 
 class AppContainer(BaseContainer):
@@ -30,11 +32,23 @@ class AppContainer(BaseContainer):
 
         super().__init__(config)
 
-        self.metabomb_api_service = MetabombApiService()
+        self.metabomb_api_service = MetabombApiService(
+            cache_service=self.cache_service
+        )
 
         self.mapper_service = MapperService(
             cache_service=self.cache_service,
             coingecko_service=self.coingecko_service,
+        )
+        
+        self.metabomb_moralis_service = MetabombMoralisService(
+            cache_service=self.cache_service,
+            moralis_api_service=self.moralis_api_service
+        )
+
+        self.metabomb_coingecko_service = MetabombCoingeckoService(
+            cache_service=self.cache_service,
+            coingecko_service=self.coingecko_service
         )
 
         # DB
@@ -72,7 +86,7 @@ class AppContainer(BaseContainer):
         self.heroes_listings_service = HeroListingsService(
             coingecko_service=self.coingecko_service,
             metabomb_api_service=self.metabomb_api_service,
-            mapper_service=self.mapper_service            
+            mapper_service=self.mapper_service
         )
 
         self.heroes_history_service = HeroesHistoryService(
@@ -89,7 +103,7 @@ class AppContainer(BaseContainer):
             heroes_listings_service=self.heroes_listings_service,
             heroes_summary_service=self.heroes_summary_service
         )
-        
+
         # FEATURES - DASHBOARD
 
         self.dashboard_opens_service = DashboardOpensService(
@@ -104,10 +118,9 @@ class AppContainer(BaseContainer):
         # FEATURES - INVENTORY - PLAYERS
 
         self.inventory_players_service = InventoryPlayersService(
-            moralis_api_service = self.moralis_api_service,
-            cache_service=self.cache_service,
             metabomb_api_service=self.metabomb_api_service,
-            coingecko_service=self.coingecko_service,
+            metabomb_coingecko_service=self.metabomb_coingecko_service,
+            metabomb_moralis_service=self.metabomb_moralis_service,
             mapper_service=self.mapper_service
         )
 
@@ -119,17 +132,17 @@ class AppContainer(BaseContainer):
         # FEATURES - INVENTORY
 
         self.inventory_service = InventoryService(
-            moralis_api_service = self.moralis_api_service,
-            cache_service=self.cache_service,
             metabomb_api_service=self.metabomb_api_service,
-            coingecko_service=self.coingecko_service,
+            metabomb_coingecko_service=self.metabomb_coingecko_service,
+            metabomb_moralis_service=self.metabomb_moralis_service,
             mapper_service=self.mapper_service
         )
 
-        self.inventory_players_controller = InventoryController(
+        self.inventory_controller = InventoryController(
             client_service=self.client_service,
             inventory_service=self.inventory_service
         )
+
 
 if __name__ == '__main__':
     container = AppContainer()
@@ -137,6 +150,11 @@ if __name__ == '__main__':
     container.client_service.add_controller(container.boxes_market_controller)
     container.client_service.add_controller(container.dashboard_controller)
     container.client_service.add_controller(container.heroes_market_controller)
-    container.client_service.add_controller(container.inventory_players_controller)
+    container.client_service.add_controller(
+        container.inventory_players_controller
+    )
+    container.client_service.add_controller(
+        container.inventory_controller
+    )
 
     container.client_service.listen()

@@ -8,9 +8,13 @@ from ekp_sdk.ui import (Button, Card, Col, Column, Container, Datatable, Div,
 def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
     return Container(
         children=[
-            page_title('users', 'Inventory - Manage Players'),
+            page_title('users', 'Inventory'),
+            Span(
+                "Track Boxes, Heroes, Market Value and ROI for any player. Once you add an address, click on it in the list for full details",
+                "my-1 d-block font-small-4"
+            ),
             form_row(PLAYERS_FORM_NAME),
-            table_row(PLAYERS_COLLECTION_NAME,PLAYERS_FORM_NAME)
+            table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME)
         ]
     )
 
@@ -33,9 +37,9 @@ def form_row(PLAYERS_FORM_NAME):
                     "col-auto my-auto",
                     [
                         Input(
-                            label="Player Address",
+                            label="👇 Enter a BSC address to track",
                             name="address",
-                            style={"minWidth": "240px"}
+                            style={"minWidth": "300px"}
                         ),
                     ]
                 ),
@@ -62,27 +66,26 @@ def table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                 {
                     "address": "$.id"
                 }
-            ),
-            new_tab=True
+            )
         ),
         columns=[
             Column(
                 id="id",
                 title="Address",
                 searchable=True,
-                sortable=True                
+                sortable=True
             ),
             Column(
                 id="boxes",
                 right=True,
                 width="100px",
-                sortable=True                
+                sortable=True
             ),
             Column(
                 id="heroes",
                 right=True,
                 width="100px",
-                sortable=True                
+                sortable=True
             ),
             Column(
                 id="market_value_fiat",
@@ -100,10 +103,10 @@ def table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                     icon="cil-delete",
                     size='sm',
                     color='flat-primary',
-                    on_click=remove_form_record(PLAYERS_FORM_NAME, "address", "$.id"),
+                    on_click=remove_form_record(
+                        PLAYERS_FORM_NAME, "address", "$.id"),
                     tooltip="Remove player"
                 )
             )
         ]
     )
-

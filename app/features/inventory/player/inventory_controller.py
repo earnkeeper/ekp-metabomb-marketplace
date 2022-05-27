@@ -34,17 +34,34 @@ class InventoryController:
             return
 
         await self.client_service.emit_busy(sid, HEROES_COLLECTION_NAME)
+        await self.client_service.emit_busy(sid, BOXES_COLLECTION_NAME)
 
         currency = client_currency(event)
         
         address = path.replace("inventory/", "")
         
-        inventory_documents = await self.inventory_service.get_hero_documents(address, currency)
+        # ---------------------------------------------------------------
+        
+        hero_documents = await self.inventory_service.get_hero_documents(address, currency)
 
         await self.client_service.emit_documents(
             sid,
             HEROES_COLLECTION_NAME,
-            inventory_documents
+            hero_documents
+        )
+        
+        await self.client_service.emit_done(sid, HEROES_COLLECTION_NAME)
+                
+        # ---------------------------------------------------------------
+        
+        box_documents = await self.inventory_service.get_box_documents(address, currency)
+
+        await self.client_service.emit_documents(
+            sid,
+            BOXES_COLLECTION_NAME,
+            box_documents
         )
 
-        await self.client_service.emit_done(sid, HEROES_COLLECTION_NAME)
+        await self.client_service.emit_done(sid, BOXES_COLLECTION_NAME)
+        
+        # ---------------------------------------------------------------        

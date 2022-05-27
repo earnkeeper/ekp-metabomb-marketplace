@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import List
 
 from ekp_sdk.services import BaseMapperService, CacheService, CoingeckoService
+from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS
 
 from shared.domain.hero import Hero
 from shared.domain.hero_box import HeroBox
@@ -22,7 +23,11 @@ class MapperService(BaseMapperService):
         self.cache_service = cache_service
 
     async def get_mtb_rate(self):
-        rate = await self.cache_service.wrap("latest_price_metabomb_usd", lambda: self.coingecko_service.get_latest_price("metabomb", "usd"), ex=60)
+        rate = await self.cache_service.wrap(
+            "latest_price_metabomb_usd", 
+            lambda: self.coingecko_service.get_latest_price("metabomb", "usd"), 
+            ex=60
+        )
         return rate
 
     def map_hero_dto_to_domain(self, dto: HeroDto) -> Hero:
@@ -105,7 +110,7 @@ class MapperService(BaseMapperService):
 
         return listings
 
-    async def get_hero_map(self, hero_list):
+    def get_hero_map(self, hero_list):
         hero_map = {}
         
         for hero in hero_list:
@@ -113,8 +118,8 @@ class MapperService(BaseMapperService):
             hero_map[token_id] = hero
             
         return hero_map
-    
-    async def get_hero_price_map(self, hero_list):
+
+    def get_hero_price_map(self, hero_list):
         hero_price_map = {}
         
         for hero in hero_list:
@@ -132,6 +137,22 @@ class MapperService(BaseMapperService):
                 hero_price_map[rarity][level] = price
                 
         return hero_price_map    
+        
+    def get_box_price_map(self, box_list: List[BoxMarketListingDto]):
+        box_price_map = {}
+        
+        for box in box_list:
+            if ("for_sale" not in box) or (not box["for_sale"]):
+                continue
+            
+            box_type = box["box_type"]
+            box_name = self.get_box_name_by_box_type(box_type)
+            price = box["price"]
+            
+            if (box_name not in box_price_map) or (box_price_map[box_name] > price):
+                box_price_map[box_name] = price
+                
+        return box_price_map    
 
     def get_hero_price(self, rarity, level, hero_price_map):
         if str(rarity) not in hero_price_map:
@@ -174,6 +195,18 @@ class MapperService(BaseMapperService):
         2: "Ultra Box"
     }
 
+    def get_box_name_by_contract_address(self, contract_address):
+        return self.HERO_BOX_CONTRACT_ADDRESS_TO_NAME.get(contract_address, None)
+
+    def get_box_name_by_box_type(self, box_type):
+        return self.HERO_BOX_TYPE_TO_NAME.get(box_type, None)
+        
+    HERO_BOX_CONTRACT_ADDRESS_TO_NAME = {
+        COMMON_BOX_CONTRACT_ADDRESS: "Common Box",
+        PREMIUM_BOX_CONTRACT_ADDRESS: "Premium Box",
+        ULTRA_BOX_CONTRACT_ADDRESS: "Ultra Box"
+    }
+    
     HERO_CLASS_TO_NAME = {
         0: "Warrior",
         1: "Assassin",

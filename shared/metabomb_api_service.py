@@ -8,19 +8,26 @@ from shared.dto.box_market_listing_dto import BoxMarketListingDto
 from shared.dto.hero_dto import HeroDto
 from shared.dto.hero_market_listing_dto import HeroMarketListingDto
 
+from ekp_sdk.services import CacheService
+
 
 class MetabombApiService:
     def __init__(
-        self
+        self,
+        cache_service: CacheService
     ):
         self.base_url = "https://api.metabomb.io/graphql/"
+        self.cache_service = cache_service
 
     async def get_market_boxes(self) -> List[BoxMarketListingDto]:
-
-        return await self.__gql_get(
-            self.__MARKET_BOX_QUERY,
-            self.__market_box_params(1, 5000),
-            lambda x: x["box_market"]["boxes"]
+        return await self.cache_service.wrap(
+            "metabomb_box_listings",
+            lambda: self.__gql_get(
+                self.__MARKET_BOX_QUERY,
+                self.__market_box_params(1, 5000),
+                lambda x: x["box_market"]["boxes"]
+            ),
+            ex=60
         )
 
     async def get_hero(self, token_id) -> HeroDto:
@@ -32,11 +39,14 @@ class MetabombApiService:
         )
 
     async def get_market_heroes(self) -> List[HeroMarketListingDto]:
-
-        return await self.__gql_get(
-            self.__MARKET_HERO_QUERY,
-            self.__market_hero_params(1, 5000),
-            lambda x: x["hero_market"]["heroes"]
+        return await self.cache_service.wrap(
+            "metabomb_hero_listings",
+            lambda: self.__gql_get(
+                self.__MARKET_HERO_QUERY,
+                self.__market_hero_params(1, 5000),
+                lambda x: x["hero_market"]["heroes"]
+            ),
+            ex=60
         )
 
     async def __gql_get(self, query, variables, fn=lambda x: x):
