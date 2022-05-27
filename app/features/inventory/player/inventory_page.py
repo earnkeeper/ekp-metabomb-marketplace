@@ -96,7 +96,7 @@ def summary_row(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME):
                     [
                         summary_card(
                             "Total Boxes",
-                            sum(
+                            count(
                                 f"$.{BOXES_COLLECTION_NAME}.*"
                             ),
                         ),
