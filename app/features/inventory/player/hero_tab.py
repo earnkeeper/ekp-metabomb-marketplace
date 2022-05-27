@@ -34,7 +34,7 @@ def hero_tab(HEROES_COLLECTION_NAME):
                         sortable=True,
                     ),
                     Column(
-                        id="priceFiat",
+                        id="price_fiat",
                         title="Fiat Value",
                         format=format_currency("$.price_fiat", "$.fiat_symbol"),
                         width="120px",

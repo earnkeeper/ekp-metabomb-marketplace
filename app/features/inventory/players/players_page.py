@@ -2,7 +2,9 @@ from app.utils.page_title import page_title
 from ekp_sdk.ui import (Button, Card, Col, Column, Container, Datatable, Div,
                         Form, Image, Input, Row, Span, Tab, Tabs, collection,
                         documents, format_currency, format_template, is_busy,
-                        navigate, remove_form_record, commify)
+                        navigate, remove_form_record, commify, sum, count)
+
+from app.utils.summary_card import summary_card
 
 
 def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
@@ -13,8 +15,52 @@ def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                 "Track Boxes, Heroes, Market Value and ROI for any player. Once you add an address, click on it in the list for full details",
                 "my-1 d-block font-small-4"
             ),
+            summary_row(PLAYERS_COLLECTION_NAME),
             form_row(PLAYERS_FORM_NAME),
             table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME)
+        ]
+    )
+
+
+def summary_row(PLAYERS_COLLECTION_NAME):
+    return Container(
+        children=[
+            Row([
+                Col(
+                    "col-auto",
+                    [
+                        summary_card(
+                            "Total Heroes",
+                            sum(
+                                f"$.{PLAYERS_COLLECTION_NAME}..heroes"
+                            ),
+                        ),
+                    ]
+                ),    
+                Col(
+                    "col-auto",
+                    [
+                        summary_card(
+                            "Total Boxes",
+                            sum(
+                                f"$.{PLAYERS_COLLECTION_NAME}..boxes"
+                            ),
+                        ),
+                    ]
+                ),                                
+                Col("col-auto", [
+                    summary_card(
+                        "Market Value",
+                        format_currency(
+                            sum(
+                                f"$.{PLAYERS_COLLECTION_NAME}..market_value_fiat"
+                            ),
+                            f"$.{PLAYERS_COLLECTION_NAME}[0].fiat_symbol"
+                        ),
+                    ),
+                ]),
+
+            ])
         ]
     )
 
