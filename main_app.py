@@ -7,6 +7,7 @@ from app.features.boxes_market.history.boxes_history_service import \
 from app.features.boxes_market.listings.boxes_listings_service import \
     BoxesListingsService
 from app.features.boxes_market.boxes_market_controller import BoxesMarketController
+from app.features.dashboard.dashboard_activity_service import DashboardActivityService
 from app.features.dashboard.dashboard_controller import DashboardController
 from app.features.dashboard.dashboard_opens_service import \
     DashboardOpensService
@@ -18,6 +19,7 @@ from app.features.inventory.player.inventory_service import InventoryService
 from app.features.inventory.players.players_controller import InventoryPlayersController
 from app.features.inventory.players.players_service import InventoryPlayersService
 from app.features.heroes_market.heroes_summary_service import HeroesSummaryService
+from db.activity_repo import ActivityRepo
 from db.box_opens_repo import BoxOpensRepo
 from db.market_sales_repo import MarketSalesRepo
 from shared.mapper_service import MapperService
@@ -52,6 +54,10 @@ class AppContainer(BaseContainer):
         )
 
         # DB
+
+        self.activity_repo = ActivityRepo(
+            mg_client=self.mg_client,
+        )
 
         self.box_opens_repo = BoxOpensRepo(
             mg_client=self.mg_client,
@@ -110,8 +116,13 @@ class AppContainer(BaseContainer):
             box_opens_repo=self.box_opens_repo
         )
 
+        self.dashboard_activity_service = DashboardActivityService(
+            activity_repo=self.activity_repo
+        )
+
         self.dashboard_controller = DashboardController(
             client_service=self.client_service,
+            dashboard_activity_service=self.dashboard_activity_service,
             dashboard_opens_service=self.dashboard_opens_service,
         )
 
