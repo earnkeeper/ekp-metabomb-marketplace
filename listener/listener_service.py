@@ -163,7 +163,7 @@ class ListenerService:
 
             floor_listing = self.__get_floor_listing(filtered_listings)
 
-            if (new_listing["price_mtb"] >= floor_listing["price_mtb"]):
+            if (new_listing["price_mtb"] > floor_listing["price_mtb"]):
                 logging.warn(
                     f'⚠️ not notifying listing, price ({int(new_listing["price_mtb"])}) is not lower than floor price ({floor_listing["price_mtb"]})'
                 )
@@ -188,9 +188,7 @@ class ListenerService:
 
             floor_listing = self.__get_floor_listing(filtered_listings)
 
-            print(floor_listing)
-
-            if (new_listing["price_mtb"] >= floor_listing["price_mtb"]):
+            if (new_listing["price_mtb"] > floor_listing["price_mtb"]):
                 logging.warn(
                     f'⚠️ not notifying listing, price ({int(new_listing["price_mtb"])}) is not lower than floor price ({floor_listing["price_mtb"]})'
                 )
