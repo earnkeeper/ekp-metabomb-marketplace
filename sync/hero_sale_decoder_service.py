@@ -37,11 +37,7 @@ class HeroSaleDecoderService:
     async def decode_hero_sales(self):
         latest_block = self.market_sales_repo.find_latest_block_number("hero")
 
-        dtos = await self.cache_service.wrap(
-            "metabomb_market_heroes",
-            lambda: self.metabomb_api_service.get_market_heroes(),
-            ex=60
-        )
+        dtos = await self.metabomb_api_service.get_market_heroes()
 
         current_listings: List[MarketListing] = await self.mapper_service.map_market_hero_dtos_to_domain(dtos)
 
