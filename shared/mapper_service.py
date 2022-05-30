@@ -80,7 +80,7 @@ class MapperService(BaseMapperService):
         return box
         
     async def map_market_box_dto_to_domain(self, dto: BoxMarketListingDto, mtb_rate: int = None) -> MarketListing:
-        box = self.map_box_type_to_domain[dto["box_type"]]
+        box = self.map_box_type_to_domain(dto["box_type"])
 
         if mtb_rate is None:
             mtb_rate = await self.get_mtb_rate()
