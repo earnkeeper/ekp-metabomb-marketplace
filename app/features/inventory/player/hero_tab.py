@@ -23,13 +23,56 @@ def hero_tab(HEROES_COLLECTION_NAME):
                     ),
                     Column(
                         id="name",
-                        cell=__name_cell
+                        cell=__name_cell,
+                        width='200px'
+                    ),
+                    Column(
+                        id="hero_power",
+                        title="Power",
+                        width="100px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="hero_health",
+                        title="Health",
+                        width="100px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="hero_speed",
+                        title="Speed",
+                        width="100px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="hero_stamina",
+                        title="Stamina",
+                        width="100px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="hero_bomb_num",
+                        title="Bomb num",
+                        width="100px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="hero_bomb_range",
+                        title="Bomb range",
+                        width="100px",
+                        right=True,
+                        sortable=True,
                     ),
                     Column(
                         id="price",
                         title="MTB Value",
                         format=commify("$.price"),
-                        width="120px",
+                        width="100px",
                         right=True,
                         sortable=True,
                     ),
