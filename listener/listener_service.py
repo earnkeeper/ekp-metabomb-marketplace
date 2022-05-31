@@ -77,8 +77,8 @@ class ListenerService:
                     await self.process_market_listing(listing)
 
                 await asyncio.sleep(poll_interval)
-            except Exception as e:
-                logging.error("🚨 error while listening for events", e)
+            except Exception:
+                logging.exception("🚨 error while listening for events")
                 quit()
 
     async def decode_market_listing(self, log_dto: Web3LogDto) -> MarketListing:
