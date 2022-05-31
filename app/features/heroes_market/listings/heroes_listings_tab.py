@@ -38,7 +38,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 id="timestamp",
                 sortable=True,
                 cell=timestamp_cell(),
-                width="300px"
+                width="120px"
             ),
             Column(
                 id="tokenId",
@@ -149,16 +149,16 @@ __name_cell = image_text_cell(
 
 def timestamp_cell():
     return Row([
-        # Col(
-        #     class_name="my-auto col-auto pr-0",
-        #     children=[
-        #         Span(format_age("$.updated"))
-        #     ]
-        # ),
         Col(
             class_name="my-auto col-auto pr-0",
             children=[
-                Span(format_datetime("$.last_listing_timestamp"))
+                Span(format_age("$.last_listing_timestamp"))
             ]
         ),
+        # Col(
+        #     class_name="my-auto col-auto pr-0",
+        #     children=[
+        #         Span(format_datetime("$.last_listing_timestamp"))
+        #     ]
+        # ),
     ])
