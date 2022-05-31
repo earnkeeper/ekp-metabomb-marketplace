@@ -27,48 +27,6 @@ def hero_tab(HEROES_COLLECTION_NAME):
                         width='200px'
                     ),
                     Column(
-                        id="hero_power",
-                        title="Power",
-                        width="100px",
-                        right=True,
-                        sortable=True,
-                    ),
-                    Column(
-                        id="hero_health",
-                        title="Health",
-                        width="100px",
-                        right=True,
-                        sortable=True,
-                    ),
-                    Column(
-                        id="hero_speed",
-                        title="Speed",
-                        width="100px",
-                        right=True,
-                        sortable=True,
-                    ),
-                    Column(
-                        id="hero_stamina",
-                        title="Stamina",
-                        width="100px",
-                        right=True,
-                        sortable=True,
-                    ),
-                    Column(
-                        id="hero_bomb_num",
-                        title="Bomb num",
-                        width="100px",
-                        right=True,
-                        sortable=True,
-                    ),
-                    Column(
-                        id="hero_bomb_range",
-                        title="Bomb range",
-                        width="100px",
-                        right=True,
-                        sortable=True,
-                    ),
-                    Column(
                         id="price",
                         title="MTB Value",
                         format=commify("$.price"),
@@ -81,6 +39,54 @@ def hero_tab(HEROES_COLLECTION_NAME):
                         title="Fiat Value",
                         format=format_currency("$.price_fiat", "$.fiat_symbol"),
                         width="120px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="hero_power",
+                        title="Power",
+                        cell=set_image(icon_name='stats-power', attr_name='hero_power'),
+                        width="100px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="hero_health",
+                        title="Health",
+                        cell=set_image(icon_name='stats-health', attr_name='hero_health'),
+                        width="100px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="hero_speed",
+                        title="Speed",
+                        cell=set_image(icon_name='stats-speed', attr_name='hero_speed'),
+                        width="100px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="hero_stamina",
+                        title="Stamina",
+                        cell=set_image(icon_name='stats-stamina', attr_name='hero_stamina'),
+                        width="100px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="hero_bomb_num",
+                        title="Bomb num",
+                        cell=set_image(icon_name='stats-bombnum', attr_name='hero_bomb_num'),
+                        width="100px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="hero_bomb_range",
+                        title="Bomb range",
+                        cell=set_image(icon_name='stats-bombrange', attr_name='hero_bomb_range'),
+                        width="100px",
                         right=True,
                         sortable=True,
                     ),
@@ -106,3 +112,10 @@ __name_cell = image_cell(
     }),
     "$.name"
 )
+
+
+def set_image(icon_name, attr_name):
+    return image_cell(
+        f"https://app.metabomb.io/icons/stats-icon/{icon_name}.svg",
+        f"$.{attr_name}"
+    )
