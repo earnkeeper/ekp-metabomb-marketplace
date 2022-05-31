@@ -53,7 +53,7 @@ class HeroListingsService:
 
         rarity_name = self.mapper_service.HERO_RARITY_TO_NAME[listing["rarity"]]
         token_id = int(listing["id"])
-        timestamp = [hero_listing_timestamp['tokenId'] for hero_listing_timestamp in hero_listing_timestamps if
+        timestamp = [hero_listing_timestamp['lastListingTimestamp'] for hero_listing_timestamp in hero_listing_timestamps if
                      hero_listing_timestamp['tokenId'] == token_id]
 
         # find the hero listing timestamp using the hero token id listing["id"]
