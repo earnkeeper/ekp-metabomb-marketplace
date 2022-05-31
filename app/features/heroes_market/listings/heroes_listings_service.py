@@ -9,7 +9,7 @@ class HeroListingsService:
         self,
         coingecko_service: CoingeckoService,
         metabomb_api_service: MetabombApiService,
-        mapper_service: MapperService
+        mapper_service: MapperService,
     ):
         self.coingecko_service = coingecko_service
         self.metabomb_api_service = metabomb_api_service
@@ -44,6 +44,8 @@ class HeroListingsService:
         price = listing["price"]
 
         rarity_name = self.mapper_service.HERO_RARITY_TO_NAME[listing["rarity"]]
+        
+        timestamp = 0 # find the hero listing timestamp using the hero token id listing["id"]
         
         name = self.mapper_service.map_hero_name(rarity_name, listing["level"])
 
