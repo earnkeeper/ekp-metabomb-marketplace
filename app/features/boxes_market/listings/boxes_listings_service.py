@@ -42,15 +42,27 @@ class BoxesListingsService:
 
             for listing in listings:
                 document = self.map_document(
-                    listing, currency, rate, now, name_totals)
-                documents.append(document)
+                    listing, 
+                    currency, 
+                    rate, 
+                    now, 
+                    name_totals
+                )
+                
+                if document:
+                    documents.append(document)
 
             return documents
 
     def map_document(self, listing, currency, rate, now, name_totals):
         price = listing["price"]
-
-        name = self.__BOX_TYPES[listing["box_type"]]
+        
+        box_type = listing["box_type"]
+        
+        if box_type not in self.__BOX_TYPES:
+            return None
+        
+        name = self.__BOX_TYPES[box_type]
 
         name_total = None
         if name in name_totals:
