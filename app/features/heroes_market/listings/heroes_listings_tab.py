@@ -35,7 +35,8 @@ def market_row(LISTINGS_COLLECTION_NAME):
         ],
         columns=[
             Column(
-                id="timestamp",
+                id="last_listing_timestamp",
+                title="Listed",
                 sortable=True,
                 cell=timestamp_cell(),
                 width="120px"
