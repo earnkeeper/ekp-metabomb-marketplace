@@ -4,7 +4,7 @@ import asyncio
 from decouple import AutoConfig
 from ekp_sdk import BaseContainer
 from db.box_opens_repo import BoxOpensRepo
-
+from db.hero_listing_timestamp_repo import HeroListingTimestampRepo
 from db.market_sales_repo import MarketSalesRepo
 from db.state_repo import StateRepo
 from shared.constants import HERO_CONTRACT_ADDRESS, MTB_CONTRACT_ADDRESS
@@ -13,6 +13,7 @@ from shared.metabomb_api_service import MetabombApiService
 from sync.box_open_decoder_service import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS, BoxOpenDecoderService
 from sync.box_sale_decoder_service import BoxSaleDecoderService
 from sync.hero_sale_decoder_service import HeroSaleDecoderService
+from sync.hero_listing_timestamp_decoder_service import HeroListingTimestampDecoderService
 
 
 class AppContainer(BaseContainer):
@@ -33,6 +34,10 @@ class AppContainer(BaseContainer):
 
         self.state_repo = StateRepo(
             mg_client=self.mg_client,
+        )
+
+        self.hero_listing_timestamp_repo = HeroListingTimestampRepo(
+            mg_client=self.mg_client
         )
         
         # Services
@@ -66,6 +71,12 @@ class AppContainer(BaseContainer):
             contract_transactions_repo=self.contract_transactions_repo,
             market_sales_repo=self.market_transactions_repo,
             mapper_service=self.mapper_service,
+            metabomb_api_service=self.metabomb_api_service
+        )
+
+        self.hero_listing_timestamp_decoder_service = HeroListingTimestampDecoderService(
+            hero_listing_timestamp_repo=self.hero_listing_timestamp_repo,
+            contract_transactions_repo=self.contract_transactions_repo,
             metabomb_api_service=self.metabomb_api_service
         )
 
@@ -119,4 +130,7 @@ if __name__ == '__main__':
     loop.run_until_complete(
         container.box_open_decoder_service.decode_box_openings()
     )
-    
+
+    loop.run_until_complete(
+        container.hero_listing_timestamp_decoder_service.decode_hero_listing_timestamp()
+    )

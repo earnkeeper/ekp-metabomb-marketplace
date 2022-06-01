@@ -22,6 +22,7 @@ from app.features.heroes_market.heroes_summary_service import HeroesSummaryServi
 from db.activity_repo import ActivityRepo
 from db.box_opens_repo import BoxOpensRepo
 from db.market_sales_repo import MarketSalesRepo
+from db.hero_listing_timestamp_repo import HeroListingTimestampRepo
 from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
 from shared.metabomb_coingecko_service import MetabombCoingeckoService
@@ -67,6 +68,10 @@ class AppContainer(BaseContainer):
             mg_client=self.mg_client,
         )
 
+        self.hero_listing_timestamp_repo = HeroListingTimestampRepo(
+            mg_client=self.mg_client
+        )
+
         # FEATURES - BOXES MARKET
 
         self.boxes_listings_service = BoxesListingsService(
@@ -92,7 +97,8 @@ class AppContainer(BaseContainer):
         self.heroes_listings_service = HeroListingsService(
             coingecko_service=self.coingecko_service,
             metabomb_api_service=self.metabomb_api_service,
-            mapper_service=self.mapper_service
+            mapper_service=self.mapper_service,
+            hero_listing_timestamp_repo=self.hero_listing_timestamp_repo
         )
 
         self.heroes_history_service = HeroesHistoryService(

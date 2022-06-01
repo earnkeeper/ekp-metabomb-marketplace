@@ -28,10 +28,10 @@ class HeroListingTimestampRepo:
         
         return results
             
-    def find_latest_block_number(self, nftType):
+    def find_latest_block_number(self):
         results = list(
             self.collection
-            .find({ "nftType": nftType })
+            .find()
             .sort("blockNumber", -1)
             .limit(1)
         )
@@ -45,7 +45,7 @@ class HeroListingTimestampRepo:
         start = time.perf_counter()
         
         self.collection.bulk_write(
-            list(map(lambda model: UpdateOne({"hash": model["hash"]}, {"$set": model}, True), models))
+            list(map(lambda model: UpdateOne({"tokenId": model["tokenId"]}, {"$set": model}, True), models))
         )
         
         print(f"⏱  [MarketSalesRepo.save({len(models)})] {time.perf_counter() - start:0.3f}s")
