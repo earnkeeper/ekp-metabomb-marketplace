@@ -1,7 +1,8 @@
 from app.features.inventory.player.box_tab import box_tab
 from app.features.inventory.player.hero_tab import hero_tab
 from app.utils.page_title import page_title
-from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Tabs, Tab, count, sum, format_currency, Icon, Link, format_template, Div, format_mask_address
+from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Tabs, Tab, count, sum, format_currency, Icon, \
+    Link, format_template, Div, format_mask_address
 
 from app.utils.summary_card import summary_card
 
@@ -28,7 +29,7 @@ def page(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME):
                     ),
                 ],
             ),
-            Div([], "mt-1"),            
+            Div([], "mt-1"),
             Link(
                 content=format_mask_address({
                     "method": "replace",
@@ -73,46 +74,38 @@ def summary_row(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME):
                     "col-auto",
                     [
                         summary_card(
-                            "Total Heroes",
-                            count(
-                                f"$.{HEROES_COLLECTION_NAME}.*"
+                            format_template("{{ hero_count }} Heroes", {
+                                "hero_count": count(
+                                    f"$.{HEROES_COLLECTION_NAME}.*"
+                                )
+                            }),
+                            format_currency(
+                                sum(
+                                    f"$.{HEROES_COLLECTION_NAME}..price_fiat"
+                                ),
+                                f"$.{HEROES_COLLECTION_NAME}[0].fiat_symbol"
                             ),
                         ),
                     ]
                 ),
-                Col("col-auto", [
-                    summary_card(
-                        "Hero Market Value",
-                        format_currency(
-                            sum(
-                                f"$.{HEROES_COLLECTION_NAME}..price_fiat"
-                            ),
-                            f"$.{HEROES_COLLECTION_NAME}[0].fiat_symbol"
-                        ),
-                    ),
-                ]),
                 Col(
                     "col-auto",
                     [
                         summary_card(
-                            "Total Boxes",
-                            count(
-                                f"$.{BOXES_COLLECTION_NAME}.*"
+                            format_template("{{ boxes_count }} Boxes", {
+                                "boxes_count": count(
+                                    f"$.{BOXES_COLLECTION_NAME}.*"
+                                )
+                            }),
+                            format_currency(
+                                sum(
+                                    f"$.{BOXES_COLLECTION_NAME}..price_fiat"
+                                ),
+                                f"$.{BOXES_COLLECTION_NAME}[0].fiat_symbol"
                             ),
                         ),
                     ]
                 ),
-                Col("col-auto", [
-                    summary_card(
-                        "Box Market Value",
-                        format_currency(
-                            sum(
-                                f"$.{BOXES_COLLECTION_NAME}..price_fiat"
-                            ),
-                            f"$.{BOXES_COLLECTION_NAME}[0].fiat_symbol"
-                        ),
-                    ),
-                ]),
             ])
         ]
     )
