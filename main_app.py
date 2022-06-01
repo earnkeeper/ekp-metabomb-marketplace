@@ -29,7 +29,8 @@ from shared.metabomb_api_service import MetabombApiService
 from shared.metabomb_coingecko_service import MetabombCoingeckoService
 from shared.metabomb_moralis_service import MetabombMoralisService
 from app.features.embed_box_floor.embed_box_floor_service import EmbedBoxesService
-
+from app.features.embed_hero_floor.embed_hero_floor_service import EmbedHeroesService
+from app.features.embed_hero_floor.embed_hero_floor_controller import EmbedHeroesFloorController
 
 class AppContainer(BaseContainer):
     def __init__(self):
@@ -171,7 +172,16 @@ class AppContainer(BaseContainer):
             boxes_history_service=self.boxes_history_service,
             boxes_listings_service=self.boxes_listings_service,
             embed_boxes_service=self.embed_boxes_service
-        )        
+        )
+
+        self.embed_heroes_service = EmbedHeroesService()
+
+        self.embed_heroes_floor_controller = EmbedHeroesFloorController(
+            client_service=self.client_service,
+            embed_heroes_service=self.embed_heroes_service,
+            heroes_history_service=self.heroes_history_service,
+            heroes_listings_service=self.heroes_listings_service
+        )
 
 
 if __name__ == '__main__':
@@ -187,6 +197,7 @@ if __name__ == '__main__':
         container.inventory_controller
     )
     
-    container.client_service.add_controller(container.embed_box_floor_controller)
+    # container.client_service.add_controller(container.embed_box_floor_controller)
+    container.client_service.add_controller(container.embed_heroes_floor_controller)
 
     container.client_service.listen()
