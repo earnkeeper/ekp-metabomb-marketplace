@@ -13,93 +13,62 @@ def tile():
             Div(style={"marginBottom": "10px"}),
             Row(
                 children=[
-                    Col("col-auto", [
-                        Image(
-                            src=switch_case("$.data[0]['common'].name", HERO_BOX_NAME_IMAGE),
-                            style={"height": "20px"}
-                        )
-                    ]),
-                    Col(
-                        children=[
-                            Span(class_name='d-block', content="$.data[0]['common'].name"),
-                            Span(class_name='d-block', content=format_template(
-                                "{{ boxes_num }} sales",
-                                {
-                                    "boxes_num": "$.data[0]['common'].countBoxes"
-                                }
-                            )),
-                        ]
-                    ),
-                    Col(
-                        class_name="col-auto pr-4",
-                        children=[
-                            Span(class_name='d-block', content=format_currency("$.data[0]['common'].floorPrice",
-                                                                               "$.data[0]['common'].fiatSymbol")),
-                            Span(class_name='d-block $.data[0]["common"].color', content=format_currency("$.data[0]['common'].percDiff",
-                                                                               "%")),
-                        ]
-                    )
+                    image_cell('common'),
+                    boxes_name_count('common'),
+                    boxes_price_stats('common')
                 ]
             ),
             Div(style={"marginBottom": "2px"}),
             Row(
                 children=[
-                    Col("col-auto", [
-                        Image(
-                            src=switch_case("$.data[0]['premium'].name", HERO_BOX_NAME_IMAGE),
-                            style={"height": "20px"}
-                        )
-                    ]),
-                    Col(
-                        children=[
-                            Span(class_name='d-block', content="$.data[0]['premium'].name"),
-                            Span(class_name='d-block', content=format_template(
-                                "{{ boxes_num }} sales",
-                                {
-                                    "boxes_num": "$.data[0]['premium'].countBoxes"
-                                }
-                            )),
-                        ]
-                    ),
-                    Col(
-                        class_name="col-auto pr-4",
-                        children=[
-                            Span(class_name='d-block', content=format_currency("$.data[0]['premium'].floorPrice",
-                                                                               "$.data[0]['premium'].fiatSymbol")),
-                            Span(class_name='d-block', content="$.data[0]['premium'].percDiff"),
-                        ]
-                    )
+                    image_cell('premium'),
+                    boxes_name_count('premium'),
+                    boxes_price_stats('premium')
                 ]
             ),
             Div(style={"marginBottom": "2px"}),
             Row(
                 children=[
-                    Col("col-auto", [
-                        Image(
-                            src=switch_case("$.data[0]['ultra'].name", HERO_BOX_NAME_IMAGE),
-                            style={"height": "20px"}
-                        )
-                    ]),
-                    Col(
-                        children=[
-                            Span(class_name='d-block', content="$.data[0]['ultra'].name"),
-                            Span(class_name='d-block', content=format_template(
-                                "{{ boxes_num }} sales",
-                                {
-                                    "boxes_num": "$.data[0]['ultra'].countBoxes"
-                                }
-                            )),
-                        ]
-                    ),
-                    Col(
-                        class_name="col-auto pr-4",
-                        children=[
-                            Span(class_name='d-block', content=format_currency("$.data[0]['ultra'].floorPrice",
-                                                                               "$.data[0]['ultra'].fiatSymbol")),
-                            Span(class_name='d-block', content="$.data[0]['ultra'].percDiff"),
-                        ]
-                    )
+                    image_cell('ultra'),
+                    boxes_name_count('ultra'),
+                    boxes_price_stats('ultra')
                 ]
             )
+        ]
+    )
+
+
+def image_cell(box_type):
+    return Col("col-auto", [
+        Image(
+            src=switch_case(f"$.data[0]['{box_type}'].name", HERO_BOX_NAME_IMAGE),
+            style={"height": "20px"}
+        )
+    ])
+
+
+def boxes_name_count(box_type):
+    return Col(
+        children=[
+            Span(class_name='d-block', content=f"$.data[0]['{box_type}'].name"),
+            Span(class_name='d-block', content=format_template(
+                "{{ boxes_num }} sales",
+                {
+                    "boxes_num": f"$.data[0]['{box_type}'].countBoxes"
+                }
+            )),
+        ]
+    )
+
+
+def boxes_price_stats(box_type):
+    return Col(
+        class_name="col-auto pr-4",
+        children=[
+            Span(class_name='d-block', content=format_currency(f"$.data[0]['{box_type}'].floorPrice",
+                                                               f"$.data[0]['{box_type}'].fiatSymbol")),
+            Span(class_name=f'd-block $.data[0]["{box_type}"].color',
+                 content=format_currency(f"$.data[0]['{box_type}'].percDiff",
+                                         "%")),
         ]
     )
