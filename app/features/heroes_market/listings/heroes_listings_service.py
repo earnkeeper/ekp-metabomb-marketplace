@@ -31,7 +31,6 @@ class HeroListingsService:
         listings = await self.metabomb_api_service.get_market_heroes()
 
         hero_listing_timestamps = list(self.hero_listing_timestamp_repo.collection.find())
-        # print(hero_listing_timestamps)
 
         documents = []
 
@@ -42,8 +41,14 @@ class HeroListingsService:
                 continue
 
             document = self.map_document(
-                listing, hero_listing_timestamps,
-                currency, rate, now, name_totals)
+                listing, 
+                hero_listing_timestamps,
+                currency, 
+                rate, 
+                now, 
+                name_totals
+            )
+            
             documents.append(document)
 
         return documents

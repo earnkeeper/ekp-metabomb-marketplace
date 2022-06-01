@@ -1,4 +1,6 @@
+from pprint import pprint
 from app.features.dashboard.dashboard_activity_service import DashboardActivityService
+from app.features.dashboard.dashboard_fusion_service import DashboardFusionService
 from app.features.dashboard.dashboard_opens_service import DashboardOpensService
 from app.features.dashboard.dashboard_page import page
 from ekp_sdk.services import ClientService
@@ -13,10 +15,12 @@ class DashboardController:
         client_service: ClientService,
         dashboard_activity_service: DashboardActivityService,
         dashboard_opens_service: DashboardOpensService,
+        dashboard_fusion_service: DashboardFusionService,
     ):
         self.client_service = client_service
         self.dashboard_activity_service = dashboard_activity_service
         self.dashboard_opens_service = dashboard_opens_service
+        self.dashboard_fusion_service = dashboard_fusion_service
         self.path = 'dashboard'
 
     async def on_connect(self, sid):
@@ -67,4 +71,8 @@ class DashboardController:
         
         # ----------------------------------------------------------------------
 
+        fusion_documents = await self.dashboard_fusion_service.get_documents(currency)
+        
+        pprint(fusion_documents)
+        
         await self.client_service.emit_done(sid, OPENS_COLLECTION_NAME)
