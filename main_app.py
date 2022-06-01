@@ -11,6 +11,7 @@ from app.features.dashboard.dashboard_activity_service import DashboardActivityS
 from app.features.dashboard.dashboard_controller import DashboardController
 from app.features.dashboard.dashboard_opens_service import \
     DashboardOpensService
+from app.features.embed_box_floor.embed_box_floor_controller import EmbedBoxFloorController
 from app.features.heroes_market.heroes_market_controller import HeroesMarketController
 from app.features.heroes_market.history.heroes_history_service import HeroesHistoryService
 from app.features.heroes_market.listings.heroes_listings_service import HeroListingsService
@@ -159,6 +160,12 @@ class AppContainer(BaseContainer):
             client_service=self.client_service,
             inventory_service=self.inventory_service
         )
+        
+        # FEATURES - BOX FLOOR EMBED
+        
+        self.embed_box_floor_controller = EmbedBoxFloorController(
+            client_service=self.client_service,
+        )        
 
 
 if __name__ == '__main__':
@@ -173,5 +180,7 @@ if __name__ == '__main__':
     container.client_service.add_controller(
         container.inventory_controller
     )
+    
+    container.client_service.add_controller(container.embed_box_floor_controller)
 
     container.client_service.listen()
