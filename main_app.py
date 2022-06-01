@@ -28,6 +28,7 @@ from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
 from shared.metabomb_coingecko_service import MetabombCoingeckoService
 from shared.metabomb_moralis_service import MetabombMoralisService
+from app.features.embed_box_floor.embed_box_floor_service import EmbedBoxesService
 
 
 class AppContainer(BaseContainer):
@@ -162,9 +163,14 @@ class AppContainer(BaseContainer):
         )
         
         # FEATURES - BOX FLOOR EMBED
+
+        self.embed_boxes_service = EmbedBoxesService()
         
         self.embed_box_floor_controller = EmbedBoxFloorController(
             client_service=self.client_service,
+            boxes_history_service=self.boxes_history_service,
+            boxes_listings_service=self.boxes_listings_service,
+            embed_boxes_service=self.embed_boxes_service
         )        
 
 
