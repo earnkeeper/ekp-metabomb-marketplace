@@ -26,6 +26,12 @@ class EmbedBoxesService:
             "Premium Box": None,
             "Ultra Box": None,
         }
+        
+        colors = {
+            "Common Box": "normal",
+            "Premium Box": "normal",
+            "Ultra Box": "normal",
+        }
 
         for listing in listing_documents:
             price_fiat = listing["priceFiat"]
@@ -40,39 +46,35 @@ class EmbedBoxesService:
             if floor_prices[name] and avg_prices[name]:
                 perc_difference[name] = (floor_prices[name] - avg_prices[name]) / avg_prices[name] * 100
 
-        return [
-            {
+        
+        def set_color(box_type):
+            if perc_difference[box_type] and (perc_difference[box_type] < 0):
+                colors[box_type] = "danger"
+            if perc_difference[box_type] and (perc_difference[box_type] > 0):
+                colors[box_type] = "success"
+
+        set_color("Common Box")
+        set_color("Premium Box")
+        set_color("Ultra Box")
+        
+        document = {
                 "id": "0",
                 "updated": datetime.now().timestamp(),
-                "common": {
-                    "name": "Common Box",
-                    "countBoxes": count_boxes["Common Box"],
-                    "percDiff": perc_difference["Common Box"],
-                    "floorPrice": floor_prices["Common Box"],
-                    "avgPrice": avg_prices["Common Box"],
+        }
+        
+        def set_document_box(box_id, box_type):
+            document[box_id] = {
+                    "name": box_type,
+                    "countBoxes": count_boxes[box_type],
+                    "percDiff": perc_difference[box_type],
+                    "floorPrice": floor_prices[box_type],
+                    "avgPrice": avg_prices[box_type],
                     "fiatSymbol": currency["symbol"],
-                    "color": "danger" if perc_difference["Common Box"] and perc_difference[
-                        "Common Box"] < 0 else "success"
-                },
-                "premium": {
-                    "name": "Premium Box",
-                    "countBoxes": count_boxes["Premium Box"],
-                    "percDiff": perc_difference["Premium Box"],
-                    "floorPrice": floor_prices["Premium Box"],
-                    "avgPrice": avg_prices["Premium Box"],
-                    "fiatSymbol": currency["symbol"],
-                    "color": "danger" if perc_difference["Premium Box"] and perc_difference[
-                        "Premium Box"] < 0 else "success"
-                },
-                "ultra": {
-                    "name": "Ultra Box",
-                    "countBoxes": count_boxes["Ultra Box"],
-                    "percDiff": perc_difference["Ultra Box"],
-                    "floorPrice": floor_prices["Ultra Box"],
-                    "avgPrice": avg_prices["Ultra Box"],
-                    "fiatSymbol": currency["symbol"],
-                    "color": "danger" if perc_difference["Ultra Box"] and perc_difference[
-                        "Ultra Box"] < 0 else "success"
-                },
+                    "color": colors[box_type],                
             }
-        ]
+            
+        set_document_box("common", "Common Box")
+        set_document_box("premium", "Premium Box")
+        set_document_box("ultra", "Ultra Box")
+            
+        return [document]
