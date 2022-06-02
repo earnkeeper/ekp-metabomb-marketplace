@@ -39,7 +39,7 @@ def hero_tab(HEROES_COLLECTION_NAME):
                             Link(
                                 content="Join us on discord.",
                                 external=True,
-                                href="https://discord.gg/jPDgmzug"
+                                href="https://discord.com/invite/RHnnWBAkes"
                             )],
                     ),
                     Col(
@@ -89,7 +89,7 @@ def hero_tab(HEROES_COLLECTION_NAME):
                     ),
                     Column(
                         id="mtb_per_day",
-                        title="Est mtb per day",
+                        title="MTB / day",
                         format=commify("$.mtb_per_day"),
                         width="120px",
                         right=True,
@@ -97,7 +97,7 @@ def hero_tab(HEROES_COLLECTION_NAME):
                     ),
                     Column(
                         id="est_payback",
-                        title="Est payback",
+                        title="Payback",
                         format=format_template("{{ est_payback }} days", {"est_payback": "$.est_payback"}),
                         width="120px",
                         right=True,
@@ -105,9 +105,9 @@ def hero_tab(HEROES_COLLECTION_NAME):
                     ),
                     Column(
                         id="est_roi",
-                        title="Est ROI",
+                        title="ROI",
                         format=format_template("{{ est_roi }} %", {"est_roi": "$.est_roi"}),
-                        width="120px",
+                        width="100px",
                         right=True,
                         sortable=True,
                     ),

@@ -46,7 +46,7 @@ def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                         Link(
                             content="Join us on discord.",
                             external=True,
-                            href="https://discord.gg/jPDgmzug"
+                            href="https://discord.com/invite/RHnnWBAkes"
                         )],
                     ),
                     Col(
@@ -169,29 +169,29 @@ def table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
             Column(
                 id="boxes",
                 right=True,
-                width="100px",
+                width="120px",
                 sortable=True
             ),
             Column(
                 id="heroes",
                 right=True,
-                width="100px",
+                width="120px",
                 sortable=True
             ),
             Column(
                 id="market_value_fiat",
                 title="Value",
                 right=True,
-                width="100px",
+                width="120px",
                 format=format_currency("$.market_value_fiat", "$.fiat_symbol"),
                 sortable=True
             ),
             Column(
                 id="est_mtb_per_day",
-                title="Est MTB per day",
+                title="MTB / day",
                 value=commify("$.est_mtb_per_day"),
                 right=True,
-                width="100px",
+                width="120px",
                 # format="$.est_mtb_per_day",
                 sortable=True
             ),
