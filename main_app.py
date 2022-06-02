@@ -210,7 +210,7 @@ if __name__ == '__main__':
         container.inventory_controller
     )
     
-    # container.client_service.add_controller(container.embed_box_floor_controller)
+    container.client_service.add_controller(container.embed_box_floor_controller)
     container.client_service.add_controller(container.embed_heroes_floor_controller)
 
     container.client_service.listen()

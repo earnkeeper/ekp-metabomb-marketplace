@@ -32,15 +32,6 @@ def tile():
                     heroes_price_stats('epic')
                 ]
             ),
-            # Div(class_name="mb-1"),
-            # Row(
-            #     children=[
-            #         image_cell('legend'),
-            #         heroes_name_count('legend'),
-            #         heroes_price_stats('legend')
-            #     ]
-            # ),
-
         ]
     )
 
@@ -51,7 +42,7 @@ def image_cell(hero_type):
             src=format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
                 "display_id": f"$.data[0]['{hero_type}'].display_id"
             }),
-            style={"height": "35px"}
+            style={"height": "32px"}
         )
     ])
 
@@ -60,11 +51,11 @@ def heroes_name_count(hero_type):
     return Col(
         children=[
             Span(
-                class_name='d-block font-small-4',
+                class_name='d-block font-small-3',
                 content=f"$.data[0]['{hero_type}'].name"
             ),
             Span(
-                class_name='d-block font-small-2',
+                class_name='d-block font-small-1',
                 content=format_template(
                     "{{ heroes_num }} sales",
                     {
@@ -82,7 +73,7 @@ def heroes_price_stats(hero_type):
         children=[
             Span(
                 class_name=format_template(
-                    'd-block text-right font-small-4 text-{{ color }}',
+                    'd-block text-right font-small-3 text-{{ color }}',
                     {
                         "color": f'$.data[0]["{hero_type}"].color'
                     }
@@ -94,7 +85,7 @@ def heroes_price_stats(hero_type):
             ),
             Span(
                 class_name=format_template(
-                    'd-block text-right font-small-3 text-{{ color }}',
+                    'd-block text-right font-small-1 text-{{ color }}',
                     {
                         "color": f'$.data[0]["{hero_type}"].color'
                     }

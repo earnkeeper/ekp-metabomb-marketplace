@@ -42,6 +42,7 @@ class EmbedHeroesFloorController:
         await self.client_service.emit_documents(
             sid,
             "embeds",
-            documents
+            documents,
+            layer_id='metabomb-hero-tile'
         )
 

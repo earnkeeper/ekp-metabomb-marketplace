@@ -7,7 +7,7 @@ from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Div, Chart
 def tile():
     return Container(
         children=[
-            Span("Hero Box Floor Prices", "font-medium-2"),
+            Span("Box Floor Prices", "font-medium-2"),
             Div(class_name="mb-1"),
             Row(
                 children=[
@@ -43,7 +43,7 @@ def image_cell(box_type):
                 f"$.data[0]['{box_type}'].name",
                 HERO_BOX_NAME_IMAGE
             ),
-            style={"height": "28px"}
+            style={"height": "32px"}
         )
     ])
 
