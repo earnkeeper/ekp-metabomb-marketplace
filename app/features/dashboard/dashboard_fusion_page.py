@@ -1,5 +1,5 @@
-from ekp_sdk.ui import (Badge, Button, Col, Column, Container, Datatable, Div, Form,
-                        Icon, Row, Select, Span, collection, commify, documents,
+from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Form,
+                        Icon, Row, Span, collection, documents,
                         format_currency, format_template, is_busy, switch_case)
 
 
@@ -74,22 +74,6 @@ def table_row(FUSION_COLLECTION_NAME):
                 right=True,
                 width="160px"
             ),
-            # Column(
-            #     id="premium",
-            #     value='$.calcs.premium.total_cost',
-            #     title="Premium Box",
-            #     cell=cost_cell("premium"),
-            #     right=True,
-            #     width="160px"
-            # ),
-            # Column(
-            #     id="ultra",
-            #     value='$.calcs.ultra.total_cost',
-            #     title="Ultra Box",
-            #     cell=cost_cell("ultra"),
-            #     right=True,
-            #     width="160px"
-            # ),
             Column(
                 id="spacer",
                 title="",
@@ -165,7 +149,6 @@ def materials_cell():
         ])
 
 
-# format_currency("$.total_price", "$.fiatSymbol")
 def input_costs():
     return Row([
         Col(
@@ -250,18 +233,4 @@ def market_value():
                 Span(format_currency("$.market_value_fiat", "$.fiat_symbol"))
             ],
         ),
-        # Col(
-        #     class_name="col-12 text-right",
-        #     children=[
-        #         Span(
-        #             format_template(
-        #                 "{{ market_value_mtb }} MTB",
-        #                 {
-        #                     "market_value_mtb": "$.market_value_mtb",
-        #                 }
-        #             ),
-        #             "float-right font-small-2"
-        #         )
-        #     ],
-        # )
     ])

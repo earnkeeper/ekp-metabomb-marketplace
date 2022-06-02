@@ -47,6 +47,7 @@ class DashboardController:
             return
 
         await self.client_service.emit_busy(sid, OPENS_COLLECTION_NAME)
+        await self.client_service.emit_busy(sid, FUSION_COLLECTION_NAME)
 
         currency = client_currency(event)
 
@@ -80,6 +81,5 @@ class DashboardController:
             fusion_documents
         )
 
-        # pprint(fusion_documents)
-        
         await self.client_service.emit_done(sid, OPENS_COLLECTION_NAME)
+        await self.client_service.emit_done(sid, FUSION_COLLECTION_NAME)
