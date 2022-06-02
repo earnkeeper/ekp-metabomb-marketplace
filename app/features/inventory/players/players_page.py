@@ -1,8 +1,8 @@
 from app.utils.page_title import page_title
 from ekp_sdk.ui import (Button, Card, Col, Column, Container, Datatable, Div,
-                        Form, Image, Input, Row, Span, Tab, Tabs, collection,
-                        documents, format_currency, format_template, is_busy,
-                        navigate, remove_form_record, commify, sum, count, format_mask_address)
+                        Form, Image, Input, Row, Span, collection, documents,
+                        format_currency, format_template, is_busy, Link,
+                        navigate, remove_form_record, commify, sum, format_mask_address, Icon)
 
 from app.utils.summary_card import summary_card
 
@@ -15,6 +15,50 @@ def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                 "Track Boxes, Heroes, Market Value and ROI for any player. Once you add an address, click on it in the list for full details",
                 "my-1 d-block font-small-4"
             ),
+            Row(
+                children=[
+                    Col(
+                        class_name="col-auto",
+                        children=[
+                            Span("⚠️")
+                        ]
+                    ),
+                    Col(
+                        class_name="col-auto px-0",
+                        children=[
+                            Span(
+                            "Est MTB earning calculations are based on the current state of testnet and subject to change."
+                        ),]
+                    )
+                ]
+            ),
+            Div([], "mt-1"),
+            Row(
+
+                children=[
+                    Col(
+                        class_name="col-auto",
+                        children=[Icon(name="cib-discord")],
+                    ),
+                    Col(
+                        class_name="col-auto px-0",
+                        children=[
+                        Link(
+                            content="Join us on discord.",
+                            external=True,
+                            href="https://discord.gg/jPDgmzug"
+                        )],
+                    ),
+                    Col(
+                        class_name="col-auto",
+                        children=[Span(
+                            "We research earning potential for games daily"
+                        )],
+                    ),
+
+                ]
+            ),
+            Div([], "mt-2"),
             summary_row(PLAYERS_COLLECTION_NAME),
             form_row(PLAYERS_FORM_NAME),
             table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME)
@@ -36,7 +80,7 @@ def summary_row(PLAYERS_COLLECTION_NAME):
                             ),
                         ),
                     ]
-                ),    
+                ),
                 Col(
                     "col-auto",
                     [
@@ -47,7 +91,7 @@ def summary_row(PLAYERS_COLLECTION_NAME):
                             ),
                         ),
                     ]
-                ),                                
+                ),
                 Col("col-auto", [
                     summary_card(
                         "Market Value",
