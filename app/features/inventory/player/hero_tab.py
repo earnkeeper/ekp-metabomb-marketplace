@@ -2,7 +2,7 @@ from app.utils.game_constants import HERO_BOX_NAME_IMAGE
 from app.utils.image_cell import image_cell
 from ekp_sdk.ui import (Card, Chart, Column, Container, Datatable, Span,
                         collection, commify, documents, format_currency,
-                        format_template, is_busy, Div, Row, Icon, Link, Col)
+                        format_template, is_busy, Div, Row, Icon, Link, Col, format_percent)
 
 
 def hero_tab(HEROES_COLLECTION_NAME):
@@ -98,7 +98,6 @@ def hero_tab(HEROES_COLLECTION_NAME):
                     Column(
                         id="est_payback",
                         title="Payback",
-                        format=format_template("{{ est_payback }} days", {"est_payback": "$.est_payback"}),
                         width="120px",
                         right=True,
                         sortable=True,
@@ -106,7 +105,7 @@ def hero_tab(HEROES_COLLECTION_NAME):
                     Column(
                         id="est_roi",
                         title="ROI",
-                        format=format_template("{{ est_roi }} %", {"est_roi": "$.est_roi"}),
+                        format=format_percent("$.est_roi"),
                         width="100px",
                         right=True,
                         sortable=True,
