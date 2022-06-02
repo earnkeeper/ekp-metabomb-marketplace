@@ -1,12 +1,18 @@
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Form,
                         Icon, Row, Span, collection, documents,
-                        format_currency, format_template, is_busy, switch_case)
+                        format_currency, format_template, is_busy, switch_case, commify, Paragraphs)
 
 
 def fusion_table(FUSION_COLLECTION_NAME):
     return Container(
         children=[
             title_row(),
+            Paragraphs(
+                [
+                    "Do you want a rare hero? Is it cheaper to create one using fusion or buy directly from the market?",
+                    "Use the table below to decide."
+                ],
+            ),
             table_row(FUSION_COLLECTION_NAME)
         ]
     )
@@ -62,14 +68,14 @@ def table_row(FUSION_COLLECTION_NAME):
             ),
             Column(
                 id="total_costs",
-                title="Total cost",
+                title="Fusion Cost",
                 cell=total_costs(),
                 right=True,
                 width="160px"
             ),
             Column(
                 id="market_value",
-                title="Market Value",
+                title="Market Cost",
                 cell=market_value(),
                 right=True,
                 width="160px"
@@ -141,7 +147,7 @@ def materials_cell():
                                 "input_hero_rarity": "$.input_hero_rarity",
                                 "inputs_count": "$.inputs_count"
                             }
-                        )
+                        ),
                     )
                 ],
 
@@ -168,7 +174,7 @@ def input_costs():
                             "input_floor_price_fiat": format_currency(f"$.input_floor_price_fiat", "$.fiat_symbol")
                         }
                     ),
-                    "float-right font-small-2"
+                    "float-right font-small-1"
                 )
             ],
         )
@@ -190,10 +196,10 @@ def fusion_fees():
                     format_template(
                         "{{ fusion_fees_mtb }} MTB",
                         {
-                            "fusion_fees_mtb": "$.fusion_fees_mtb",
+                            "fusion_fees_mtb": commify("$.fusion_fees_mtb"),
                         }
                     ),
-                    "float-right font-small-2"
+                    "float-right font-small-1"
                 )
             ],
         )
@@ -208,20 +214,6 @@ def total_costs():
                 Span(format_currency("$.total_cost_fiat", "$.fiat_symbol"))
             ],
         ),
-        Col(
-            class_name="col-12 text-right",
-            children=[
-                Span(
-                    format_template(
-                        "{{ total_cost_mtb }} MTB",
-                        {
-                            "total_cost_mtb": "$.total_cost_mtb",
-                        }
-                    ),
-                    "float-right font-small-2"
-                )
-            ],
-        )
     ])
 
 

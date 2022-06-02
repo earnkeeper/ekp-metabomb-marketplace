@@ -1,3 +1,4 @@
+from pprint import pprint
 from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
 
@@ -24,6 +25,10 @@ class HeroFloorPriceService:
         
         for listing in listings:
             price = listing["price"]
+            
+            if not listing["for_sale"]:
+                continue
+            
             rarity_name = self.mapper_service.HERO_RARITY_TO_NAME[listing['rarity']]
             
             if (not floor_prices[rarity_name]) or (price < floor_prices[rarity_name]):
