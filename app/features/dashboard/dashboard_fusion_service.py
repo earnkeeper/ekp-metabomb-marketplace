@@ -48,11 +48,16 @@ class DashboardFusionService:
 
             total_cost = inputs_cost + fusion_fees
             last_total_cost = total_cost
+            total_cost_fiat = total_cost * rate
 
             color = target["color"]
 
+
+
             document: FusionCostDocument = {
                 "color": color,
+                "total_cost_color": "success" if total_cost_fiat < market_value_fiat else "danger",
+                "market_value_color": "success" if total_cost_fiat > market_value_fiat else "danger",
                 "fiat_symbol": currency["symbol"],
                 "fusion_fees_fiat": fusion_fees * rate,
                 "fusion_fees_mtb": fusion_fees,
@@ -65,7 +70,7 @@ class DashboardFusionService:
                 "market_value_fiat": market_value_fiat,
                 "market_value_mtb": market_value,
                 "target_name": target_name,
-                "total_cost_fiat": total_cost * rate,
+                "total_cost_fiat": total_cost_fiat,
                 "input_hero_rarity": input_hero_rarity,
                 "total_cost_mtb": total_cost
             }

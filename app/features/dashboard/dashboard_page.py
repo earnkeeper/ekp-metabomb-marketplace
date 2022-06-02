@@ -7,9 +7,9 @@ def page(OPENS_COLLECTION_NAME, ACTIVITY_COLLECTION_NAME, FUSION_COLLECTION_NAME
     return Container(
         children=[
             page_title('activity', 'Dashboard'),
-            new_user_activity(ACTIVITY_COLLECTION_NAME),
             hero_drop_rates(OPENS_COLLECTION_NAME),
-            fusion_table(FUSION_COLLECTION_NAME)
+            fusion_table(FUSION_COLLECTION_NAME),
+            new_user_activity(ACTIVITY_COLLECTION_NAME),
         ]
     )
 
