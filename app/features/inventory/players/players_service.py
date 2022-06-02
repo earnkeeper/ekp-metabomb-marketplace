@@ -64,8 +64,16 @@ class InventoryPlayersService:
 
         total_price = 0
 
+        total_mtb_per_day = 0
+
         for hero_nft in hero_nfts:
             token_id = hero_nft["token_id"]
+
+            stats = await self.metabomb_api_service.get_hero(token_id)
+
+            mtb_per_day = 0.145 * 0.5 * 1440 * stats['power']
+
+            total_mtb_per_day += mtb_per_day
 
             if token_id not in hero_map:
                 continue
@@ -103,7 +111,8 @@ class InventoryPlayersService:
             "fiat_symbol": currency["symbol"],
             "boxes": len(box_nfts),
             "heroes": len(hero_nfts),
-            "market_value_fiat": total_price * mtb_rate
+            "market_value_fiat": total_price * mtb_rate,
+            "est_mtb_per_day": total_mtb_per_day
         }
 
         return document

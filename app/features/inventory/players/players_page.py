@@ -143,6 +143,15 @@ def table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                 sortable=True
             ),
             Column(
+                id="est_mtb_per_day",
+                title="Est MTB per day",
+                value=commify("$.est_mtb_per_day"),
+                right=True,
+                width="100px",
+                # format="$.est_mtb_per_day",
+                sortable=True
+            ),
+            Column(
                 id="actions",
                 width="60px",
                 title="",

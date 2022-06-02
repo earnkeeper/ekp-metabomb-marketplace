@@ -64,6 +64,8 @@ class InventoryService:
             if price:
                 price_fiat = price * mtb_rate
 
+            mtb_per_day = 0.145 * 0.5 * 1440 * stats['power']
+            fiat_per_day = mtb_per_day * mtb_rate
             document = {
                 "id": token_id,
                 "updated": datetime.now().timestamp(),
@@ -80,7 +82,11 @@ class InventoryService:
                 "hero_speed": stats['speed'],
                 "hero_stamina": stats['stamina'],
                 "hero_bomb_num": stats['bomb_num'],
-                "hero_bomb_range": stats['bomb_range']
+                "hero_bomb_range": stats['bomb_range'],
+                "mtb_per_day": mtb_per_day,
+                "fiat_per_day": fiat_per_day,
+                "est_payback": int(price_fiat / fiat_per_day),
+                "est_roi": int(fiat_per_day * 365 * 100 / price_fiat)
             }
 
             documents.append(document)
