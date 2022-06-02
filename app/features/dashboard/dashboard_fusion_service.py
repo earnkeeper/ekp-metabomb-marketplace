@@ -66,6 +66,7 @@ class DashboardFusionService:
                 "market_value_mtb": market_value,
                 "target_name": target_name,
                 "total_cost_fiat": total_cost * rate,
+                "input_hero_rarity": input_hero_rarity,
                 "total_cost_mtb": total_cost
             }
 

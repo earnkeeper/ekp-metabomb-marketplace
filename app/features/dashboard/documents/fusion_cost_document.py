@@ -16,4 +16,5 @@ class FusionCostDocument(TypedDict):
     market_value_mtb: int
     target_name: str
     total_cost_fiat: float
+    input_hero_rarity: str
     total_cost_mtb: int

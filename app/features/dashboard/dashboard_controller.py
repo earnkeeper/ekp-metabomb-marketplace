@@ -8,6 +8,7 @@ from ekp_sdk.util import client_currency, client_path
 
 OPENS_COLLECTION_NAME = "metabomb_dashboard_opens"
 ACTIVITY_COLLECTION_NAME = "metabomb_dashboard_activity"
+FUSION_COLLECTION_NAME = "metabomb_dashboard_fusion"
 
 class DashboardController:
     def __init__(
@@ -35,7 +36,7 @@ class DashboardController:
         await self.client_service.emit_page(
             sid,
             self.path,
-            page(OPENS_COLLECTION_NAME, ACTIVITY_COLLECTION_NAME),
+            page(OPENS_COLLECTION_NAME, ACTIVITY_COLLECTION_NAME, FUSION_COLLECTION_NAME),
         )
 
     async def on_client_state_changed(self, sid, event):
@@ -72,7 +73,13 @@ class DashboardController:
         # ----------------------------------------------------------------------
 
         fusion_documents = await self.dashboard_fusion_service.get_documents(currency)
-        
-        pprint(fusion_documents)
+
+        await self.client_service.emit_documents(
+            sid,
+            FUSION_COLLECTION_NAME,
+            fusion_documents
+        )
+
+        # pprint(fusion_documents)
         
         await self.client_service.emit_done(sid, OPENS_COLLECTION_NAME)
