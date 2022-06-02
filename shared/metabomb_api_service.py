@@ -97,15 +97,16 @@ class MetabombApiService:
                     error
                     count
                     heroes {
-                    id
-                    name
-                    display_id
-                    rarity
-                    level
-                    hero_class
-                    for_sale
-                    price
-                    __typename
+                        id
+                        name
+                        display_id
+                        rarity
+                        level
+                        hero_class
+                        for_sale
+                        price
+                        power
+                        __typename
                     }
                     __typename
                 }
