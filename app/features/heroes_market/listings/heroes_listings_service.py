@@ -97,7 +97,8 @@ class HeroListingsService:
         est_roi = None
 
         if price_fiat:
-            est_payback = f"{int(price_fiat / fiat_per_day)} days"
+            est_payback = int(price_fiat / fiat_per_day)
+            # est_payback = f"{int(price_fiat / fiat_per_day)} days"
             est_roi = int(fiat_per_day * 365 * 100 / price_fiat)
 
         return {
@@ -118,6 +119,7 @@ class HeroListingsService:
             "rarity_name": rarity_name,
             "level": listing["level"] + 1,
             "last_listing_timestamp": timestamp[0] if timestamp else None,
+            "power": listing['power'],
             "mtb_per_day": mtb_per_day,
             "fiat_per_day": fiat_per_day,
             "est_payback": est_payback,
