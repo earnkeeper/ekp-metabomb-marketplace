@@ -31,7 +31,6 @@ class HeroListingsService:
         listings = await self.metabomb_api_service.get_market_heroes()
 
         hero_listing_timestamps = list(self.hero_listing_timestamp_repo.collection.find())
-        # print(hero_listing_timestamps)
 
         documents = []
 
@@ -42,8 +41,14 @@ class HeroListingsService:
                 continue
 
             document = self.map_document(
-                listing, hero_listing_timestamps,
-                currency, rate, now, name_totals)
+                listing, 
+                hero_listing_timestamps,
+                currency, 
+                rate, 
+                now, 
+                name_totals
+            )
+            
             documents.append(document)
 
         return documents
@@ -83,6 +88,19 @@ class HeroListingsService:
             if pc_above_avg_price_fiat > 1:
                 deal = "no"
 
+        price_fiat = price * rate
+
+        mtb_per_day = 0.145 * 0.5 * 1440 * listing['power']
+        fiat_per_day = mtb_per_day * rate
+
+        est_payback = None
+        est_roi = None
+
+        if price_fiat:
+            est_payback = int(price_fiat / fiat_per_day)
+            # est_payback = f"{int(price_fiat / fiat_per_day)} days"
+            est_roi = int(fiat_per_day * 365 * 100 / price_fiat)
+
         return {
             "fiatSymbol": currency["symbol"],
             "id": int(listing["id"]),
@@ -94,13 +112,18 @@ class HeroListingsService:
             "pcAboveAvgFiat": pc_above_avg_price_fiat,
             "deal": deal,
             "price": price,
-            "priceFiat": price * rate,
+            "priceFiat": price_fiat,
             "tokenId": int(listing["id"]),
             "type": listing["__typename"],
             "updated": now,
             "rarity_name": rarity_name,
             "level": listing["level"] + 1,
-            "last_listing_timestamp": timestamp[0] if timestamp else None
+            "last_listing_timestamp": timestamp[0] if timestamp else None,
+            "power": listing['power'],
+            "mtb_per_day": mtb_per_day,
+            "fiat_per_day": fiat_per_day,
+            "est_payback": est_payback,
+            "est_roi": est_roi
         }
 
     def get_name_totals(self, history_documents, now):

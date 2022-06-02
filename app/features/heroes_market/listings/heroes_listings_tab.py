@@ -5,6 +5,8 @@ from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         format_currency, format_mask_address, format_percent,
                         format_template, is_busy, switch_case, format_age, format_datetime)
 
+from app.utils.image_cell import image_cell
+
 
 def heroes_listings_tab(LISTINGS_COLLECTION_NAME):
     return Container(
@@ -53,22 +55,22 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 id="name",
                 sortable=True,
                 searchable=True,
-                min_width="320px",
+                min_width="220px",
                 cell=__name_cell
             ),
             Column(
                 id="price",
-                title="MTB",
+                title="Cost MTB",
                 format=commify("$.price"),
-                width="120px",
+                width="110px",
                 right=True,
                 sortable=True,
             ),
             Column(
                 id="priceFiat",
-                title="Fiat",
+                title="Cost Fiat",
                 format=format_currency("$.priceFiat", "$.fiatSymbol"),
-                width="120px",
+                width="110px",
                 right=True,
                 sortable=True,
             ),
@@ -79,6 +81,39 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 right=True,
                 sortable=True,
                 cell=__avg_price_cell
+            ),
+            Column(
+                id="power",
+                title="Power",
+                cell=set_image(icon_name='stats-power',
+                               attr_name='power'),
+                width="80px",
+                right=True,
+                sortable=True,
+            ),
+            Column(
+                id="mtb_per_day",
+                title="MTB / day",
+                format=commify("$.mtb_per_day"),
+                width="110px",
+                right=True,
+                sortable=True,
+            ),
+            Column(
+                id="est_payback",
+                title="Payback",
+                format=format_template("{{ est_payback }} days", {"est_payback": "$.est_payback"}),
+                width="110px",
+                right=True,
+                sortable=True,
+            ),
+            Column(
+                id="est_roi",
+                title="ROI",
+                format=format_percent("$.est_roi"),
+                width="100px",
+                right=True,
+                sortable=True,
             ),
             Column(
                 id="rarity_name",
@@ -103,6 +138,12 @@ __avg_price_cell = Span(
     switch_case("$.deal", {"no": "text-success", "yes": "text-danger"})
 ),
 
+def set_image(icon_name, attr_name):
+    return image_cell(
+        f"https://app.metabomb.io/icons/stats-icon/{icon_name}.svg",
+        f"$.{attr_name}",
+        image_size="16px"
+    )
 
 __id_cell = Link(
     href=format_template(

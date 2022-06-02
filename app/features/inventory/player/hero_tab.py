@@ -2,12 +2,56 @@ from app.utils.game_constants import HERO_BOX_NAME_IMAGE
 from app.utils.image_cell import image_cell
 from ekp_sdk.ui import (Card, Chart, Column, Container, Datatable, Span,
                         collection, commify, documents, format_currency,
-                        format_template, is_busy)
+                        format_template, is_busy, Div, Row, Icon, Link, Col, format_percent)
 
 
 def hero_tab(HEROES_COLLECTION_NAME):
     return Container(
         children=[
+            Row(
+                children=[
+                    Col(
+                        class_name="col-auto",
+                        children=[
+                            Span("⚠️")
+                        ]
+                    ),
+                    Col(
+                        class_name="col-auto px-0",
+                        children=[
+                            Span(
+                                "Est MTB earning calculations are based on the current state of testnet and subject to change."
+                            ), ]
+                    )
+                ]
+            ),
+            Div([], "mt-1"),
+            Row(
+
+                children=[
+                    Col(
+                        class_name="col-auto",
+                        children=[Icon(name="cib-discord")],
+                    ),
+                    Col(
+                        class_name="col-auto px-0",
+                        children=[
+                            Link(
+                                content="Join us on discord.",
+                                external=True,
+                                href="https://discord.com/invite/RHnnWBAkes"
+                            )],
+                    ),
+                    Col(
+                        class_name="col-auto",
+                        children=[Span(
+                            "We research earning potential for games daily"
+                        )],
+                    ),
+
+                ]
+            ),
+            Div([], "mt-3"),
             Datatable(
                 data=documents(HEROES_COLLECTION_NAME),
                 busy_when=is_busy(collection(HEROES_COLLECTION_NAME)),
@@ -40,6 +84,29 @@ def hero_tab(HEROES_COLLECTION_NAME):
                         format=format_currency(
                             "$.price_fiat", "$.fiat_symbol"),
                         width="120px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="mtb_per_day",
+                        title="MTB / day",
+                        format=commify("$.mtb_per_day"),
+                        width="120px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="est_payback",
+                        title="Payback",
+                        width="120px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="est_roi",
+                        title="ROI",
+                        format=format_percent("$.est_roi"),
+                        width="100px",
                         right=True,
                         sortable=True,
                     ),

@@ -9,6 +9,7 @@ from app.features.boxes_market.listings.boxes_listings_service import \
 from app.features.boxes_market.boxes_market_controller import BoxesMarketController
 from app.features.dashboard.dashboard_activity_service import DashboardActivityService
 from app.features.dashboard.dashboard_controller import DashboardController
+from app.features.dashboard.dashboard_fusion_service import DashboardFusionService
 from app.features.dashboard.dashboard_opens_service import \
     DashboardOpensService
 from app.features.embed_box_floor.embed_box_floor_controller import EmbedBoxFloorController
@@ -24,6 +25,7 @@ from db.activity_repo import ActivityRepo
 from db.box_opens_repo import BoxOpensRepo
 from db.market_sales_repo import MarketSalesRepo
 from db.hero_listing_timestamp_repo import HeroListingTimestampRepo
+from shared.hero_floor_price_service import HeroFloorPriceService
 from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
 from shared.metabomb_coingecko_service import MetabombCoingeckoService
@@ -45,6 +47,11 @@ class AppContainer(BaseContainer):
         self.mapper_service = MapperService(
             cache_service=self.cache_service,
             coingecko_service=self.coingecko_service,
+        )
+
+        self.hero_floor_price_service = HeroFloorPriceService(
+            metabomb_api_service=self.metabomb_api_service,
+            mapper_service=self.mapper_service            
         )
         
         self.metabomb_moralis_service = MetabombMoralisService(
@@ -128,11 +135,17 @@ class AppContainer(BaseContainer):
         self.dashboard_activity_service = DashboardActivityService(
             activity_repo=self.activity_repo
         )
+        
+        self.dashboard_fusion_service = DashboardFusionService(
+            coingecko_service=self.coingecko_service,
+            hero_floor_price_service=self.hero_floor_price_service
+        )
 
         self.dashboard_controller = DashboardController(
             client_service=self.client_service,
             dashboard_activity_service=self.dashboard_activity_service,
             dashboard_opens_service=self.dashboard_opens_service,
+            dashboard_fusion_service=self.dashboard_fusion_service,
         )
 
         # FEATURES - INVENTORY - PLAYERS
