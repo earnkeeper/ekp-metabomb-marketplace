@@ -211,7 +211,12 @@ def total_costs():
         Col(
             class_name="col-12 text-right",
             children=[
-                Span(format_currency("$.total_cost_fiat", "$.fiat_symbol"))
+                Span(
+                    format_currency("$.total_cost_fiat", "$.fiat_symbol"), 
+                    format_template("text-{{ color }}", {
+                        "color": "$.total_cost_color"
+                    })
+                )
             ],
         ),
     ])
@@ -222,7 +227,12 @@ def market_value():
         Col(
             class_name="col-12 text-right",
             children=[
-                Span(format_currency("$.market_value_fiat", "$.fiat_symbol"))
+                Span(
+                    format_currency("$.market_value_fiat", "$.fiat_symbol"),
+                    format_template("text-{{ color }}", {
+                        "color": "$.market_value_color"
+                    })                    
+                )
             ],
         ),
     ])

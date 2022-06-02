@@ -52,12 +52,12 @@ class DashboardFusionService:
 
             color = target["color"]
 
-
+            print(market_value)
 
             document: FusionCostDocument = {
                 "color": color,
-                "total_cost_color": "success" if total_cost_fiat < market_value_fiat else "danger",
-                "market_value_color": "success" if total_cost_fiat > market_value_fiat else "danger",
+                "total_cost_color": "normal" if not market_value_fiat else "success" if total_cost_fiat < market_value_fiat else "danger",
+                "market_value_color": "normal" if not market_value_fiat else "success" if total_cost_fiat > market_value_fiat else "danger",
                 "fiat_symbol": currency["symbol"],
                 "fusion_fees_fiat": fusion_fees * rate,
                 "fusion_fees_mtb": fusion_fees,
