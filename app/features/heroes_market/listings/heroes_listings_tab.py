@@ -60,7 +60,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
             ),
             Column(
                 id="est_payback",
-                title="Payback Period",
+                title="ROI",
                 format=format_template(
                     "{{ est_payback }} days",
                     {
@@ -68,13 +68,6 @@ def market_row(LISTINGS_COLLECTION_NAME):
                     }
                 ),
                 width="120px",
-                sortable=True,
-            ),
-            Column(
-                id="est_roi",
-                title="ROI",
-                format=format_percent("$.est_roi"),
-                width="100px",
                 sortable=True,
             ),
             Column(
@@ -97,6 +90,13 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 width="90px",
                 sortable=True,
                 cell=__avg_price_cell
+            ),
+            Column(
+                id="est_roi",
+                title="APR",
+                format=format_percent("$.est_roi"),
+                width="100px",
+                sortable=True,
             ),
             # Column(
             #     id="power",
