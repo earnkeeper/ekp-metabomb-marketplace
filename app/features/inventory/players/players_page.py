@@ -15,6 +15,9 @@ def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                 "Track Boxes, Heroes, Market Value and ROI for any player. Once you add an address, click on it in the list for full details",
                 "my-1 d-block font-small-4"
             ),
+            summary_row(PLAYERS_COLLECTION_NAME),
+            form_row(PLAYERS_FORM_NAME),
+            table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME),
             Row(
                 children=[
                     Col(
@@ -27,8 +30,8 @@ def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                         class_name="col-auto px-0",
                         children=[
                             Span(
-                            "Est MTB earning calculations are based on the current state of testnet and subject to change."
-                        ),]
+                                "Est MTB earning calculations are based on the current state of testnet and subject to change."
+                            ), ]
                     )
                 ]
             ),
@@ -43,11 +46,11 @@ def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                     Col(
                         class_name="col-auto px-0",
                         children=[
-                        Link(
-                            content="Join us on discord.",
-                            external=True,
-                            href="https://discord.com/invite/RHnnWBAkes"
-                        )],
+                            Link(
+                                content="Join us on discord.",
+                                external=True,
+                                href="https://discord.com/invite/RHnnWBAkes"
+                            )],
                     ),
                     Col(
                         class_name="col-auto",
@@ -59,15 +62,13 @@ def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                 ]
             ),
             Div([], "mt-2"),
-            summary_row(PLAYERS_COLLECTION_NAME),
-            form_row(PLAYERS_FORM_NAME),
-            table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME)
         ]
     )
 
 
 def summary_row(PLAYERS_COLLECTION_NAME):
-    return Container(
+    return Div(
+        when=f"$.{PLAYERS_COLLECTION_NAME}[0].id",
         children=[
             Row([
                 Col(
