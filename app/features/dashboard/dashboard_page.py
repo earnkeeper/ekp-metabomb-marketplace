@@ -1,6 +1,7 @@
 from app.utils.game_constants import HERO_BOX_NAME_IMAGE
 from app.utils.page_title import page_title
-from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Div, Chart, commify, ekp_map, sort_by, json_array
+from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Div, Chart, commify, ekp_map, sort_by, json_array, \
+    Hr
 from app.features.dashboard.dashboard_fusion_page import fusion_table
 
 def page(OPENS_COLLECTION_NAME, ACTIVITY_COLLECTION_NAME, FUSION_COLLECTION_NAME):
@@ -8,7 +9,9 @@ def page(OPENS_COLLECTION_NAME, ACTIVITY_COLLECTION_NAME, FUSION_COLLECTION_NAME
         children=[
             page_title('activity', 'Dashboard'),
             hero_drop_rates(OPENS_COLLECTION_NAME),
+            Hr(),
             fusion_table(FUSION_COLLECTION_NAME),
+            Hr(),
             new_user_activity(ACTIVITY_COLLECTION_NAME),
         ]
     )
