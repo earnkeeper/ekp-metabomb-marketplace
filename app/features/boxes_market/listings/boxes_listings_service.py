@@ -48,7 +48,8 @@ class BoxesListingsService:
 
             for listing in listings:
                 document = self.map_document(
-                    listing, 
+                    listing,
+                    box_listing_timestamps,
                     currency, 
                     rate, 
                     now, 
@@ -60,14 +61,17 @@ class BoxesListingsService:
 
             return documents
 
-    def map_document(self, listing, currency, rate, now, name_totals):
+    def map_document(self, listing, box_listing_timestamps, currency, rate, now, name_totals):
         price = listing["price"]
         
         box_type = listing["box_type"]
+
+        token_id = int(listing["token_id"])
         
         if box_type not in self.__BOX_TYPES:
             return None
-        
+
+        timestamp = list(filter(lambda x: x['tokenId'] == token_id, box_listing_timestamps))
         name = self.__BOX_TYPES[box_type]
 
         name_total = None
@@ -108,6 +112,7 @@ class BoxesListingsService:
             "tokenId": int(listing["token_id"]),
             "type": listing["__typename"],
             "updated": now,
+            "last_listing_timestamp": timestamp[0]['lastListingTimestamp'] if timestamp else None,
         }
 
     def get_name_totals(self, history_documents, now):

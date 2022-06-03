@@ -3,7 +3,7 @@ from app.utils.game_constants import (HERO_BOX_NAME_CONTRACT,
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         Paragraphs, Row, Span, collection, commify, documents,
                         format_currency, format_mask_address, format_percent,
-                        format_template, is_busy, switch_case)
+                        format_template, is_busy, switch_case, format_age)
 
 
 def listings_tab(LISTINGS_COLLECTION_NAME):
@@ -34,9 +34,11 @@ def market_row(LISTINGS_COLLECTION_NAME):
         ],
         columns=[
             Column(
-                id="id",
+                id="last_listing_timestamp",
+                title="Listed",
                 sortable=True,
-                width="100px",
+                cell=timestamp_cell(),
+                width="120px"
             ),
             Column(
                 id="tokenId",
@@ -137,3 +139,19 @@ def image_text_cell(src, text):
 
 __name_cell = image_text_cell(switch_case(
     "$.name", HERO_BOX_NAME_IMAGE), "$.name")
+
+def timestamp_cell():
+    return Row([
+        Col(
+            class_name="my-auto col-auto pr-0",
+            children=[
+                Span(format_age("$.last_listing_timestamp"))
+            ]
+        ),
+        # Col(
+        #     class_name="my-auto col-auto pr-0",
+        #     children=[
+        #         Span(format_datetime("$.last_listing_timestamp"))
+        #     ]
+        # ),
+    ])

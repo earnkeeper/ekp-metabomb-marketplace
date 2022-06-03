@@ -22,6 +22,7 @@ from app.features.inventory.players.players_controller import InventoryPlayersCo
 from app.features.inventory.players.players_service import InventoryPlayersService
 from app.features.heroes_market.heroes_summary_service import HeroesSummaryService
 from db.activity_repo import ActivityRepo
+from db.box_listing_timestamp_repo import BoxListingTimestampRepo
 from db.box_opens_repo import BoxOpensRepo
 from db.market_sales_repo import MarketSalesRepo
 from db.hero_listing_timestamp_repo import HeroListingTimestampRepo
@@ -84,8 +85,13 @@ class AppContainer(BaseContainer):
 
         # FEATURES - BOXES MARKET
 
+        self.box_listing_timestamp_repo = BoxListingTimestampRepo(
+            mg_client=self.mg_client
+        )
+
         self.boxes_listings_service = BoxesListingsService(
-            coingecko_service=self.coingecko_service
+            coingecko_service=self.coingecko_service,
+            box_listing_timestamp_repo=self.box_listing_timestamp_repo
         )
 
         self.boxes_history_service = BoxesHistoryService(
