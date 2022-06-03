@@ -12,8 +12,8 @@ def heroes_listings_tab(LISTINGS_COLLECTION_NAME):
         children=[
             Paragraphs(
                 [
-                    "The live Metabomb marketplace! Think it looks the same as the offical one, look again 👀",
-                    "Compare every price to the 24 hour average and check prices in your currency (select at top of page)",
+                    "Browse the live Metabomb Marketplace for the best deals.",
+                    "The heroes with the best Return on Investment are shown at the top. (Based on Testnet gameplay mechanics) ",
                 ],
             ),
             Div([], "mb-3"),
@@ -26,7 +26,8 @@ def market_row(LISTINGS_COLLECTION_NAME):
     return Datatable(
         data=documents(LISTINGS_COLLECTION_NAME),
         busy_when=is_busy(collection(LISTINGS_COLLECTION_NAME)),
-        default_sort_field_id="price",
+        default_sort_field_id="est_roi",
+        default_sort_asc=False,
         pagination_per_page=18,
         disable_list_view=True,
         search_hint="Search by token id or token name...",
@@ -58,52 +59,15 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 cell=__name_cell
             ),
             Column(
-                id="price",
-                title="Cost MTB",
-                format=commify("$.price"),
-                width="110px",
-                right=True,
-                sortable=True,
-            ),
-            Column(
-                id="priceFiat",
-                title="Cost Fiat",
-                format=format_currency("$.priceFiat", "$.fiatSymbol"),
-                width="110px",
-                right=True,
-                sortable=True,
-            ),
-            Column(
-                id="avgPriceFiat",
-                title="Vs 24h Avg",
-                width="120px",
-                right=True,
-                sortable=True,
-                cell=__avg_price_cell
-            ),
-            Column(
-                id="power",
-                title="Power",
-                cell=set_image(icon_name='stats-power',
-                               attr_name='power'),
-                width="80px",
-                right=True,
-                sortable=True,
-            ),
-            Column(
-                id="mtb_per_day",
-                title="MTB / day",
-                format=commify("$.mtb_per_day"),
-                width="110px",
-                right=True,
-                sortable=True,
-            ),
-            Column(
                 id="est_payback",
-                title="Payback",
-                format=format_template("{{ est_payback }} days", {"est_payback": "$.est_payback"}),
-                width="110px",
-                right=True,
+                title="Payback Period",
+                format=format_template(
+                    "{{ est_payback }} days",
+                    {
+                        "est_payback": "$.est_payback"
+                    }
+                ),
+                width="120px",
                 sortable=True,
             ),
             Column(
@@ -111,9 +75,37 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 title="ROI",
                 format=format_percent("$.est_roi"),
                 width="100px",
-                right=True,
                 sortable=True,
             ),
+            Column(
+                id="price",
+                title="Cost MTB",
+                format=commify("$.price"),
+                width="110px",
+                sortable=True,
+            ),
+            Column(
+                id="priceFiat",
+                title="Cost Fiat",
+                format=format_currency("$.priceFiat", "$.fiatSymbol"),
+                width="110px",
+                sortable=True,
+            ),
+            Column(
+                id="avgPriceFiat",
+                title="Vs 24h Avg",
+                width="90px",
+                sortable=True,
+                cell=__avg_price_cell
+            ),
+            # Column(
+            #     id="power",
+            #     title="Power",
+            #     cell=set_image(icon_name='stats-power',
+            #                    attr_name='power'),
+            #     width="80px",
+            #     sortable=True,
+            # ),
             Column(
                 id="rarity_name",
                 omit=True,
@@ -137,12 +129,14 @@ __avg_price_cell = Span(
     switch_case("$.deal", {"no": "text-success", "yes": "text-danger"})
 ),
 
+
 def set_image(icon_name, attr_name):
     return image_cell(
         f"https://app.metabomb.io/icons/stats-icon/{icon_name}.svg",
         f"$.{attr_name}",
         image_size="16px"
     )
+
 
 __id_cell = Link(
     href=format_template(
@@ -187,6 +181,7 @@ __name_cell = image_text_cell(
     }),
     "$.name"
 )
+
 
 def timestamp_cell():
     return Row([
