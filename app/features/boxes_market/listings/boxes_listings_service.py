@@ -5,13 +5,17 @@ from ekp_sdk.services import CoingeckoService
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
 
+from db.box_listing_timestamp_repo import BoxListingTimestampRepo
+
 
 class BoxesListingsService:
     def __init__(
         self,
-        coingecko_service: CoingeckoService
+        coingecko_service: CoingeckoService,
+        box_listing_timestamp_repo: BoxListingTimestampRepo
     ):
         self.coingecko_service = coingecko_service
+        self.box_listing_timestamp_repo = box_listing_timestamp_repo
 
     async def get_documents(self, currency, history_documents):
         url = "https://api.metabomb.io/graphql/"
@@ -21,6 +25,8 @@ class BoxesListingsService:
         start = time.perf_counter()
 
         transport = AIOHTTPTransport(url=url)
+
+        box_listing_timestamps = list(self.box_listing_timestamp_repo.collection.find())
 
         now = datetime.now().timestamp()
 

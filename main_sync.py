@@ -3,6 +3,8 @@ import asyncio
 
 from decouple import AutoConfig
 from ekp_sdk import BaseContainer
+
+from db.box_listing_timestamp_repo import BoxListingTimestampRepo
 from db.box_opens_repo import BoxOpensRepo
 from db.hero_listing_timestamp_repo import HeroListingTimestampRepo
 from db.market_sales_repo import MarketSalesRepo
@@ -10,6 +12,7 @@ from db.state_repo import StateRepo
 from shared.constants import HERO_CONTRACT_ADDRESS, MTB_CONTRACT_ADDRESS
 from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
+from sync.box_listing_timestamp_decoder_service import BoxListingTimestampDecoderService
 from sync.box_open_decoder_service import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS, BoxOpenDecoderService
 from sync.box_sale_decoder_service import BoxSaleDecoderService
 from sync.hero_sale_decoder_service import HeroSaleDecoderService
@@ -37,6 +40,9 @@ class AppContainer(BaseContainer):
         )
 
         self.hero_listing_timestamp_repo = HeroListingTimestampRepo(
+            mg_client=self.mg_client
+        )
+        self.box_listing_timestamp_repo = BoxListingTimestampRepo(
             mg_client=self.mg_client
         )
         
@@ -76,6 +82,12 @@ class AppContainer(BaseContainer):
 
         self.hero_listing_timestamp_decoder_service = HeroListingTimestampDecoderService(
             hero_listing_timestamp_repo=self.hero_listing_timestamp_repo,
+            contract_transactions_repo=self.contract_transactions_repo,
+            metabomb_api_service=self.metabomb_api_service
+        )
+
+        self.box_listing_timestamp_decoder_service = BoxListingTimestampDecoderService(
+            box_listing_timestamp_repo=self.box_listing_timestamp_repo,
             contract_transactions_repo=self.contract_transactions_repo,
             metabomb_api_service=self.metabomb_api_service
         )
@@ -133,4 +145,8 @@ if __name__ == '__main__':
 
     loop.run_until_complete(
         container.hero_listing_timestamp_decoder_service.decode_hero_listing_timestamp()
+    )
+
+    loop.run_until_complete(
+        container.box_listing_timestamp_decoder_service.decode_box_listing_timestamp()
     )
