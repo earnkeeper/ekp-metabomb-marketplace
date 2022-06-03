@@ -52,8 +52,6 @@ class DashboardFusionService:
 
             color = target["color"]
 
-            print(market_value)
-
             document: FusionCostDocument = {
                 "color": color,
                 "total_cost_color": "normal" if not market_value_fiat else "success" if total_cost_fiat < market_value_fiat else "danger",
