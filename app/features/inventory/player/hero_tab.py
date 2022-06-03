@@ -11,10 +11,6 @@ def hero_tab(HEROES_COLLECTION_NAME):
             Datatable(
                 data=documents(HEROES_COLLECTION_NAME),
                 busy_when=is_busy(collection(HEROES_COLLECTION_NAME)),
-                filters=[
-                    {"columnId": "rarity_name", "icon": "cil-spa"},
-                    {"columnId": "level", "icon": "cil-shield-alt"},
-                ],
                 columns=[
                     Column(
                         id="id",
