@@ -1,11 +1,10 @@
-from app.utils.game_constants import (HERO_BOX_NAME_CONTRACT,
-                                      HERO_BOX_NAME_IMAGE)
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         Paragraphs, Row, Span, collection, commify, documents,
                         format_currency, format_mask_address, format_percent,
-                        format_template, is_busy, switch_case, format_age, format_datetime)
+                        format_template, is_busy, switch_case, format_age)
 
 from app.utils.image_cell import image_cell
+from shared.constants import HERO_CONTRACT_ADDRESS
 
 
 def heroes_listings_tab(LISTINGS_COLLECTION_NAME):
@@ -149,7 +148,7 @@ __id_cell = Link(
     href=format_template(
         "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
         {
-            "contractAddress": switch_case("$.name", HERO_BOX_NAME_CONTRACT),
+            "contractAddress": HERO_CONTRACT_ADDRESS,
             "tokenId": "$.tokenId"
         }
     ),
