@@ -8,7 +8,7 @@ from typing import List
 from ekp_sdk.domain import Log
 from ekp_sdk.dto import Web3LogDto
 from ekp_sdk.services import CacheService, CoingeckoService, Web3Service
-from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, HERO_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS
+from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, HERO_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS, BOMB_BOX_CONTRACT_ADDRESS
 from shared.domain.hero import Hero
 from shared.domain.hero_box import HeroBox
 from shared.domain.market_listing import MarketListing
@@ -52,6 +52,10 @@ class ListenerService:
             "address": Web3.toChecksumAddress(ULTRA_BOX_CONTRACT_ADDRESS),
             "topics": ["0xe04eefd2590e9186abb360fc0848592add67dcef57f68a4110a6922c4793f7e0"]
         })
+        bomb_filter = self.web3_service.get_filter({
+            "address": Web3.toChecksumAddress(BOMB_BOX_CONTRACT_ADDRESS),
+            "topics": ["0xe04eefd2590e9186abb360fc0848592add67dcef57f68a4110a6922c4793f7e0"]
+        })
 
         hero_filter = self.web3_service.get_filter({
             "address": Web3.toChecksumAddress(HERO_CONTRACT_ADDRESS),
@@ -65,6 +69,7 @@ class ListenerService:
                 self.filter_loop(common_filter, 2),
                 self.filter_loop(premium_filter, 2),
                 self.filter_loop(ultra_filter, 2),
+                self.filter_loop(bomb_filter, 2),
                 self.filter_loop(hero_filter, 2),
             )
         )
@@ -106,6 +111,8 @@ class ListenerService:
             box_type = 1
         if address == ULTRA_BOX_CONTRACT_ADDRESS:
             box_type = 2
+        if address == BOMB_BOX_CONTRACT_ADDRESS:
+            box_type = 3
         if address == HERO_CONTRACT_ADDRESS:
             hero_dto: HeroDto = await self.metabomb_api_service.get_hero(token_id)
             hero = self.mapper_service.map_hero_dto_to_domain(hero_dto)

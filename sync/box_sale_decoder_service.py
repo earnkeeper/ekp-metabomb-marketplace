@@ -7,12 +7,13 @@ from db.market_sale_model import MarketSaleModel
 from db.market_sales_repo import MarketSalesRepo
 from ekp_sdk.db import ContractTransactionsRepo
 from ekp_sdk.services import CacheService, CoingeckoService
-from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, MTB_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS
+from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, MTB_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, \
+    ULTRA_BOX_CONTRACT_ADDRESS, BOMB_BOX_CONTRACT_ADDRESS
 from shared.mapper_service import MapperService
 from web3 import Web3
 
-TOKEN_TRANSFER_TOPIC = "0xd61e22991e1ab43a17e1ba8ddb78b72a4ffc0d7f455c8536073a6b8a9ffc0c4e"
-
+HERO_BOX_TRANSFER_TOPIC = "0xd61e22991e1ab43a17e1ba8ddb78b72a4ffc0d7f455c8536073a6b8a9ffc0c4e"
+BOMB_BOX_TRANSFER_TOPIC = "0x980eeb99bdb8de3043fd81f10d249141f5388fce276dd92ee88400c28d4c3a5b"
 
 class BoxSaleDecoderService:
     def __init__(
@@ -99,15 +100,18 @@ class BoxSaleDecoderService:
             if address == MTB_CONTRACT_ADDRESS:
                 dec = Web3.fromWei(literal_eval(data), 'ether')
                 distributions.append(dec)
-            if address == COMMON_BOX_CONTRACT_ADDRESS and topics[0] == TOKEN_TRANSFER_TOPIC:
+            if address == COMMON_BOX_CONTRACT_ADDRESS and topics[0] == HERO_BOX_TRANSFER_TOPIC:
                 token_id = literal_eval(topics[1])
                 box_type = 0
-            if address == PREMIUM_BOX_CONTRACT_ADDRESS and topics[0] == TOKEN_TRANSFER_TOPIC:
+            if address == PREMIUM_BOX_CONTRACT_ADDRESS and topics[0] == HERO_BOX_TRANSFER_TOPIC:
                 token_id = literal_eval(topics[1])
                 box_type = 1
-            if address == ULTRA_BOX_CONTRACT_ADDRESS and topics[0] == TOKEN_TRANSFER_TOPIC:
+            if address == ULTRA_BOX_CONTRACT_ADDRESS and topics[0] == HERO_BOX_TRANSFER_TOPIC:
                 token_id = literal_eval(topics[1])
                 box_type = 2
+            if address == BOMB_BOX_CONTRACT_ADDRESS and topics[0] == BOMB_BOX_TRANSFER_TOPIC:
+                token_id = literal_eval(topics[1])
+                box_type = 3
 
         if box_type is None:
             logging.warn(f'⚠️ could not find box type for sale: {hash}')
