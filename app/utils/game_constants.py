@@ -1,3 +1,6 @@
+from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS
+
+
 def rarity_names():
     return {
         0: "Common",
@@ -18,9 +21,9 @@ def class_names():
     }
 
 HERO_BOX_NAME_CONTRACT = {
-    "Common Box": "0x1f36bef063ee6fcefeca070159d51a3b36bc68d6",
-    "Premium Box": "0x2076626437c3bb9273998a5e4f96438abe467f1c",
-    "Ultra Box": "",
+    "Common Box": COMMON_BOX_CONTRACT_ADDRESS,
+    "Premium Box": PREMIUM_BOX_CONTRACT_ADDRESS,
+    "Ultra Box": ULTRA_BOX_CONTRACT_ADDRESS,
 }
 
 HERO_BOX_NAME_IMAGE = {

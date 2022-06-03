@@ -1,9 +1,10 @@
-from app.utils.game_constants import (HERO_BOX_NAME_CONTRACT,
-                                      HERO_BOX_NAME_IMAGE, MTB_ICON)
+from app.utils.game_constants import (MTB_ICON)
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         Paragraphs, Row, Span, collection, commify, documents,
                         format_age, format_currency, format_mask_address,
                         format_template, is_busy, switch_case)
+
+from shared.constants import HERO_CONTRACT_ADDRESS
 
 
 def history_tab(HISTORY_COLLECTION_NAME):
@@ -124,7 +125,7 @@ def name_cell():
                                         href=format_template(
                                             "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
                                             {
-                                                "contractAddress": switch_case("$.name", HERO_BOX_NAME_CONTRACT),
+                                                "contractAddress": HERO_CONTRACT_ADDRESS,
                                                 "tokenId": "$.tokenId"
                                             }
                                         ),
