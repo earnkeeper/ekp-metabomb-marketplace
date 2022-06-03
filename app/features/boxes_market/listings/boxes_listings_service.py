@@ -6,15 +6,18 @@ from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
 
 from db.box_listing_timestamp_repo import BoxListingTimestampRepo
+from shared.metabomb_api_service import MetabombApiService
 
 
 class BoxesListingsService:
     def __init__(
         self,
         coingecko_service: CoingeckoService,
+        metabomb_api_service: MetabombApiService,
         box_listing_timestamp_repo: BoxListingTimestampRepo
     ):
         self.coingecko_service = coingecko_service
+        self.metabomb_api_service = metabomb_api_service
         self.box_listing_timestamp_repo = box_listing_timestamp_repo
 
     async def get_documents(self, currency, history_documents):
@@ -32,34 +35,27 @@ class BoxesListingsService:
 
         name_totals = self.get_name_totals(history_documents, now)
 
-        async with Client(transport=transport) as client:
-            gql_result = await client.execute(
-                self.__QUERY,
-                variable_values=self.params(1, 5000)
+        listings = await self.metabomb_api_service.get_market_boxes()
+
+        documents = []
+
+        rate = await self.coingecko_service.get_latest_price("metabomb", currency["id"])
+
+        for listing in listings:
+            document = self.map_document(
+                listing,
+                box_listing_timestamps,
+                currency, 
+                rate, 
+                now, 
+                name_totals
             )
+            
+            if document:
+                documents.append(document)
 
-            print(f"⏱  [{url}] {time.perf_counter() - start:0.3f}s")
+        return documents
 
-            listings = gql_result["box_market"]["boxes"]
-
-            documents = []
-
-            rate = await self.coingecko_service.get_latest_price("metabomb", currency["id"])
-
-            for listing in listings:
-                document = self.map_document(
-                    listing,
-                    box_listing_timestamps,
-                    currency, 
-                    rate, 
-                    now, 
-                    name_totals
-                )
-                
-                if document:
-                    documents.append(document)
-
-            return documents
 
     def map_document(self, listing, box_listing_timestamps, currency, rate, now, name_totals):
         price = listing["price"]
@@ -138,53 +134,10 @@ class BoxesListingsService:
             name_totals[name]["count"] += 1
 
         return name_totals
+    
     __BOX_TYPES = {
         0: "Common Box",
         1: "Premium Box",
-        2: "Ultra Box"
+        2: "Ultra Box",
+        3: "Bomb Box"
     }
-
-    __QUERY = gql("""
-    query box_market($input: BoxMarketInput!) {
-    box_market(input: $input) {
-        error
-        count
-        boxes {
-        id
-        token_id
-        user {
-            wallet_address
-            __typename
-        }
-        box_type
-        price
-        for_sale
-        chain_process
-        __typename
-        }
-        __typename
-    }
-    }
-    """)
-
-    def params(self, page, count):
-        return {
-            "input": {
-                "f5": 0,
-                "token_id": -1,
-                "page": page,
-                "count": count,
-                "sort": 0,
-                "sort_type": 3,
-                "box_type": [
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
-                "forSale": 2
-
-            }
-        }
