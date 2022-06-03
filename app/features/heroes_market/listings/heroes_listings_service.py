@@ -58,11 +58,8 @@ class HeroListingsService:
 
         rarity_name = self.mapper_service.HERO_RARITY_TO_NAME[listing["rarity"]]
         token_id = int(listing["id"])
-        timestamp = [hero_listing_timestamp['lastListingTimestamp'] for hero_listing_timestamp in hero_listing_timestamps if
-                     hero_listing_timestamp['tokenId'] == token_id]
 
-        # find the hero listing timestamp using the hero token id listing["id"]
-        # print(timestamp)
+        timestamp = list(filter(lambda x: x['tokenId'] == token_id, hero_listing_timestamps))
         name = self.mapper_service.map_hero_name(rarity_name, listing["level"])
 
         name_total = None
@@ -118,7 +115,7 @@ class HeroListingsService:
             "updated": now,
             "rarity_name": rarity_name,
             "level": listing["level"] + 1,
-            "last_listing_timestamp": timestamp[0] if timestamp else None,
+            "last_listing_timestamp": timestamp[0]['lastListingTimestamp'] if timestamp else None,
             "power": listing['power'],
             "mtb_per_day": mtb_per_day,
             "fiat_per_day": fiat_per_day,
