@@ -40,6 +40,9 @@ def summary_row(SUMMARY_COLLECTION_NAME):
                 ]),
                 Col("col-auto", [
                     summary_card("ultra"),
+                ]),
+                Col("col-auto", [
+                    summary_card("bomb"),
                 ])
             ])
         ]

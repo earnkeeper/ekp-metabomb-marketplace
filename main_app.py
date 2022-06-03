@@ -91,6 +91,7 @@ class AppContainer(BaseContainer):
 
         self.boxes_listings_service = BoxesListingsService(
             coingecko_service=self.coingecko_service,
+            metabomb_api_service=self.metabomb_api_service,
             box_listing_timestamp_repo=self.box_listing_timestamp_repo
         )
 

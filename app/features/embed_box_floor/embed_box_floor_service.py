@@ -8,29 +8,34 @@ class EmbedBoxesService:
             "Common Box": None,
             "Premium Box": None,
             "Ultra Box": None,
+            "Bomb Box": None
         }
 
         avg_prices = {
             "Common Box": None,
             "Premium Box": None,
             "Ultra Box": None,
+            "Bomb Box": None
         }
 
         count_boxes = {
             "Common Box": 0,
             "Premium Box": 0,
             "Ultra Box": 0,
+            "Bomb Box": 0
         }
         perc_difference = {
             "Common Box": None,
             "Premium Box": None,
             "Ultra Box": None,
+            "Bomb Box": None
         }
         
         colors = {
             "Common Box": "normal",
             "Premium Box": "normal",
             "Ultra Box": "normal",
+            "Bomb Box": None
         }
 
         for listing in listing_documents:
@@ -56,6 +61,7 @@ class EmbedBoxesService:
         set_color("Common Box")
         set_color("Premium Box")
         set_color("Ultra Box")
+        set_color("Bomb Box")
         
         document = {
                 "id": "0",
@@ -76,5 +82,6 @@ class EmbedBoxesService:
         set_document_box("common", "Common Box")
         set_document_box("premium", "Premium Box")
         set_document_box("ultra", "Ultra Box")
+        set_document_box("bomb", "Bomb Box")
             
         return [document]

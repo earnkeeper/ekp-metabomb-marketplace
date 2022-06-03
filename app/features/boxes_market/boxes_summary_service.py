@@ -9,12 +9,14 @@ class BoxesSummaryService:
             "Common Box": None,
             "Premium Box": None,
             "Ultra Box": None,
+            "Bomb Box": None
         }
 
         avg_prices = {
             "Common Box": None,
             "Premium Box": None,
             "Ultra Box": None,
+            "Bomb Box": None
         }
         
         for listing in listing_documents:
@@ -49,5 +51,11 @@ class BoxesSummaryService:
                     "avgPrice": avg_prices["Ultra Box"],
                     "fiatSymbol": currency["symbol"]
                 },
+                "bomb": {
+                    "name": "Bomb Box",
+                    "floorPrice": floor_prices["Bomb Box"],
+                    "avgPrice": avg_prices["Bomb Box"],
+                    "fiatSymbol": currency["symbol"]
+                }
             }
         ]

@@ -3,7 +3,8 @@ from datetime import datetime
 from typing import List
 
 from ekp_sdk.services import BaseMapperService, CacheService, CoingeckoService
-from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS
+from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS, \
+    BOMB_BOX_CONTRACT_ADDRESS
 
 from shared.domain.hero import Hero
 from shared.domain.hero_box import HeroBox
@@ -192,7 +193,8 @@ class MapperService(BaseMapperService):
     HERO_BOX_TYPE_TO_NAME = {
         0: "Common Box",
         1: "Premium Box",
-        2: "Ultra Box"
+        2: "Ultra Box",
+        3: "Bomb Box"
     }
 
     def get_box_name_by_contract_address(self, contract_address):
@@ -204,7 +206,8 @@ class MapperService(BaseMapperService):
     HERO_BOX_CONTRACT_ADDRESS_TO_NAME = {
         COMMON_BOX_CONTRACT_ADDRESS: "Common Box",
         PREMIUM_BOX_CONTRACT_ADDRESS: "Premium Box",
-        ULTRA_BOX_CONTRACT_ADDRESS: "Ultra Box"
+        ULTRA_BOX_CONTRACT_ADDRESS: "Ultra Box",
+        BOMB_BOX_CONTRACT_ADDRESS: "Bomb Box"
     }
     
     HERO_CLASS_TO_NAME = {
@@ -227,5 +230,6 @@ class MapperService(BaseMapperService):
     HERO_BOX_TYPE_TO_IMAGE_URL = {
         0: "https://app.metabomb.io/gifs/herobox-gif/normal-box.gif",
         1: "https://app.metabomb.io/gifs/herobox-gif/premium-box.gif",
-        2: "https://app.metabomb.io/gifs/herobox-gif/ultra-box.gif"
+        2: "https://app.metabomb.io/gifs/herobox-gif/ultra-box.gif",
+        3: "https://app.metabomb.io/gifs/herobox-gif/bomb-box.gif"
     }
