@@ -111,7 +111,11 @@ class HeroSaleDecoderService:
                 token_id = literal_eval(topics[1])
 
         distributions.sort()
-
+        
+        if not len(distributions):
+            logging.warn(f'⚠️ skipping hero decode, no distribution logs: {hash}')
+            return None
+        
         bnb_cost = Web3.fromWei(tran["gasUsed"] * tran["gasPrice"], 'ether')
         price = sum(distributions)
         fees = price - distributions[-1]

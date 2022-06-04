@@ -49,14 +49,14 @@ def hero_tab(HEROES_COLLECTION_NAME):
                     ),
                     Column(
                         id="est_payback",
-                        title="Payback",
+                        title="ROI",
                         width="120px",
                         right=True,
                         sortable=True,
                     ),
                     Column(
                         id="est_roi",
-                        title="ROI",
+                        title="APR",
                         format=format_percent("$.est_roi"),
                         width="100px",
                         right=True,
