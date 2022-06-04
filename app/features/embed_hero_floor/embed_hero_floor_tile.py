@@ -1,7 +1,5 @@
-from app.utils.game_constants import HERO_BOX_NAME_IMAGE
-from app.utils.page_title import page_title
-from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Div, Chart, commify, ekp_map, sort_by, json_array, \
-    switch_case, format_template, format_currency
+from ekp_sdk.ui import (Col, Container, Div, Image, Row, Span, format_currency,
+                        format_percent, format_template)
 
 
 def tile():
@@ -90,9 +88,8 @@ def heroes_price_stats(hero_type):
                         "color": f'$.data[0]["{hero_type}"].color'
                     }
                 ),
-                content=format_currency(
+                content=format_percent(
                     f"$.data[0]['{hero_type}'].percDiff",
-                    "%"
                 )
             ),
         ]
