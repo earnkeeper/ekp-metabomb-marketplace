@@ -1,15 +1,17 @@
-from ekp_sdk.ui import Div, Span, Row, Col, Datatable, Card, Column, format_currency, format_template, Icon, \
-    Container, Paragraphs, switch_case, Link, Hr
+from ekp_sdk.ui import (Card, Col, Column, Container, Datatable, Div, Hr, Icon,
+                        Link, Paragraphs, Row, Span, commify, format_currency,
+                        format_template, switch_case)
 
 
 def hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME):
     return Container(
         children=[
             title_row(),
+            Hr("mb-2"),            
             Paragraphs(
                 [
                     "Use the table below as reference for how long a hero will take to pay back its initial purchase cost",
-                    "These figures are based on 24hr play in the Chest Farm mode"
+                    "These figures are based on research using the Chest Farm game mode on Testnet"
                 ],
             ),
             Row([
@@ -44,7 +46,7 @@ def hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME):
             ]),
             Paragraphs(
                 [
-                    "⚠️Est MTB earning calculations are based on the current state of testnet and subject to change.",
+                    "⚠️ Est MTB earning calculations are based on the current state of testnet and subject to change.",
                 ],
             ),
             Row(
@@ -72,7 +74,6 @@ def hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME):
 
                 ]
             ),
-            Hr()
         ]
     )
 
@@ -95,10 +96,10 @@ def title_row():
 
 
 def table_row(HERO_DASH_PROFIT_COLLECTION_NAME, doc_index, hero_type):
-    return Div(
+    return Card(
         [
             Row(
-                class_name="mx-1 my-2",
+                class_name="mx-1 mt-1",
                 children=[
 
                     Col(
@@ -130,10 +131,12 @@ def table_row(HERO_DASH_PROFIT_COLLECTION_NAME, doc_index, hero_type):
                 ]
             ),
             Datatable(
+                card=False,
                 class_name="mt-1",
                 data=f"$.{HERO_DASH_PROFIT_COLLECTION_NAME}[{doc_index}].*",
-                # busy_when=is_busy(collection(FUSION_COLLECTION_NAME)),
                 show_export=False,
+                show_last_updated=False,
+                pagination=False,
                 columns=[
                     Column(
                         id="power",
@@ -142,29 +145,55 @@ def table_row(HERO_DASH_PROFIT_COLLECTION_NAME, doc_index, hero_type):
                     ),
                     Column(
                         id="market_value",
-                        value=format_currency("$.market_value", "$.fiat_symbol"),
-                        min_width="120px"
+                        cell=Div([
+                            Div(
+                                when="$.market_value",
+                                children=[
+                                    Span(
+                                        format_currency(
+                                            "$.market_value",
+                                            "$.fiat_symbol"
+                                        ),
+                                    )
+                                ]
+                            ),
+                            Div(
+                                when={"not": "$.market_value"},
+                                children=[
+                                    Span("?")
+                                ]
+                            )
+                        ])
                     ),
                     Column(
                         id="mtb_per_day",
-                        value="$.mtb_per_day",
-                        min_width="120px"
+                        value=commify("$.mtb_per_day"),
                     ),
                     Column(
                         id="roi",
-                        value=format_template(
-                            "{{ roi }} days",
-                            {"roi": "$.roi"}
-                        ),
-                        min_width="120px"
+                        cell=Div([
+                            Div(
+                                when="$.roi",
+                                children=[
+                                    Span(
+                                        format_template(
+                                            "{{ roi }} days",
+                                            {"roi": "$.roi"}
+                                        ),
+                                    )
+                                ]
+                            ),
+                            Div(
+                                when={"not": "$.market_value"},
+                                children=[
+                                    Span("?")
+                                ]
+                            )
+                        ])
                     ),
-                    Column(
-                        id="spacer",
-                        title="",
-                        width="10px"
-                    )
                 ]
-            )
+            ),
+            Div(style={"height": "4px"})
 
         ]
     )

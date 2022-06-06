@@ -1,5 +1,5 @@
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Form,
-                        Icon, Row, Span, collection, documents,
+                        Icon, Row, Span, collection, documents, Hr,
                         format_currency, format_template, is_busy, switch_case, commify, Paragraphs)
 
 
@@ -7,6 +7,7 @@ def fusion_table(FUSION_COLLECTION_NAME):
     return Container(
         children=[
             title_row(),
+            Hr("mb-2"),
             Paragraphs(
                 [
                     "Do you want a rare hero? Is it cheaper to create one using fusion or buy directly from the market?",

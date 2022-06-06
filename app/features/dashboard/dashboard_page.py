@@ -9,10 +9,11 @@ def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECT
     return Container(
         children=[
             page_title('activity', 'Dashboard'),
+            Div(class_name="my-4"),
             fusion_table(FUSION_COLLECTION_NAME),
-            Hr(),
+            Div(class_name="my-4"),
             hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME),
-            Hr(),
+            Div(class_name="my-4"),
             hero_drop_rates(OPENS_COLLECTION_NAME),
         ]
     )
@@ -20,7 +21,8 @@ def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECT
 def hero_drop_rates(OPENS_COLLECTION_NAME):
     return Div([
         Span('Actual Hero Drop Rates', 'font-medium-4 font-weight-bold'),
-        Span('We are scanning the binance chain in REAL TIME, so that you know the ACTUAL hero drop rates. Check them out below 👀', "d-block mb-2 mt-1"),
+        Hr("mb-2"),        
+        Span('We scan the binance smart chain in real time, to give you the real hero drop rates as boxes are opened.', "d-block mb-2 mt-1"),
         Row([
             Col("col-12 col-md-6", [
                 opens_chart_row(
