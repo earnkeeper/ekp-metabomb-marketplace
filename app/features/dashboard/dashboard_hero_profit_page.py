@@ -8,12 +8,10 @@ def hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME):
         children=[
             title_row(),
             Hr("mb-2"),            
-            Paragraphs(
-                [
-                    "Use the table below as reference for how long a hero will take to pay back its initial purchase cost",
-                    "These figures are based on research using the Chest Farm game mode on Testnet"
-                ],
-            ),
+            Span("Use the table below to calculate how much MTB your heroes will earn each day.", "d-block"),
+            Div(style={"marginTop": "8px"}),
+            Span("Want to automatically calculate earning for the heroes you own? Use our Inventory page in the left menu."),
+            Div(style={"marginTop": "24px"}),
             Row([
                 Col("col-12 col-md-6", [
                     table_row(

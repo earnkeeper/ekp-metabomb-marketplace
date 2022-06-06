@@ -10,9 +10,9 @@ def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECT
         children=[
             page_title('activity', 'Dashboard'),
             Div(class_name="my-4"),
-            fusion_table(FUSION_COLLECTION_NAME),
-            Div(class_name="my-4"),
             hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME),
+            Div(class_name="my-4"),
+            fusion_table(FUSION_COLLECTION_NAME),
             Div(class_name="my-4"),
             hero_drop_rates(OPENS_COLLECTION_NAME),
         ]
