@@ -7,7 +7,6 @@ from app.features.boxes_market.history.boxes_history_service import \
 from app.features.boxes_market.listings.boxes_listings_service import \
     BoxesListingsService
 from app.features.boxes_market.boxes_market_controller import BoxesMarketController
-from app.features.dashboard.dashboard_activity_service import DashboardActivityService
 from app.features.dashboard.dashboard_controller import DashboardController
 from app.features.dashboard.dashboard_fusion_service import DashboardFusionService
 from app.features.dashboard.dashboard_hero_profit_service import DashboardHeroProfitService
@@ -140,10 +139,6 @@ class AppContainer(BaseContainer):
             box_opens_repo=self.box_opens_repo
         )
 
-        self.dashboard_activity_service = DashboardActivityService(
-            activity_repo=self.activity_repo
-        )
-        
         self.dashboard_fusion_service = DashboardFusionService(
             metabomb_coingecko_service=self.metabomb_coingecko_service,
             hero_floor_price_service=self.hero_floor_price_service
@@ -155,7 +150,6 @@ class AppContainer(BaseContainer):
 
         self.dashboard_controller = DashboardController(
             client_service=self.client_service,
-            dashboard_activity_service=self.dashboard_activity_service,
             dashboard_opens_service=self.dashboard_opens_service,
             dashboard_fusion_service=self.dashboard_fusion_service,
             dashboard_hero_profit_service=self.dashboard_hero_profit_service,

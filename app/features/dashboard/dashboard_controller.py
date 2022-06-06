@@ -1,5 +1,4 @@
 from pprint import pprint
-from app.features.dashboard.dashboard_activity_service import DashboardActivityService
 from app.features.dashboard.dashboard_fusion_service import DashboardFusionService
 from app.features.dashboard.dashboard_hero_profit_service import DashboardHeroProfitService
 from app.features.dashboard.dashboard_opens_service import DashboardOpensService
@@ -11,7 +10,6 @@ from app.features.heroes_market.history.heroes_history_service import HeroesHist
 from app.features.heroes_market.listings.heroes_listings_service import HeroListingsService
 
 OPENS_COLLECTION_NAME = "metabomb_dashboard_opens"
-ACTIVITY_COLLECTION_NAME = "metabomb_dashboard_activity"
 FUSION_COLLECTION_NAME = "metabomb_dashboard_fusion"
 HERO_DASH_PROFIT_COLLECTION_NAME = "metabomb_dashboard_hero_profit_calc"
 
@@ -20,7 +18,6 @@ class DashboardController:
     def __init__(
             self,
             client_service: ClientService,
-            dashboard_activity_service: DashboardActivityService,
             dashboard_opens_service: DashboardOpensService,
             dashboard_fusion_service: DashboardFusionService,
             heroes_history_service: HeroesHistoryService,
@@ -28,7 +25,6 @@ class DashboardController:
             dashboard_hero_profit_service: DashboardHeroProfitService
     ):
         self.client_service = client_service
-        self.dashboard_activity_service = dashboard_activity_service
         self.dashboard_opens_service = dashboard_opens_service
         self.dashboard_fusion_service = dashboard_fusion_service
         self.dashboard_hero_profit_service = dashboard_hero_profit_service
@@ -49,7 +45,7 @@ class DashboardController:
         await self.client_service.emit_page(
             sid,
             self.path,
-            page(OPENS_COLLECTION_NAME, ACTIVITY_COLLECTION_NAME, FUSION_COLLECTION_NAME,
+            page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME,
                  HERO_DASH_PROFIT_COLLECTION_NAME),
         )
 
@@ -69,22 +65,10 @@ class DashboardController:
 
         opens_documents = await self.dashboard_opens_service.get_documents()
 
-        # print(opens_documents)
-
         await self.client_service.emit_documents(
             sid,
             OPENS_COLLECTION_NAME,
             opens_documents
-        )
-
-        # ----------------------------------------------------------------------
-
-        activity_documents = self.dashboard_activity_service.get_documents()
-
-        await self.client_service.emit_documents(
-            sid,
-            ACTIVITY_COLLECTION_NAME,
-            activity_documents
         )
 
         # ----------------------------------------------------------------------
@@ -100,14 +84,7 @@ class DashboardController:
         history_documents = await self.heroes_history_service.get_documents(currency)
         listing_documents = await self.heroes_listings_service.get_documents(currency, history_documents)
 
-        # pprint(listing_documents)
-        # l1 = list(filter(lambda x: x['power'] == 1 and x['rarity_name'] == 'Common', listing_documents))
-        # # pprint(l1)
-        # print(min(feature["priceFiat"] for feature in l1))
-
         hero_profit_calc_documents = await self.dashboard_hero_profit_service.get_documents(listing_documents, currency)
-
-        # print(hero_profit_calc_documents)
 
         await self.client_service.emit_documents(
             sid,

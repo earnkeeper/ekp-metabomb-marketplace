@@ -5,88 +5,17 @@ from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Div, Chart
     Hr
 from app.features.dashboard.dashboard_fusion_page import fusion_table
 
-def page(OPENS_COLLECTION_NAME, ACTIVITY_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECTION_NAME):
+def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECTION_NAME):
     return Container(
         children=[
             page_title('activity', 'Dashboard'),
             fusion_table(FUSION_COLLECTION_NAME),
             Hr(),
-            new_user_activity(ACTIVITY_COLLECTION_NAME),
-            Hr(),
             hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME),
+            Hr(),
+            hero_drop_rates(OPENS_COLLECTION_NAME),
         ]
     )
-
-
-def new_user_activity(ACTIVITY_COLLECTION_NAME):
-    return Div([
-        Span('New Users', 'font-medium-4 font-weight-bold'),
-        Span('A great way to judge the health of a game economy is checking how many new users are entering the game every day.', "d-block mb-2 mt-1"),
-        Span('Our chart below shows you the number of new unique wallet addresses interacting with Metabomb each day.', "d-block mb-2 mt-1"),
-        Span('🤔 NOTE, Metabomb gameplay is not live yet, so new user counts are expected to be low',
-             "d-block mb-2 mt-1"),
-        new_user_chart(ACTIVITY_COLLECTION_NAME)
-    ])
-
-
-def new_user_chart(ACTIVITY_COLLECTION_NAME):
-    return Card([
-        Chart(
-            card=False,
-            height=250,
-            type="line",
-            data=f"$.{ACTIVITY_COLLECTION_NAME}.*",
-            options={
-                "chart": {
-                    "zoom": {
-                        "enabled": False,
-                    },
-                    "toolbar": {
-                        "show": False,
-                    },
-                    "stacked": False,
-                    "type": "line"
-                },
-                "xaxis": {
-                    "type": "datetime",
-                },
-                "yaxis": [
-                    {
-                        "labels": {
-                            "show": False,
-                            "formatter": commify("$")
-                        },
-                    },
-                ],
-                "labels": ekp_map(
-                    sort_by(
-                        json_array(
-                            f"$.{ACTIVITY_COLLECTION_NAME}.*"
-                        ),
-                        "$.timestamp_ms"
-                    ), "$.timestamp_ms"
-                ),
-                "stroke": {
-                    "width": 4,
-                    "curve": 'smooth',
-                }
-            },
-            series=[
-                {
-                    "name": "new users",
-                    "type": "line",
-                    "data": ekp_map(
-                        sort_by(
-                            json_array(f"$.{ACTIVITY_COLLECTION_NAME}.*"),
-                            "$.timestamp_ms"),
-                        "$.new_users"
-                    )
-                },
-            ],
-
-        )
-    ])
-
 
 def hero_drop_rates(OPENS_COLLECTION_NAME):
     return Div([
