@@ -42,6 +42,9 @@ def table_row(FUSION_COLLECTION_NAME):
         data=documents(FUSION_COLLECTION_NAME),
         busy_when=is_busy(collection(FUSION_COLLECTION_NAME)),
         show_export=False,
+        show_last_updated=False,
+        pagination=False,
+        card=False,
         columns=[
             Column(
                 id="target_name",
