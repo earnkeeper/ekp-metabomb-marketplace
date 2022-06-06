@@ -1,18 +1,19 @@
+from app.features.dashboard.dashboard_hero_profit_page import hero_dashboard_profit_calc_page
 from app.utils.game_constants import HERO_BOX_NAME_IMAGE
 from app.utils.page_title import page_title
 from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Div, Chart, commify, ekp_map, sort_by, json_array, \
     Hr
 from app.features.dashboard.dashboard_fusion_page import fusion_table
 
-def page(OPENS_COLLECTION_NAME, ACTIVITY_COLLECTION_NAME, FUSION_COLLECTION_NAME):
+def page(OPENS_COLLECTION_NAME, ACTIVITY_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECTION_NAME):
     return Container(
         children=[
             page_title('activity', 'Dashboard'),
             fusion_table(FUSION_COLLECTION_NAME),
             Hr(),
-            hero_drop_rates(OPENS_COLLECTION_NAME),
-            # Hr(),
-            # new_user_activity(ACTIVITY_COLLECTION_NAME),
+            new_user_activity(ACTIVITY_COLLECTION_NAME),
+            Hr(),
+            hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME),
         ]
     )
 
