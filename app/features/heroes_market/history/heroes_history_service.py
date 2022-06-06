@@ -1,22 +1,22 @@
 from db.market_sales_repo import MarketSalesRepo
-from ekp_sdk.services import CoingeckoService
 
 from shared.mapper_service import MapperService
+from shared.metabomb_coingecko_service import MetabombCoingeckoService
 
 
 class HeroesHistoryService:
     def __init__(
         self,
         market_sales_repo: MarketSalesRepo,
-        coingecko_service: CoingeckoService,
+        metabomb_coingecko_service: MetabombCoingeckoService,
         mapper_service: MapperService
     ):
         self.market_sales_repo = market_sales_repo
-        self.coingecko_service = coingecko_service
+        self.metabomb_coingecko_service = metabomb_coingecko_service
         self.mapper_service = mapper_service
 
     async def get_documents(self, currency):
-        rate = await self.coingecko_service.get_latest_price('usd-coin', currency["id"])
+        rate = await self.metabomb_coingecko_service.get_usd_price(currency["id"])
 
         models = self.market_sales_repo.find_all('hero', 1000)
 

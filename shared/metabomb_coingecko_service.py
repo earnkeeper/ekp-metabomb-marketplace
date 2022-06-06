@@ -16,3 +16,9 @@ class MetabombCoingeckoService:
             ex=300
         )
         
+    async def get_usd_price(self, currency_id):
+        return await self.cache_service.wrap(
+            f"coingecko_price_usdcoin_{currency_id}",
+            lambda: self.coingecko_service.get_latest_price('usd-coin', currency_id),
+            ex=300
+        )    

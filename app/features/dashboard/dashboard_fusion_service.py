@@ -1,22 +1,21 @@
-from ekp_sdk.services import CoingeckoService
-
 from app.features.dashboard.documents.fusion_cost_document import FusionCostDocument
 from shared.hero_floor_price_service import HeroFloorPriceService
+from shared.metabomb_coingecko_service import MetabombCoingeckoService
 
 
 class DashboardFusionService:
     def __init__(
         self,
         hero_floor_price_service: HeroFloorPriceService,
-        coingecko_service: CoingeckoService
+        metabomb_coingecko_service: MetabombCoingeckoService
     ):
         self.hero_floor_price_service = hero_floor_price_service
-        self.coingecko_service = coingecko_service
+        self.metabomb_coingecko_service = metabomb_coingecko_service
 
     async def get_documents(self, currency):
         hero_floor_prices = await self.hero_floor_price_service.get_floor_prices()
 
-        rate = await self.coingecko_service.get_latest_price("metabomb", currency["id"])
+        rate = await self.metabomb_coingecko_service.get_mtb_price(currency["id"])
 
         documents = []
 

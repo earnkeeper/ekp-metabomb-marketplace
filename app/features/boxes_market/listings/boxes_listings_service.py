@@ -7,27 +7,21 @@ from gql.transport.aiohttp import AIOHTTPTransport
 
 from db.box_listing_timestamp_repo import BoxListingTimestampRepo
 from shared.metabomb_api_service import MetabombApiService
+from shared.metabomb_coingecko_service import MetabombCoingeckoService
 
 
 class BoxesListingsService:
     def __init__(
         self,
-        coingecko_service: CoingeckoService,
+        metabomb_coingecko_service: MetabombCoingeckoService,
         metabomb_api_service: MetabombApiService,
         box_listing_timestamp_repo: BoxListingTimestampRepo
     ):
-        self.coingecko_service = coingecko_service
+        self.metabomb_coingecko_service = metabomb_coingecko_service
         self.metabomb_api_service = metabomb_api_service
         self.box_listing_timestamp_repo = box_listing_timestamp_repo
 
     async def get_documents(self, currency, history_documents):
-        url = "https://api.metabomb.io/graphql/"
-
-        print(f"🐛 {url}")
-
-        start = time.perf_counter()
-
-        transport = AIOHTTPTransport(url=url)
 
         box_listing_timestamps = list(self.box_listing_timestamp_repo.collection.find())
 
@@ -39,7 +33,7 @@ class BoxesListingsService:
 
         documents = []
 
-        rate = await self.coingecko_service.get_latest_price("metabomb", currency["id"])
+        rate = await self.metabomb_coingecko_service.get_mtb_price(currency["id"])
 
         for listing in listings:
             document = self.map_document(

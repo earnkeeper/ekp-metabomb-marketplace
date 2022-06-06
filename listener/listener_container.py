@@ -23,7 +23,7 @@ class ListenerContainer(BaseContainer):
 
         self.mapper_service = MapperService(
             cache_service=self.cache_service,
-            coingecko_service=self.coingecko_service,
+            metabomb_coingecko_service=self.coingecko_service,
         )
 
         self.notification_service = NotificationService(

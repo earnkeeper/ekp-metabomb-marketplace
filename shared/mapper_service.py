@@ -2,7 +2,7 @@ import asyncio
 from datetime import datetime
 from typing import List
 
-from ekp_sdk.services import BaseMapperService, CacheService, CoingeckoService
+from ekp_sdk.services import BaseMapperService, CacheService
 from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS, \
     BOMB_BOX_CONTRACT_ADDRESS
 
@@ -12,23 +12,20 @@ from shared.domain.market_listing import MarketListing
 from shared.dto.box_market_listing_dto import BoxMarketListingDto
 from shared.dto.hero_dto import HeroDto
 from shared.dto.hero_market_listing_dto import HeroMarketListingDto
+from shared.metabomb_coingecko_service import MetabombCoingeckoService
 
 
 class MapperService(BaseMapperService):
     def __init__(
         self,
         cache_service: CacheService,
-        coingecko_service: CoingeckoService,
+        metabomb_coingecko_service: MetabombCoingeckoService,
     ):
-        self.coingecko_service = coingecko_service
+        self.metabomb_coingecko_service = metabomb_coingecko_service
         self.cache_service = cache_service
 
     async def get_mtb_rate(self):
-        rate = await self.cache_service.wrap(
-            "latest_price_metabomb_usd", 
-            lambda: self.coingecko_service.get_latest_price("metabomb", "usd"), 
-            ex=60
-        )
+        rate = await self.metabomb_coingecko_service.get_mtb_price("usd")
         return rate
 
     def map_hero_dto_to_domain(self, dto: HeroDto) -> Hero:

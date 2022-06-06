@@ -42,13 +42,18 @@ class AppContainer(BaseContainer):
 
         super().__init__(config)
 
+        self.metabomb_coingecko_service = MetabombCoingeckoService(
+            cache_service=self.cache_service,
+            coingecko_service=self.coingecko_service
+        )
+        
         self.metabomb_api_service = MetabombApiService(
             cache_service=self.cache_service
         )
 
         self.mapper_service = MapperService(
             cache_service=self.cache_service,
-            coingecko_service=self.coingecko_service,
+            metabomb_coingecko_service=self.metabomb_coingecko_service,
         )
 
         self.hero_floor_price_service = HeroFloorPriceService(
@@ -59,11 +64,6 @@ class AppContainer(BaseContainer):
         self.metabomb_moralis_service = MetabombMoralisService(
             cache_service=self.cache_service,
             moralis_api_service=self.moralis_api_service
-        )
-
-        self.metabomb_coingecko_service = MetabombCoingeckoService(
-            cache_service=self.cache_service,
-            coingecko_service=self.coingecko_service
         )
 
         # DB
@@ -91,14 +91,14 @@ class AppContainer(BaseContainer):
         )
 
         self.boxes_listings_service = BoxesListingsService(
-            coingecko_service=self.coingecko_service,
+            metabomb_coingecko_service=self.metabomb_coingecko_service,
             metabomb_api_service=self.metabomb_api_service,
             box_listing_timestamp_repo=self.box_listing_timestamp_repo
         )
 
         self.boxes_history_service = BoxesHistoryService(
             market_sales_repo=self.market_sales_repo,
-            coingecko_service=self.coingecko_service
+            metabomb_coingecko_service=self.metabomb_coingecko_service
         )
 
         self.market_summary_service = BoxesSummaryService()
@@ -113,7 +113,7 @@ class AppContainer(BaseContainer):
         # FEATURES - HEROES MARKET
 
         self.heroes_listings_service = HeroListingsService(
-            coingecko_service=self.coingecko_service,
+            metabomb_coingecko_service=self.metabomb_coingecko_service,
             metabomb_api_service=self.metabomb_api_service,
             mapper_service=self.mapper_service,
             hero_listing_timestamp_repo=self.hero_listing_timestamp_repo
@@ -121,7 +121,7 @@ class AppContainer(BaseContainer):
 
         self.heroes_history_service = HeroesHistoryService(
             market_sales_repo=self.market_sales_repo,
-            coingecko_service=self.coingecko_service,
+            metabomb_coingecko_service=self.metabomb_coingecko_service,
             mapper_service=self.mapper_service
         )
 
@@ -145,7 +145,7 @@ class AppContainer(BaseContainer):
         )
         
         self.dashboard_fusion_service = DashboardFusionService(
-            coingecko_service=self.coingecko_service,
+            metabomb_coingecko_service=self.metabomb_coingecko_service,
             hero_floor_price_service=self.hero_floor_price_service
         )
 

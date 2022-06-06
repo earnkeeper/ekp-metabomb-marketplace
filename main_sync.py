@@ -54,7 +54,7 @@ class AppContainer(BaseContainer):
 
         self.mapper_service = MapperService(
             cache_service=self.cache_service,
-            coingecko_service=self.coingecko_service,
+            metabomb_coingecko_service=self.coingecko_service,
         )
 
         self.box_open_decoder_service = BoxOpenDecoderService(

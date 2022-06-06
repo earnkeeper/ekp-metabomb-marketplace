@@ -1,18 +1,18 @@
 from db.market_sales_repo import MarketSalesRepo
-from ekp_sdk.services import CoingeckoService
+from shared.metabomb_coingecko_service import MetabombCoingeckoService
 
 
 class BoxesHistoryService:
     def __init__(
         self,
         market_sales_repo: MarketSalesRepo,
-        coingecko_service: CoingeckoService
+        metabomb_coingecko_service: MetabombCoingeckoService
     ):
         self.market_sales_repo = market_sales_repo
-        self.coingecko_service = coingecko_service
+        self.metabomb_coingecko_service = metabomb_coingecko_service
 
     async def get_documents(self, currency):
-        rate = await self.coingecko_service.get_latest_price('usd-coin', currency["id"])
+        rate = await self.metabomb_coingecko_service.get_usd_price(currency["id"])
 
         models = self.market_sales_repo.find_all('box', 1000)
 

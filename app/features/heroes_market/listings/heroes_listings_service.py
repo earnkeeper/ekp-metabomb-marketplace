@@ -1,28 +1,25 @@
 from datetime import datetime
 
-from ekp_sdk.services import CoingeckoService
 from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
 from db.hero_listing_timestamp_repo import HeroListingTimestampRepo
+from shared.metabomb_coingecko_service import MetabombCoingeckoService
 
 
 class HeroListingsService:
     def __init__(
             self,
-            coingecko_service: CoingeckoService,
+            metabomb_coingecko_service: MetabombCoingeckoService,
             metabomb_api_service: MetabombApiService,
             mapper_service: MapperService,
             hero_listing_timestamp_repo: HeroListingTimestampRepo
     ):
-        self.coingecko_service = coingecko_service
+        self.metabomb_coingecko_service = metabomb_coingecko_service
         self.metabomb_api_service = metabomb_api_service
         self.mapper_service = mapper_service
         self.hero_listing_timestamp_repo = hero_listing_timestamp_repo
 
     async def get_documents(self, currency, history_documents):
-        url = "https://api.metabomb.io/graphql/"
-
-        print(f"🐛 {url}")
 
         now = datetime.now().timestamp()
 
@@ -34,7 +31,7 @@ class HeroListingsService:
 
         documents = []
 
-        rate = await self.coingecko_service.get_latest_price("metabomb", currency["id"])
+        rate = await self.metabomb_coingecko_service.get_mtb_price(currency["id"])
 
         for listing in listings:
             if not listing['for_sale']:
