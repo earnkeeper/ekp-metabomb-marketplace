@@ -24,13 +24,13 @@ class DashboardHeroProfitService:
                 mtb_per_day = 0.145 * 0.5 * 1440 * power
                 fiat_per_day = mtb_per_day * mtb_rate
                 floor_price = None
-                roi = None
+                est_payback = None
                 if spec_listings:
                     floor_price = min(spec_listing["priceFiat"] for spec_listing in spec_listings)
-                    roi = int(fiat_per_day * 365 * 100 / floor_price)
+                    est_payback = int(floor_price / fiat_per_day)
                 document['market_value'] = floor_price
                 document['mtb_per_day'] = int(mtb_per_day)
-                document['roi'] = roi
+                document['roi'] = est_payback
                 document["fiat_symbol"] = currency["symbol"],
                 documents.append(document)
 
