@@ -10,7 +10,9 @@ def hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME):
             Hr("mb-2"),            
             Span("Use the table below to calculate how much MTB your heroes will earn each day.", "d-block"),
             Div(style={"marginTop": "8px"}),
-            Span("Want to automatically calculate earning for the heroes you own? Use our Inventory page in the left menu."),
+            Span("Want to automatically calculate earning for the heroes you own? Try our "),
+            Link(content="Inventory", href="players"),
+            Span(" page."),
             Div(style={"marginTop": "24px"}),
             Row([
                 Col("col-12 col-md-6", [
