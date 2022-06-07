@@ -163,8 +163,9 @@ def earn_cell():
                 class_name="col-12",
                 children=[
                     Span(
-                        format_template("{{ est_roi }} days ROI",
-                                        {"est_roi": "$.est_roi"})
+                        format_template("{{ est_payback }} days ROI",
+                                        {"est_payback": "$.est_payback"}),
+                        "font-small-1"
                     )
                 ]
             )
@@ -178,7 +179,12 @@ def cost_cell():
         Col(
             class_name="my-auto col-auto pr-0",
             children=[
-                Span(format_currency("$.priceFiat", "$.fiatSymbol"))
+                Span(format_template("{{ priceFiat }} {{ fiatSymbol }}",
+                                     {
+                                         "priceFiat": format_currency("$.priceFiat", ""),
+                                         "fiatSymbol": "$.fiatSymbol"
+                                     }
+                                     )),
             ]
         ),
         Col(
