@@ -5,10 +5,12 @@ from typing import List
 from ekp_sdk.services import BaseMapperService, CacheService
 from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS, \
     BOMB_BOX_CONTRACT_ADDRESS
+from shared.domain.bomb import Bomb
 
 from shared.domain.hero import Hero
 from shared.domain.hero_box import HeroBox
 from shared.domain.market_listing import MarketListing
+from shared.dto.bomb_market_listing_dto import BombMarketListingDto
 from shared.dto.box_market_listing_dto import BoxMarketListingDto
 from shared.dto.hero_dto import HeroDto
 from shared.dto.hero_market_listing_dto import HeroMarketListingDto
@@ -108,6 +110,18 @@ class MapperService(BaseMapperService):
 
         return listings
 
+    async def map_market_bombs_dtos_to_domain(self, dtos: List[BombMarketListingDto]) -> List[MarketListing]:
+        mtb_rate = await self.get_mtb_rate()
+
+        futures = []
+
+        for dto in dtos:
+            futures.append(self.map_market_bombs_dto_to_domain(dto, mtb_rate))
+
+        listings = await asyncio.gather(*futures)
+
+        return listings
+
     def get_hero_map(self, hero_list):
         hero_map = {}
         
@@ -187,6 +201,31 @@ class MapperService(BaseMapperService):
 
         return market_listing
 
+    async def map_market_bombs_dto_to_domain(self, dto: BombMarketListingDto, mtb_rate: int = None) -> MarketListing:
+        bomb: Bomb = {
+            'id': dto['id'],
+            'display_id': dto['display_id'],
+            'element': dto['element'],
+            'element_name': self.BOMB_ELEMENT_TO_NAME[dto['element']],
+            'rarity': dto['rarity'],
+            'rarity_name': self.BOMB_RARITY_TO_NAME[dto['rarity']],
+        }
+
+        if mtb_rate is None:
+            mtb_rate = await self.get_mtb_rate()
+
+        bomb_market_listing: MarketListing = {
+            'bomb': bomb,
+            'for_sale': dto['for_sale'],
+            'id': dto['id'],
+            'price_mtb': dto['price'],
+            'price_usdc': dto['price'] * mtb_rate,
+            'token_id': dto['id'],
+            'updated': datetime.now().timestamp(),
+        }
+
+        return bomb_market_listing
+
     HERO_BOX_TYPE_TO_NAME = {
         0: "Common Box",
         1: "Premium Box",
@@ -216,6 +255,23 @@ class MapperService(BaseMapperService):
     }
 
     HERO_RARITY_TO_NAME = {
+        0: "Common",
+        1: "Rare",
+        2: "Epic",
+        3: "Legend",
+        4: "Mythic",
+        5: "Meta",
+    }
+
+    BOMB_ELEMENT_TO_NAME = {
+        0: "Fire",
+        1: "Wood",
+        2: "Thunder",
+        3: "Earth",
+        4: "Water"
+    }
+
+    BOMB_RARITY_TO_NAME = {
         0: "Common",
         1: "Rare",
         2: "Epic",

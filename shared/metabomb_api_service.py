@@ -7,14 +7,15 @@ from gql.transport.aiohttp import AIOHTTPTransport
 from shared.dto.box_market_listing_dto import BoxMarketListingDto
 from shared.dto.hero_dto import HeroDto
 from shared.dto.hero_market_listing_dto import HeroMarketListingDto
+from shared.dto.bomb_market_listing_dto import BombMarketListingDto
 
 from ekp_sdk.services import CacheService
 
 
 class MetabombApiService:
     def __init__(
-        self,
-        cache_service: CacheService
+            self,
+            cache_service: CacheService
     ):
         self.base_url = "https://api.metabomb.io/graphql/"
         self.cache_service = cache_service
@@ -31,7 +32,6 @@ class MetabombApiService:
         )
 
     async def get_hero(self, token_id) -> HeroDto:
-
         return await self.__gql_get(
             self.__HERO_QUERY,
             {"id": str(token_id)},
@@ -45,6 +45,17 @@ class MetabombApiService:
                 self.__MARKET_HERO_QUERY,
                 self.__market_hero_params(1, 5000),
                 lambda x: x["hero_market"]["heroes"]
+            ),
+            ex=60
+        )
+
+    async def get_market_bombs(self) -> List[BombMarketListingDto]:
+        return await self.cache_service.wrap(
+            "metabomb_bomb_listings",
+            lambda: self.__gql_get(
+                self.__MARKET_BOMBS_QUERY,
+                self.__market_bombs_params(1, 5000),
+                lambda x: x["bomb_market"]["bombs"]
             ),
             ex=60
         )
@@ -118,6 +129,31 @@ class MetabombApiService:
             }
         """)
 
+    __MARKET_BOMBS_QUERY = gql("""
+                query bomb_market($input: BombMarketInput!) {
+                  bomb_market(input: $input) {
+                    error
+                    count
+                    bombs {
+                      id
+                      rarity
+                      skill_1
+                      skill_2
+                      skill_3
+                      skill_4
+                      skill_5
+                      skill_6
+                      display_id
+                      element
+                      for_sale
+                      price
+                      __typename
+                    }
+                    __typename
+                  }
+                }
+            """)
+
     __HERO_QUERY = gql("""
         query hero($id: ID!) {
             hero(id: $id) {
@@ -146,6 +182,33 @@ class MetabombApiService:
             }
         }
         """)
+
+    __BOMB_QUERY = gql("""
+            query bomb($id: ID!) {
+              bomb(id: $id) {
+                id
+                user_id
+                rarity
+                skill_1
+                skill_2
+                skill_3
+                skill_4
+                skill_5
+                skill_6
+                display_id
+                element
+                for_sale
+                price
+                user {
+                  id
+                  name
+                  user_name
+                  __typename
+                }
+                __typename
+              }
+            }
+            """)
 
     def __market_box_params(self, page, count):
         return {
@@ -189,4 +252,41 @@ class MetabombApiService:
                 "forSale": 2
             }
 
+        }
+
+    def __market_bombs_params(self, page, count):
+        return {
+            "input":
+                {
+                    "f5": 0,
+                    "rarity": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ],
+                    "element": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                    ],
+                    "skill": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7
+                    ],
+                    "page": page,
+                    "count": count,
+                    "sort": 0,
+                    "sort_type": 3,
+                    "forSale": 1
+                }
         }

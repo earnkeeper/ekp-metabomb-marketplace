@@ -4,15 +4,17 @@ import asyncio
 from decouple import AutoConfig
 from ekp_sdk import BaseContainer
 
+from db.bombs_sales_repo import BombsSalesRepo
 from db.box_listing_timestamp_repo import BoxListingTimestampRepo
 from db.box_opens_repo import BoxOpensRepo
 from db.hero_listing_timestamp_repo import HeroListingTimestampRepo
 from db.market_sales_repo import MarketSalesRepo
 from db.state_repo import StateRepo
-from shared.constants import HERO_CONTRACT_ADDRESS, MTB_CONTRACT_ADDRESS
+from shared.constants import HERO_CONTRACT_ADDRESS, MTB_CONTRACT_ADDRESS, BOMB_CONTRACT_ADDRESS
 from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
 from shared.metabomb_coingecko_service import MetabombCoingeckoService
+from sync.bomb_sale_decoder_service import BombsSaleDecoderService
 from sync.box_listing_timestamp_decoder_service import BoxListingTimestampDecoderService
 from sync.box_open_decoder_service import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS, BOMB_BOX_CONTRACT_ADDRESS, BoxOpenDecoderService
 from sync.box_sale_decoder_service import BoxSaleDecoderService
@@ -46,7 +48,11 @@ class AppContainer(BaseContainer):
         self.box_listing_timestamp_repo = BoxListingTimestampRepo(
             mg_client=self.mg_client
         )
-        
+
+        self.bombs_sales_repo = BombsSalesRepo(
+            mg_client=self.mg_client
+        )
+
         # Services
         
         self.metabomb_coingecko_service = MetabombCoingeckoService(
@@ -98,6 +104,14 @@ class AppContainer(BaseContainer):
             metabomb_api_service=self.metabomb_api_service
         )
 
+        self.bomb_sale_decoder_service = BombsSaleDecoderService(
+            cache_service=self.cache_service,
+            coingecko_service=self.coingecko_service,
+            contract_transactions_repo=self.contract_transactions_repo,
+            bombs_sales_repo=self.bombs_sales_repo,
+            mapper_service=self.mapper_service,
+            metabomb_api_service=self.metabomb_api_service
+        )
 
 if __name__ == '__main__':
     container = AppContainer()
@@ -108,15 +122,16 @@ if __name__ == '__main__':
 
     contract_addresses = [
         HERO_CONTRACT_ADDRESS,
+        BOMB_CONTRACT_ADDRESS,
         COMMON_BOX_CONTRACT_ADDRESS,
         PREMIUM_BOX_CONTRACT_ADDRESS,
         ULTRA_BOX_CONTRACT_ADDRESS,
-        BOMB_BOX_CONTRACT_ADDRESS
-
+        BOMB_BOX_CONTRACT_ADDRESS,
     ]
 
     log_addresses = [
         HERO_CONTRACT_ADDRESS,
+        BOMB_CONTRACT_ADDRESS,
         COMMON_BOX_CONTRACT_ADDRESS,
         PREMIUM_BOX_CONTRACT_ADDRESS,
         ULTRA_BOX_CONTRACT_ADDRESS,
@@ -158,4 +173,8 @@ if __name__ == '__main__':
 
     loop.run_until_complete(
         container.box_listing_timestamp_decoder_service.decode_box_listing_timestamp()
+    )
+
+    loop.run_until_complete(
+        container.bomb_sale_decoder_service.decode_bomb_sales()
     )
