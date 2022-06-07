@@ -56,6 +56,13 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 cell=price_cell()
             ),
             Column(
+                id="avgPriceFiat",
+                title="Vs 24h Avg",
+                width="120px",
+                sortable=True,
+                cell=__avg_price_cell
+            ),
+            Column(
                 id="type",
                 omit=True,
                 format=format_currency("$.priceFiat", "$.fiatSymbol")
@@ -128,7 +135,7 @@ def timestamp_cell():
                 Link(
                     class_name="font-small-1",
                     href=format_template(
-                        "https://bscscan.com/tx/{{ seller }}", {"hash": "$.seller"}),
+                        "https://bscscan.com/address/{{ seller }}", {"seller": "$.seller"}),
                     external=True,
                     content=format_mask_address("$.seller")
                 )
