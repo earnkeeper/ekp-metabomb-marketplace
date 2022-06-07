@@ -54,25 +54,25 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 min_width="250px"
             ),
             Column(
-                id="earn",
-                title="Earn",
+                id="est_payback",
+                title="ROI",
                 sortable=True,
                 searchable=True,
                 cell=earn_cell(),
-                min_width="200px"
+                min_width="120px"
             ),
             Column(
-                id="cost",
+                id="priceFiat",
                 title="Cost",
                 sortable=True,
                 searchable=True,
                 cell=cost_cell(),
-                min_width="160px"
+                min_width="100px"
             ),
             Column(
                 id="avgPriceFiat",
                 title="Vs 24h Avg",
-                width="90px",
+                width="120px",
                 sortable=True,
                 cell=__avg_price_cell
             ),
@@ -147,29 +147,56 @@ def market_row(LISTINGS_COLLECTION_NAME):
         ]
     )
 
+
 def earn_cell():
     return Row(
         children=[
             Col(
-                class_name="my-auto col-auto pr-0",
+                class_name="col-12",
                 children=[
                     Span(
-                        format_template("{{ mtb_per_day }} MTB/day",
-                                        {"mtb_per_day": format_currency("$.mtb_per_day", "")})
+                        format_template(
+                            "{{ est_payback }} days", {
+                                "est_payback": "$.est_payback"
+                            }
+                        ),
                     )
                 ]
             ),
             Col(
                 class_name="col-12",
                 children=[
-                    Span(
-                        format_template("{{ est_payback }} days ROI",
-                                        {"est_payback": "$.est_payback"}),
-                        "font-small-1"
-                    )
+                    Row([
+                        Col(
+                            "col-auto pr-0",
+                            [
+                                Image(
+                                    src=MTB_ICON,
+                                    style={
+                                        "height": "10px",
+                                        "marginRight": "3px",
+                                        "marginTop": "-2px"
+                                    }
+                                )
+                            ]
+                        ),
+                        Col(
+                            "col-auto pl-0",
+                            [
+                                Span(
+                                    format_template(
+                                        "{{ mtb_per_day }} /day",
+                                        {
+                                            "mtb_per_day": commify("$.mtb_per_day")
+                                        }
+                                    ),
+                                    "font-small-1 text-success"
+                                )
+                            ]
+                        )
+                    ])
                 ]
-            )
-
+            ),
         ]
     )
 
@@ -177,28 +204,27 @@ def earn_cell():
 def cost_cell():
     return Row([
         Col(
-            class_name="my-auto col-auto pr-0",
+            class_name="col-12",
             children=[
-                Span(format_template("{{ priceFiat }} {{ fiatSymbol }}",
-                                     {
-                                         "priceFiat": format_currency("$.priceFiat", ""),
-                                         "fiatSymbol": "$.fiatSymbol"
-                                     }
-                                     )),
+                Span(
+                    format_currency("$.priceFiat", "$.fiatSymbol"),
+                ),
             ]
         ),
         Col(
             class_name="col-12 font-small-1",
             children=[
                 Row([
-                    Col(),
                     Col(
-                        class_name="col-auto p-0 my-auto",
+                        class_name="col-auto pr-0 my-auto",
                         children=[
                             Image(
                                 src=MTB_ICON,
-                                style={"height": "10px",
-                                       "marginRight": "3px", "marginTop": "-2px"}
+                                style={
+                                    "height": "10px",
+                                    "marginRight": "3px",
+                                    "marginTop": "-2px"
+                                }
                             )
                         ]
                     ),
