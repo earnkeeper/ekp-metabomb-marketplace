@@ -1,5 +1,5 @@
 from app.utils.game_constants import (HERO_BOX_NAME_CONTRACT,
-                                      HERO_BOX_NAME_IMAGE)
+                                      HERO_BOX_NAME_IMAGE, MTB_ICON)
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         Paragraphs, Row, Span, collection, commify, documents,
                         format_currency, format_mask_address, format_percent,
@@ -25,12 +25,12 @@ def market_row(LISTINGS_COLLECTION_NAME):
     return Datatable(
         data=documents(LISTINGS_COLLECTION_NAME),
         busy_when=is_busy(collection(LISTINGS_COLLECTION_NAME)),
-        default_sort_field_id="price",
+        default_sort_field_id="timestamp",
         pagination_per_page=18,
         disable_list_view=True,
         search_hint="Search by token id, seller address or token name...",
         filters=[
-            {"columnId": "name", "icon": "cil-spa"},
+            {"columnId": "item", "icon": "cil-spa"},
         ],
         columns=[
             Column(
@@ -41,56 +41,30 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 width="120px"
             ),
             Column(
-                id="tokenId",
-                title="Token",
+                id="item",
+                value="$.name",
+                title="Item",
                 sortable=True,
                 searchable=True,
-                width="100px",
-                cell=__id_cell,
-            ),
-            Column(
-                id="seller",
-                sortable=True,
-                searchable=True,
-                width="140px",
-                cell=__seller_cell
-            ),
-            Column(
-                id="name",
-                sortable=True,
-                searchable=True,
-                min_width="320px",
-                cell=__name_cell
+                cell=name_cell(),
+                min_width="200px"
             ),
             Column(
                 id="price",
-                title="MTB",
-                format=commify("$.price"),
-                width="120px",
-                right=True,
                 sortable=True,
+                right=True,
+                cell=price_cell()
             ),
             Column(
-                id="priceFiat",
-                title="Fiat",
-                format=format_currency("$.priceFiat", "$.fiatSymbol"),
-                width="120px",
-                right=True,
-                sortable=True,
-            ),
-            Column(
-                id="avgPriceFiat",
-                title="Vs 24h Avg",
-                width="120px",
-                right=True,
-                sortable=True,
-                cell=__avg_price_cell
+                id="type",
+                omit=True,
+                format=format_currency("$.priceFiat", "$.fiatSymbol")
             ),
             Column(
                 id="spacer",
                 title="",
                 width="2px"
-            )
+            ),
         ]
     )
 
@@ -148,10 +122,105 @@ def timestamp_cell():
                 Span(format_age("$.last_listing_timestamp"))
             ]
         ),
-        # Col(
-        #     class_name="my-auto col-auto pr-0",
-        #     children=[
-        #         Span(format_datetime("$.last_listing_timestamp"))
-        #     ]
-        # ),
+        Col(
+            class_name="col-12",
+            children=[
+                Link(
+                    class_name="font-small-1",
+                    href=format_template(
+                        "https://bscscan.com/tx/{{ seller }}", {"hash": "$.seller"}),
+                    external=True,
+                    content=format_mask_address("$.seller")
+                )
+            ]
+        )
+    ])
+
+
+def name_cell():
+    return Row(
+        children=[
+            Col(
+                class_name="my-auto col-auto pr-0",
+                children=[
+                    Image(
+                        src=switch_case("$.name", HERO_BOX_NAME_IMAGE),
+                        style={"height": "38px"}
+                    )
+                ]
+            ),
+            Col(
+                children=[
+                    Row(
+                        children=[
+                            Col(
+                                class_name="col-12 font-small-4",
+                                children=[
+                                    Span("$.name")
+                                ]
+                            ),
+                            Col(
+                                class_name="col-12",
+                                children=[
+                                    Link(
+                                        class_name="font-small-1",
+                                        href=format_template(
+                                            "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
+                                            {
+                                                "contractAddress": switch_case("$.name", HERO_BOX_NAME_CONTRACT),
+                                                "tokenId": "$.tokenId"
+                                            }
+                                        ),
+                                        external=True,
+                                        content=format_template(
+                                            "Token Id: {{ tokenId }}",
+                                            {
+                                                "tokenId": "$.tokenId"
+                                            }
+                                        ),
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+
+                ]
+            )
+
+        ]
+    )
+
+def price_cell():
+    return Row([
+        Col(
+            class_name="col-12 text-right",
+            children=[
+                Span(format_currency("$.priceFiat", "$.fiatSymbol"))
+            ]
+        ),
+        Col(
+            class_name="col-12 text-right font-small-1",
+            children=[
+                Row([
+                    Col(),
+                    Col(
+                        class_name="col-auto p-0 my-auto",
+                        children=[
+                            Image(
+                                src=MTB_ICON,
+                                style={"height": "10px",
+                                       "marginRight": "3px", "marginTop": "-2px"}
+                            )
+                        ]
+                    ),
+                    Col(
+                        class_name="col-auto pl-0 my-auto text-success",
+                        children=[
+                            Span(commify("$.price"))
+                        ]
+                    )
+                ])
+
+            ]
+        ),
     ])
