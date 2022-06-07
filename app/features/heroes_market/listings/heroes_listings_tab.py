@@ -74,6 +74,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 title="Vs 24h Avg",
                 width="120px",
                 sortable=True,
+                right=True,
                 cell=__avg_price_cell
             ),
             Column(
@@ -299,7 +300,7 @@ def name_cell():
 
 __avg_price_cell = Span(
     format_percent("$.pcAboveAvgFiat"),
-    switch_case("$.deal", {"no": "text-success", "yes": "text-danger"})
+    switch_case("$.deal", {"no": "float-right text-success", "yes": "float-right text-danger"})
 ),
 
 
