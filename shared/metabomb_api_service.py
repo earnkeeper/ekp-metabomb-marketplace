@@ -106,6 +106,11 @@ class MetabombApiService:
                         for_sale
                         price
                         power
+                        health
+                        speed
+                        stamina
+                        bomb_num
+                        bomb_range
                         __typename
                     }
                     __typename

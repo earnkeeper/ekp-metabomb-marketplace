@@ -3,6 +3,7 @@ from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         format_currency, format_mask_address, format_percent,
                         format_template, is_busy, switch_case, format_age)
 
+from app.utils.game_constants import MTB_ICON
 from app.utils.image_cell import image_cell
 from shared.constants import HERO_CONTRACT_ADDRESS
 
@@ -44,45 +45,29 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 width="120px"
             ),
             Column(
-                id="tokenId",
-                title="Token",
+                id="item",
+                value="$.name",
+                title="Item",
                 sortable=True,
                 searchable=True,
-                width="80px",
-                cell=__id_cell,
+                cell=name_cell(),
+                min_width="250px"
             ),
             Column(
-                id="name",
+                id="earn",
+                title="Earn",
                 sortable=True,
                 searchable=True,
-                min_width="220px",
-                cell=__name_cell
+                cell=earn_cell(),
+                min_width="200px"
             ),
             Column(
-                id="est_payback",
-                title="ROI",
-                format=format_template(
-                    "{{ est_payback }} days",
-                    {
-                        "est_payback": "$.est_payback"
-                    }
-                ),
-                width="120px",
+                id="cost",
+                title="Cost",
                 sortable=True,
-            ),
-            Column(
-                id="price",
-                title="Cost MTB",
-                format=commify("$.price"),
-                width="110px",
-                sortable=True,
-            ),
-            Column(
-                id="priceFiat",
-                title="Cost Fiat",
-                format=format_currency("$.priceFiat", "$.fiatSymbol"),
-                width="110px",
-                sortable=True,
+                searchable=True,
+                cell=cost_cell(),
+                min_width="160px"
             ),
             Column(
                 id="avgPriceFiat",
@@ -92,20 +77,59 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 cell=__avg_price_cell
             ),
             Column(
-                id="est_roi",
-                title="APR",
-                format=format_percent("$.est_roi"),
-                width="100px",
+                id="hero_power",
+                title="Power",
+                cell=set_image(icon_name='stats-power',
+                               attr_name='hero_power'),
+                width="80px",
+                right=True,
                 sortable=True,
             ),
-            # Column(
-            #     id="power",
-            #     title="Power",
-            #     cell=set_image(icon_name='stats-power',
-            #                    attr_name='power'),
-            #     width="80px",
-            #     sortable=True,
-            # ),
+            Column(
+                id="hero_health",
+                title="Health",
+                cell=set_image(icon_name='stats-health',
+                               attr_name='hero_health'),
+                width="80px",
+                right=True,
+                sortable=True,
+            ),
+            Column(
+                id="hero_speed",
+                title="Speed",
+                cell=set_image(icon_name='stats-speed',
+                               attr_name='hero_speed'),
+                width="80px",
+                right=True,
+                sortable=True,
+            ),
+            Column(
+                id="hero_stamina",
+                title="Stamina",
+                cell=set_image(icon_name='stats-stamina',
+                               attr_name='hero_stamina'),
+                width="90px",
+                right=True,
+                sortable=True,
+            ),
+            Column(
+                id="hero_bomb_num",
+                title="Bomb num",
+                cell=set_image(icon_name='stats-bombnum',
+                               attr_name='hero_bomb_num'),
+                width="80px",
+                right=True,
+                sortable=True,
+            ),
+            Column(
+                id="hero_bomb_range",
+                title="Bomb range",
+                cell=set_image(icon_name='stats-bombrange',
+                               attr_name='hero_bomb_range'),
+                width="80px",
+                right=True,
+                sortable=True,
+            ),
             Column(
                 id="rarity_name",
                 omit=True,
@@ -120,6 +144,123 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 title="",
                 width="2px"
             )
+        ]
+    )
+
+def earn_cell():
+    return Row(
+        children=[
+            Col(
+                class_name="my-auto col-auto pr-0",
+                children=[
+                    Span(
+                        format_template("{{ mtb_per_day }} MTB/day",
+                                        {"mtb_per_day": format_currency("$.mtb_per_day", "")})
+                    )
+                ]
+            ),
+            Col(
+                class_name="col-12",
+                children=[
+                    Span(
+                        format_template("{{ est_roi }} days ROI",
+                                        {"est_roi": "$.est_roi"})
+                    )
+                ]
+            )
+
+        ]
+    )
+
+
+def cost_cell():
+    return Row([
+        Col(
+            class_name="my-auto col-auto pr-0",
+            children=[
+                Span(format_currency("$.priceFiat", "$.fiatSymbol"))
+            ]
+        ),
+        Col(
+            class_name="col-12 font-small-1",
+            children=[
+                Row([
+                    Col(),
+                    Col(
+                        class_name="col-auto p-0 my-auto",
+                        children=[
+                            Image(
+                                src=MTB_ICON,
+                                style={"height": "10px",
+                                       "marginRight": "3px", "marginTop": "-2px"}
+                            )
+                        ]
+                    ),
+                    Col(
+                        class_name="col-auto pl-0 my-auto text-success",
+                        children=[
+                            Span(commify("$.price"))
+                        ]
+                    )
+                ])
+
+            ]
+        ),
+    ])
+
+
+def name_cell():
+    return Row(
+        children=[
+            Col(
+                class_name="my-auto col-auto pr-0",
+                children=[
+                    Image(
+                        src=format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+                            "display_id": '$.display_id'
+                        }),
+                        style={"height": "38px"}
+                    )
+                ]
+            ),
+            Col(
+                children=[
+                    Row(
+                        children=[
+                            Col(
+                                class_name="col-12 font-small-4",
+                                children=[
+                                    Span("$.name")
+                                ]
+                            ),
+                            Col(
+                                class_name="col-12",
+                                children=[
+                                    Link(
+                                        class_name="font-small-1",
+                                        href=format_template(
+                                            "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
+                                            {
+                                                "contractAddress": HERO_CONTRACT_ADDRESS,
+                                                "tokenId": "$.tokenId"
+                                            }
+                                        ),
+                                        external=True,
+                                        content=format_template(
+                                            "Token Id: {{ tokenId }}",
+                                            {
+                                                "tokenId": "$.tokenId"
+                                            }
+                                        ),
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+
+                ]
+            )
+
         ]
     )
 
