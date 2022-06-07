@@ -25,7 +25,8 @@ class InventoryPlayersController:
             'Inventory',
             self.path,
             order=400,
-            id="metabomb_inventory"
+            id="metabomb_inventory",
+            short_link="mtb-inventory"
         )
         await self.client_service.emit_page(
             sid,

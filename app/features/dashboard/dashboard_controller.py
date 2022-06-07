@@ -36,7 +36,8 @@ class DashboardController:
             'Dashboard',
             self.path,
             order=100,
-            id="metabomb_dashboard"
+            id="metabomb_dashboard",
+            short_link="mtb-dashboard"
         )
         await self.client_service.emit_page(
             sid,

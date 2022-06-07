@@ -26,7 +26,7 @@ class HeroesMarketController:
         self.heroes_listings_service = heroes_listings_service
         self.heroes_summary_service = heroes_summary_service
         self.path = 'heroes'
-        self.short_link = 'metabomb-hero-market'
+        self.short_link = 'mtb-market'
 
     async def on_connect(self, sid):
         await self.client_service.emit_menu(
