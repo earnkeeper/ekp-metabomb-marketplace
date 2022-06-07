@@ -12,6 +12,7 @@ from db.state_repo import StateRepo
 from shared.constants import HERO_CONTRACT_ADDRESS, MTB_CONTRACT_ADDRESS
 from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
+from shared.metabomb_coingecko_service import MetabombCoingeckoService
 from sync.box_listing_timestamp_decoder_service import BoxListingTimestampDecoderService
 from sync.box_open_decoder_service import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS, BOMB_BOX_CONTRACT_ADDRESS, BoxOpenDecoderService
 from sync.box_sale_decoder_service import BoxSaleDecoderService
@@ -26,7 +27,7 @@ class AppContainer(BaseContainer):
         super().__init__(config)
 
         # DB
-
+        
         self.market_transactions_repo = MarketSalesRepo(
             mg_client=self.mg_client,
         )
@@ -48,13 +49,18 @@ class AppContainer(BaseContainer):
         
         # Services
         
+        self.metabomb_coingecko_service = MetabombCoingeckoService(
+            cache_service=self.cache_service,
+            coingecko_service=self.coingecko_service
+        )
+        
         self.metabomb_api_service = MetabombApiService(
             cache_service=self.cache_service
         )
 
         self.mapper_service = MapperService(
             cache_service=self.cache_service,
-            metabomb_coingecko_service=self.coingecko_service,
+            metabomb_coingecko_service=self.metabomb_coingecko_service,
         )
 
         self.box_open_decoder_service = BoxOpenDecoderService(
