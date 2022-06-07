@@ -11,9 +11,6 @@ def box_tab(BOXES_COLLECTION_NAME):
             Datatable(
                 data=documents(BOXES_COLLECTION_NAME),
                 busy_when=is_busy(collection(BOXES_COLLECTION_NAME)),
-                filters=[
-                    {"columnId": "name", "icon": "cil-spa"},
-                ],
                 columns=[
                     Column(
                         id="id",
