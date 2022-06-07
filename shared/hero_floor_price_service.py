@@ -40,6 +40,10 @@ class HeroFloorPriceService:
     async def get_floor_price_by_rarity_power(self, rarity, power):
         listings = await self.metabomb_api_service.get_market_heroes()
 
+        for listing in listings:
+            if listing["hero_class"] == 0:
+                listing["power"] += 1
+
         floor_price = None
 
         spec_listings = list(

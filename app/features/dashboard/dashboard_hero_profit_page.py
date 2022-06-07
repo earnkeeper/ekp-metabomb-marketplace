@@ -44,11 +44,24 @@ def hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME):
                     ),
                 ]),
             ]),
-            Paragraphs(
-                [
-                    "⚠️ Est MTB earning calculations are based on the current state of testnet and subject to change.",
-                ],
+            Row(
+                children=[
+                    Col(
+                        class_name="col-auto",
+                        children=[
+                            Span("⚠️")
+                        ]
+                    ),
+                    Col(
+                        class_name="col-auto px-0",
+                        children=[
+                            Span(
+                                "Est MTB earning calculations are based on the current state of testnet and subject to change."
+                            ), ]
+                    )
+                ]
             ),
+            Div([], "mt-1"),
             Row(
 
                 children=[
@@ -112,7 +125,7 @@ def table_row(HERO_DASH_PROFIT_COLLECTION_NAME, doc_index, hero_type):
                                         'Common': "#D1CCCC",
                                         'Rare': '#65F44E',
                                         'Epic': '#C13EFA',
-                                        'Legend': '#EB9A29',
+                                        'Legend': '#FEFC01',
                                     }),
                                     "width": 6,
                                     "height": '100%',

@@ -103,9 +103,9 @@ def target_cell():
                         [],
                         style={
                             "backgroundColor": switch_case('$.target_name', {
-                                'Rare': '#D1CCCC',
-                                'Epic': '#65F44E',
-                                'Legend': '#C13EFA',
+                                'Rare': '#65F44E',
+                                'Epic': '#C13EFA',
+                                'Legend': '#FEFC01',
                                 'Mythic': '#EB9A29',
                                 'Meta': '#E8483A',
                             }),
