@@ -145,7 +145,8 @@ class AppContainer(BaseContainer):
         )
 
         self.dashboard_hero_profit_service = DashboardHeroProfitService(
-            metabomb_coingecko_service=self.metabomb_coingecko_service
+            metabomb_coingecko_service=self.metabomb_coingecko_service,
+            hero_floor_price_service=self.hero_floor_price_service
         )
 
         self.dashboard_controller = DashboardController(
@@ -153,8 +154,6 @@ class AppContainer(BaseContainer):
             dashboard_opens_service=self.dashboard_opens_service,
             dashboard_fusion_service=self.dashboard_fusion_service,
             dashboard_hero_profit_service=self.dashboard_hero_profit_service,
-            heroes_history_service=self.heroes_history_service,
-            heroes_listings_service=self.heroes_listings_service
         )
 
         # FEATURES - INVENTORY - PLAYERS

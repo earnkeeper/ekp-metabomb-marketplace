@@ -1,3 +1,4 @@
+from shared.hero_floor_price_service import HeroFloorPriceService
 from shared.metabomb_coingecko_service import MetabombCoingeckoService
 
 
@@ -5,10 +6,12 @@ class DashboardHeroProfitService:
     def __init__(
             self,
             metabomb_coingecko_service: MetabombCoingeckoService,
+            hero_floor_price_service: HeroFloorPriceService,
     ):
         self.metabomb_coingecko_service = metabomb_coingecko_service
+        self.hero_floor_price_service = hero_floor_price_service
 
-    async def get_documents(self, listing_documents, currency):
+    async def get_documents(self, currency):
 
         mtb_rate = await self.metabomb_coingecko_service.get_mtb_price(currency["id"])
 
@@ -19,14 +22,12 @@ class DashboardHeroProfitService:
             for power in powers:
                 document = {}
                 document['power'] = power
-                spec_listings = list(
-                    filter(lambda x: x['power'] == power and x['rarity_name'] == rarity, listing_documents))
                 mtb_per_day = 0.145 * 0.5 * 1440 * power
                 fiat_per_day = mtb_per_day * mtb_rate
-                floor_price = None
                 est_payback = None
-                if spec_listings:
-                    floor_price = min(spec_listing["priceFiat"] for spec_listing in spec_listings)
+                floor_price = await self.hero_floor_price_service.get_floor_price_by_rarity_power(rarity, power)
+                if floor_price:
+                    floor_price = floor_price * mtb_rate
                     est_payback = int(floor_price / fiat_per_day)
                 document['market_value'] = floor_price
                 document['mtb_per_day'] = int(mtb_per_day)
@@ -39,8 +40,8 @@ class DashboardHeroProfitService:
         return all_documents
 
     POWERS_OF_RARITIES = {
-        "Common": [1, 2, 3, 4],
-        "Rare": [4, 5, 6, 7],
-        "Epic": [7, 8, 9, 10],
-        "Legend": [10, 11, 12, 13]
+        0: [1, 2, 3, 4],
+        1: [4, 5, 6, 7],
+        2: [7, 8, 9, 10],
+        3: [10, 11, 12, 13]
     }

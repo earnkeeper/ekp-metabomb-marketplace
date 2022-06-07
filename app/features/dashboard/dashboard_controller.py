@@ -20,16 +20,12 @@ class DashboardController:
             client_service: ClientService,
             dashboard_opens_service: DashboardOpensService,
             dashboard_fusion_service: DashboardFusionService,
-            heroes_history_service: HeroesHistoryService,
-            heroes_listings_service: HeroListingsService,
             dashboard_hero_profit_service: DashboardHeroProfitService
     ):
         self.client_service = client_service
         self.dashboard_opens_service = dashboard_opens_service
         self.dashboard_fusion_service = dashboard_fusion_service
         self.dashboard_hero_profit_service = dashboard_hero_profit_service
-        self.heroes_history_service = heroes_history_service
-        self.heroes_listings_service = heroes_listings_service
 
         self.path = 'dashboard'
 
@@ -81,10 +77,7 @@ class DashboardController:
             fusion_documents
         )
 
-        history_documents = await self.heroes_history_service.get_documents(currency)
-        listing_documents = await self.heroes_listings_service.get_documents(currency, history_documents)
-
-        hero_profit_calc_documents = await self.dashboard_hero_profit_service.get_documents(listing_documents, currency)
+        hero_profit_calc_documents = await self.dashboard_hero_profit_service.get_documents(currency)
 
         await self.client_service.emit_documents(
             sid,
