@@ -116,6 +116,10 @@ class BoxSaleDecoderService:
         if box_type is None:
             logging.warn(f'⚠️ could not find box type for sale: {hash}')
 
+        if not len(distributions):
+            logging.warn(f'⚠️ skipping box decode, no distribution logs: {hash}')
+            return None
+        
         distributions.sort()
 
         bnb_cost = Web3.fromWei(tran["gasUsed"] * tran["gasPrice"], 'ether')
