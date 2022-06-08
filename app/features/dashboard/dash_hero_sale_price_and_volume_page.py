@@ -51,7 +51,7 @@ def form_row(RARITIES_FORM_NAME, CHART_COLLECTION_NAME):
 def chart_row(CHART_COLLECTION_NAME):
     return Chart(
         title="",
-        height=400,
+        height=350,
         type="line",
         card=False,
         data=documents(CHART_COLLECTION_NAME),
@@ -97,7 +97,9 @@ def chart_row(CHART_COLLECTION_NAME):
             ),
             "stroke": {
                 "width": [0, 8],
-                # "curve": 'smooth',
+            },
+            "legend": {
+                "show": False
             }
         },
         series=[
@@ -112,7 +114,7 @@ def chart_row(CHART_COLLECTION_NAME):
                 )
             },
             {
-                "name": "Average Price",
+                "name": "Avg Price",
                 "type": "line",
                 "data": ekp_map(
                     sort_by(
