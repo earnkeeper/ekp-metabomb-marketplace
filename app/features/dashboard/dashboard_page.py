@@ -1,3 +1,4 @@
+from app.features.dashboard.dash_hero_sale_price_and_volume_page import chart_row, form_row
 from app.features.dashboard.dashboard_hero_profit_page import hero_dashboard_profit_calc_page
 from app.utils.game_constants import HERO_BOX_NAME_IMAGE
 from app.utils.page_title import page_title
@@ -5,7 +6,7 @@ from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Div, Chart
     Hr, Alert
 from app.features.dashboard.dashboard_fusion_page import fusion_table
 
-def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECTION_NAME):
+def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECTION_NAME, CHART_COLLECTION_NAME, RARITIES_FORM_NAME):
     return Container(
         children=[
             Alert(
@@ -21,6 +22,10 @@ def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECT
             fusion_table(FUSION_COLLECTION_NAME),
             Div(class_name="my-4"),
             hero_drop_rates(OPENS_COLLECTION_NAME),
+            Div(class_name="my-4"),
+            form_row(RARITIES_FORM_NAME),
+            # Div(class_name="my-4"),
+            chart_row(CHART_COLLECTION_NAME),
         ]
     )
 

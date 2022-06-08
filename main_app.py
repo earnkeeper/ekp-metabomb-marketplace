@@ -7,6 +7,7 @@ from app.features.boxes_market.history.boxes_history_service import \
 from app.features.boxes_market.listings.boxes_listings_service import \
     BoxesListingsService
 from app.features.boxes_market.boxes_market_controller import BoxesMarketController
+from app.features.dashboard.dash_hero_sale_price_and_volume_service import HeroSalePriceAndVolumeService
 from app.features.dashboard.dashboard_controller import DashboardController
 from app.features.dashboard.dashboard_fusion_service import DashboardFusionService
 from app.features.dashboard.dashboard_hero_profit_service import DashboardHeroProfitService
@@ -149,11 +150,18 @@ class AppContainer(BaseContainer):
             hero_floor_price_service=self.hero_floor_price_service
         )
 
+        self.dash_hero_sale_price_and_volume_service = HeroSalePriceAndVolumeService(
+            market_sales_repo=self.market_sales_repo,
+            metabomb_coingecko_service=self.metabomb_coingecko_service,
+            mapper_service=self.mapper_service
+        )
+
         self.dashboard_controller = DashboardController(
             client_service=self.client_service,
             dashboard_opens_service=self.dashboard_opens_service,
             dashboard_fusion_service=self.dashboard_fusion_service,
             dashboard_hero_profit_service=self.dashboard_hero_profit_service,
+            dash_hero_sale_price_and_volume_service=self.dash_hero_sale_price_and_volume_service
         )
 
         # FEATURES - INVENTORY - PLAYERS

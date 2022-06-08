@@ -1,10 +1,12 @@
 from pprint import pprint
+
+from app.features.dashboard.dash_hero_sale_price_and_volume_service import HeroSalePriceAndVolumeService
 from app.features.dashboard.dashboard_fusion_service import DashboardFusionService
 from app.features.dashboard.dashboard_hero_profit_service import DashboardHeroProfitService
 from app.features.dashboard.dashboard_opens_service import DashboardOpensService
 from app.features.dashboard.dashboard_page import page
 from ekp_sdk.services import ClientService
-from ekp_sdk.util import client_currency, client_path
+from ekp_sdk.util import client_currency, client_path, form_values
 
 from app.features.heroes_market.history.heroes_history_service import HeroesHistoryService
 from app.features.heroes_market.listings.heroes_listings_service import HeroListingsService
@@ -12,7 +14,8 @@ from app.features.heroes_market.listings.heroes_listings_service import HeroList
 OPENS_COLLECTION_NAME = "metabomb_dashboard_opens"
 FUSION_COLLECTION_NAME = "metabomb_dashboard_fusion"
 HERO_DASH_PROFIT_COLLECTION_NAME = "metabomb_dashboard_hero_profit_calc"
-
+RARITIES_FORM_NAME = "rarities_form_name"
+CHART_COLLECTION_NAME = "chart_collection_name"
 
 class DashboardController:
     def __init__(
@@ -20,12 +23,14 @@ class DashboardController:
             client_service: ClientService,
             dashboard_opens_service: DashboardOpensService,
             dashboard_fusion_service: DashboardFusionService,
-            dashboard_hero_profit_service: DashboardHeroProfitService
+            dashboard_hero_profit_service: DashboardHeroProfitService,
+            dash_hero_sale_price_and_volume_service: HeroSalePriceAndVolumeService,
     ):
         self.client_service = client_service
         self.dashboard_opens_service = dashboard_opens_service
         self.dashboard_fusion_service = dashboard_fusion_service
         self.dashboard_hero_profit_service = dashboard_hero_profit_service
+        self.dash_hero_sale_price_and_volume_service = dash_hero_sale_price_and_volume_service
 
         self.path = 'dashboard'
 
@@ -43,7 +48,7 @@ class DashboardController:
             sid,
             self.path,
             page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME,
-                 HERO_DASH_PROFIT_COLLECTION_NAME),
+                 HERO_DASH_PROFIT_COLLECTION_NAME, CHART_COLLECTION_NAME, RARITIES_FORM_NAME),
         )
 
     async def on_client_state_changed(self, sid, event):
@@ -55,6 +60,7 @@ class DashboardController:
         await self.client_service.emit_busy(sid, OPENS_COLLECTION_NAME)
         await self.client_service.emit_busy(sid, FUSION_COLLECTION_NAME)
         await self.client_service.emit_busy(sid, HERO_DASH_PROFIT_COLLECTION_NAME)
+        await self.client_service.emit_busy(sid, CHART_COLLECTION_NAME)
 
         currency = client_currency(event)
 
@@ -86,6 +92,20 @@ class DashboardController:
             hero_profit_calc_documents
         )
 
+        address_form_value = form_values(event, RARITIES_FORM_NAME)
+
+        print(address_form_value)
+
+        chart_documents = await self.dash_hero_sale_price_and_volume_service.get_documents(currency, address_form_value['rarity'] or [])
+
+        await self.client_service.emit_documents(
+            sid,
+            CHART_COLLECTION_NAME,
+            chart_documents
+        )
+
+
         await self.client_service.emit_done(sid, OPENS_COLLECTION_NAME)
         await self.client_service.emit_done(sid, FUSION_COLLECTION_NAME)
         await self.client_service.emit_done(sid, HERO_DASH_PROFIT_COLLECTION_NAME)
+        await self.client_service.emit_done(sid, CHART_COLLECTION_NAME)
