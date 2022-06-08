@@ -3,7 +3,7 @@ from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         format_currency, format_mask_address, format_percent,
                         format_template, is_busy, switch_case, format_age)
 
-from app.utils.game_constants import MTB_ICON
+from app.utils.game_constants import METABOMB_IMAGE_URL, MTB_ICON
 from app.utils.image_cell import image_cell
 from shared.constants import HERO_CONTRACT_ADDRESS
 
@@ -249,7 +249,7 @@ def name_cell():
                 class_name="my-auto col-auto pr-0",
                 children=[
                     Image(
-                        src=format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+                        src=format_template(METABOMB_IMAGE_URL + "/gifs/char-gif/{{ display_id }}.gif", {
                             "display_id": '$.display_id'
                         }),
                         style={"height": "38px"}
@@ -306,7 +306,7 @@ __avg_price_cell = Span(
 
 def set_image(icon_name, attr_name):
     return image_cell(
-        f"https://app.metabomb.io/icons/stats-icon/{icon_name}.svg",
+        f"{METABOMB_IMAGE_URL}/icons/stats-icon/{icon_name}.svg",
         f"$.{attr_name}",
         image_size="16px"
     )
@@ -350,7 +350,7 @@ def image_text_cell(src, text):
 
 __name_cell = image_text_cell(
 
-    format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+    format_template(METABOMB_IMAGE_URL + "/gifs/char-gif/{{ display_id }}.gif", {
         "display_id": '$.display_id'
     }),
     "$.name"

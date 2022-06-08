@@ -1,4 +1,4 @@
-from app.utils.game_constants import (MTB_ICON)
+from app.utils.game_constants import (METABOMB_IMAGE_URL, MTB_ICON)
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         Paragraphs, Row, Span, collection, commify, documents,
                         format_age, format_currency, format_mask_address,
@@ -100,7 +100,7 @@ def name_cell():
                 class_name="my-auto col-auto pr-0",
                 children=[
                     Image(
-                        src=format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+                        src=format_template(METABOMB_IMAGE_URL + "/gifs/char-gif/{{ display_id }}.gif", {
                             "display_id": '$.display_id'
                         }),
                         style={"height": "38px"}
