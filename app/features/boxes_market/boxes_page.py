@@ -9,11 +9,6 @@ from ekp_sdk.ui import (Card, Col, Container, Div, Image, Row, Span, Tab, Tabs,
 def boxes_page(LISTINGS_COLLECTION_NAME, HISTORY_COLLECTION_NAME, SUMMARY_COLLECTION_NAME):
     return Container(
         children=[
-            Alert(
-                "Metabomb is currently under maintenance, preparing for their official launch today. This page may encounter errors.",
-                header="Attention",
-                icon_name="bell"
-            ),
             Div([], "mb-4"),
             page_title('shopping-bag', 'Box Market'),
             summary_row(SUMMARY_COLLECTION_NAME),

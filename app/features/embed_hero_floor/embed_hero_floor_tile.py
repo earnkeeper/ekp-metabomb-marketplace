@@ -1,6 +1,8 @@
 from ekp_sdk.ui import (Col, Container, Div, Image, Row, Span, format_currency,
                         format_percent, format_template)
 
+from app.utils.game_constants import METABOMB_IMAGE_URL
+
 
 def tile():
     return Container(
@@ -37,7 +39,7 @@ def tile():
 def image_cell(hero_type):
     return Col("col-auto pr-0 my-auto", [
         Image(
-            src=format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+            src=format_template(METABOMB_IMAGE_URL + "/gifs/char-gif/{{ display_id }}.gif", {
                 "display_id": f"$.data[0]['{hero_type}'].display_id"
             }),
             style={"height": "32px"}

@@ -10,11 +10,6 @@ from app.utils.summary_card import summary_card
 def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
     return Container(
         children=[
-            Alert(
-                "Metabomb is currently under maintenance, preparing for their official launch today. This page may encounter errors.",
-                header="Attention",
-                icon_name="bell"
-            ),
             Div([], "mb-4"),
             page_title('users', 'Inventory'),
             Span(
