@@ -2,7 +2,7 @@ from app.utils.page_title import page_title
 from ekp_sdk.ui import (Button, Card, Col, Column, Container, Datatable, Div,
                         Form, Image, Input, Row, Span, collection, documents,
                         format_currency, format_template, is_busy, Link,
-                        navigate, remove_form_record, commify, sum, format_mask_address, Icon)
+                        navigate, remove_form_record, commify, sum, format_mask_address, Icon, Alert)
 
 from app.utils.summary_card import summary_card
 
@@ -10,6 +10,11 @@ from app.utils.summary_card import summary_card
 def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
     return Container(
         children=[
+            Alert(
+                "Metabomb is currently under maintenance, preparing for their official launch today. This page may encounter errors.",
+                header="Attention",
+                icon_name="bell"
+            ),
             page_title('users', 'Inventory'),
             Span(
                 "Track Boxes, Heroes, Market Value and ROI for any player. Once you add an address, click on it in the list for full details",

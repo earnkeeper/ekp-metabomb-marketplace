@@ -2,12 +2,17 @@ from app.features.dashboard.dashboard_hero_profit_page import hero_dashboard_pro
 from app.utils.game_constants import HERO_BOX_NAME_IMAGE
 from app.utils.page_title import page_title
 from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Div, Chart, commify, ekp_map, sort_by, json_array, \
-    Hr
+    Hr, Alert
 from app.features.dashboard.dashboard_fusion_page import fusion_table
 
 def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECTION_NAME):
     return Container(
         children=[
+            Alert(
+                "Metabomb is currently under maintenance, preparing for their official launch today. This page may encounter errors.",
+                header="Attention",
+                icon_name="bell"
+            ),
             page_title('activity', 'Dashboard'),
             Div(class_name="my-4"),
             hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME),
