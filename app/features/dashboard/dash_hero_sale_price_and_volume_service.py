@@ -66,21 +66,21 @@ class HeroSalePriceAndVolumeService:
                 ])
         )
 
-        # pprint(results)
         new_result_list = []
+        
         for result in results:
             new_result_dict = {}
             dt = parser.parse(result['_id'])
             dtm = get_midnight_utc(dt)
-            new_result_dict["timestamp_ms"] = int(dtm.timestamp()) * 1000
+            dtm_timestamp = dtm.timestamp()
+            
+            if dtm_timestamp < 1653436800:
+                continue;
+            
+            new_result_dict["timestamp_ms"] = int(dtm_timestamp) * 1000
             new_result_dict["number_of_sales"] = result["number_of_sales"]
             new_result_dict["price_avg"] = result["price_avg"]
             new_result_dict["price_fiat_avg"] = result["price_avg_usd"] * rate
             new_result_list.append(new_result_dict)
 
-        # pprint(new_result_list)
-
-        # documents = list(grouped_by_date_str.values())
-
         return new_result_list
-        # hero_list = await self.metabomb_api_service.get_market_heroes()

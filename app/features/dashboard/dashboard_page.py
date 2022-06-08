@@ -12,18 +12,18 @@ def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECT
             Div([], "mb-4"),
             page_title('activity', 'Dashboard'),
             Div(class_name="my-4"),
+            hero_sales_volume_chart(RARITIES_FORM_NAME, CHART_COLLECTION_NAME),
+            Div(class_name="my-4"),
             hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME),
             Div(class_name="my-4"),
             fusion_table(FUSION_COLLECTION_NAME),
             Div(class_name="my-4"),
             hero_drop_rates(OPENS_COLLECTION_NAME),
-            Div(class_name="my-4"),
-            hero_sales_volume_chart(RARITIES_FORM_NAME, CHART_COLLECTION_NAME)
         ]
     )
 
 def hero_sales_volume_chart(RARITIES_FORM_NAME, CHART_COLLECTION_NAME):
-    return Container(
+    return Div(
         children=[
             title_row(),
             Hr("mb-2"),
@@ -32,10 +32,10 @@ def hero_sales_volume_chart(RARITIES_FORM_NAME, CHART_COLLECTION_NAME):
                     "Check the history of price and number of sales of each hero rarity on the market. Is now a good time to buy or sell?"
                 ],
             ),
-            Div(class_name="my-4"),
+            Div(class_name="mt-2"),
             Card(
                 children=[
-                    form_row(RARITIES_FORM_NAME),
+                    form_row(RARITIES_FORM_NAME, CHART_COLLECTION_NAME),
                     chart_row(CHART_COLLECTION_NAME),
                 ],
             )
@@ -51,7 +51,7 @@ def title_row():
             ),
             Col(
                 children=[
-                    Span("Hero sale price and volume", "font-medium-3")
+                    Span("Hero Price History", "font-medium-3")
                 ]
             )
         ],

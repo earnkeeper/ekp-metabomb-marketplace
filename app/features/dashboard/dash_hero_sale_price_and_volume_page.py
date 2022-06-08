@@ -1,37 +1,49 @@
-from ekp_sdk.ui import Form, Row, Col, Select, Button, Chart, documents, commify, ekp_map, json_array, sort_by
+from ekp_sdk.ui import (Button, Chart, Col, Div, Form, Row, Select, commify,
+                        documents, ekp_map, format_currency, is_busy,
+                        json_array, sort_by)
 
 
-def form_row(RARITIES_FORM_NAME):
-    return Form(
-        name=RARITIES_FORM_NAME,
-        schema={
-            "type": "object",
-            "properties": {
-                "rarity": "string"
-            },
-        },
+def form_row(RARITIES_FORM_NAME, CHART_COLLECTION_NAME):
+    return Div(
+        class_name="pt-1 pl-3",
         children=[
-            Row([
-                Col(
-                    "col-auto my-auto",
-                    [
-                        Select(
-                            label="Select rarity",
-                            name="rarity",
-                            options=["Common", "Epic", "Rare", "Legend"],
-                            min_width="120px"
+            Form(
+                name=RARITIES_FORM_NAME,
+                schema={
+                    "type": "object",
+                    "properties": {
+                        "rarity": "string"
+                    },
+                    "default": {
+                        "rarity": "Common"
+                    }
+                },
+                children=[
+                    Row([
+                        Col(
+                            "col-auto my-auto",
+                            [
+                                Select(
+                                    label="Hero Rarity",
+                                    name="rarity",
+                                    options=["Common", "Rare",
+                                             "Epic", "Legend"],
+                                    min_width="120px"
+                                ),
+                            ],
+
                         ),
-                    ],
+                        Col(
+                            "col-auto my-auto",
+                            [
+                                Button(label="Update", is_submit=True,
+                                       busy_when=is_busy(CHART_COLLECTION_NAME))
+                            ]
+                        )
+                    ])
 
-                ),
-                Col(
-                    "col-auto my-auto",
-                    [
-                        Button(label="Update", is_submit=True)
-                    ]
-                )
-            ])
-
+                ]
+            )
         ]
     )
 
@@ -39,7 +51,7 @@ def form_row(RARITIES_FORM_NAME):
 def chart_row(CHART_COLLECTION_NAME):
     return Chart(
         title="",
-        height=200,
+        height=400,
         type="line",
         card=False,
         data=documents(CHART_COLLECTION_NAME),
@@ -51,7 +63,6 @@ def chart_row(CHART_COLLECTION_NAME):
                 "toolbar": {
                     "show": False,
                 },
-                "stacked": False,
                 "type": "line"
             },
             "xaxis": {
@@ -59,15 +70,19 @@ def chart_row(CHART_COLLECTION_NAME):
             },
             "yaxis": [
                 {
+                    "title": {
+                        "text": "Sales Count"
+                    },
                     "labels": {
-                        "show": False,
                         "formatter": commify("$")
                     },
                 },
                 {
+                    "title": {
+                        "text": "Avg Price"
+                    },
                     "labels": {
-                        "show": False,
-                        "formatter": commify("$")
+                        "formatter": format_currency("$", None)
                     },
                     "opposite": True,
                 },
@@ -81,8 +96,8 @@ def chart_row(CHART_COLLECTION_NAME):
                 ), "$.timestamp_ms"
             ),
             "stroke": {
-                "width": [4, 4],
-                "curve": 'smooth',
+                "width": [0, 8],
+                # "curve": 'smooth',
             }
         },
         series=[
@@ -97,7 +112,7 @@ def chart_row(CHART_COLLECTION_NAME):
                 )
             },
             {
-                "name": "Sales Value",
+                "name": "Average Price",
                 "type": "line",
                 "data": ekp_map(
                     sort_by(
