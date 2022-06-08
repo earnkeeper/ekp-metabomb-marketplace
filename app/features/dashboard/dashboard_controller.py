@@ -94,15 +94,14 @@ class DashboardController:
 
         address_form_value = form_values(event, RARITIES_FORM_NAME)
 
-        print(address_form_value)
+        if address_form_value and  ("rarity" in address_form_value):
+            chart_documents = await self.dash_hero_sale_price_and_volume_service.get_documents(currency, address_form_value['rarity'] or [])
 
-        chart_documents = await self.dash_hero_sale_price_and_volume_service.get_documents(currency, address_form_value['rarity'] or [])
-
-        await self.client_service.emit_documents(
-            sid,
-            CHART_COLLECTION_NAME,
-            chart_documents
-        )
+            await self.client_service.emit_documents(
+                sid,
+                CHART_COLLECTION_NAME,
+                chart_documents
+            )
 
 
         await self.client_service.emit_done(sid, OPENS_COLLECTION_NAME)
