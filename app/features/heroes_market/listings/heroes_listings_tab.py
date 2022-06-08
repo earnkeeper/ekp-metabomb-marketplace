@@ -34,7 +34,8 @@ def market_row(LISTINGS_COLLECTION_NAME):
         search_hint="Search by token id or token name...",
         filters=[
             {"columnId": "rarity_name", "icon": "cil-spa"},
-            {"columnId": "level", "icon": "cil-shield-alt"},
+            {"columnId": "hero_power", "icon": "cil-fire"},
+            {"columnId": "hero_stamina", "icon": "cil-bolt"},
         ],
         columns=[
             Column(
@@ -311,31 +312,6 @@ def set_image(icon_name, attr_name):
         image_size="16px"
     )
 
-
-__id_cell = Link(
-    href=format_template(
-        "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
-        {
-            "contractAddress": HERO_CONTRACT_ADDRESS,
-            "tokenId": "$.tokenId"
-        }
-    ),
-    external=True,
-    content="$.tokenId"
-)
-
-__seller_cell = Link(
-    href=format_template(
-        "https://bscscan.com/address/{{ seller }}",
-        {
-            "seller": "$.seller",
-        }
-    ),
-    external=True,
-    content=format_mask_address("$.seller")
-)
-
-
 def image_text_cell(src, text):
     return Row([
         Col("col-auto my-auto", [
@@ -346,15 +322,6 @@ def image_text_cell(src, text):
         ]),
         Col("pl-0 my-auto", [Span(text)])
     ])
-
-
-__name_cell = image_text_cell(
-
-    format_template(METABOMB_IMAGE_URL + "/gifs/char-gif/{{ display_id }}.gif", {
-        "display_id": '$.display_id'
-    }),
-    "$.name"
-)
 
 
 def timestamp_cell():
