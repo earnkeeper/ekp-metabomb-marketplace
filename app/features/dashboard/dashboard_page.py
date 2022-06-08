@@ -8,11 +8,6 @@ from app.features.dashboard.dashboard_fusion_page import fusion_table
 def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECTION_NAME):
     return Container(
         children=[
-            Alert(
-                "Metabomb is currently under maintenance, preparing for their official launch today. This page may encounter errors.",
-                header="Attention",
-                icon_name="bell"
-            ),
             Div([], "mb-4"),
             page_title('activity', 'Dashboard'),
             Div(class_name="my-4"),

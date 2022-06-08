@@ -8,11 +8,6 @@ from app.utils.page_title import page_title
 def heroes_page(HISTORY_COLLECTION_NAME, HERO_LISTINGS_COLLECTION_NAME, HERO_SUMMARY_COLLECTION_NAME):
     return Container(
         children=[
-            Alert(
-                "Metabomb is currently under maintenance, preparing for their official launch today. This page may encounter errors.",
-                header="Attention",
-                icon_name="bell"
-            ),
             Div([], "mb-4"),
             page_title('shopping-bag', 'Hero Market'),
             summary_row(HERO_SUMMARY_COLLECTION_NAME),
