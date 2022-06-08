@@ -1,3 +1,3 @@
 ekp-sdk==0.5.23
 gql[aiohttp]==3.2.0
-dateutil
+python-dateutil
