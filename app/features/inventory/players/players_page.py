@@ -15,6 +15,7 @@ def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                 header="Attention",
                 icon_name="bell"
             ),
+            Div([], "mb-4"),
             page_title('users', 'Inventory'),
             Span(
                 "Track Boxes, Heroes, Market Value and ROI for any player. Once you add an address, click on it in the list for full details",

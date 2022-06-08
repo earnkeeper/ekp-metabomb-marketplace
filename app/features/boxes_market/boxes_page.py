@@ -14,6 +14,7 @@ def boxes_page(LISTINGS_COLLECTION_NAME, HISTORY_COLLECTION_NAME, SUMMARY_COLLEC
                 header="Attention",
                 icon_name="bell"
             ),
+            Div([], "mb-4"),
             page_title('shopping-bag', 'Box Market'),
             summary_row(SUMMARY_COLLECTION_NAME),
             Tabs(

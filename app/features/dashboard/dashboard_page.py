@@ -13,6 +13,7 @@ def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECT
                 header="Attention",
                 icon_name="bell"
             ),
+            Div([], "mb-4"),
             page_title('activity', 'Dashboard'),
             Div(class_name="my-4"),
             hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME),

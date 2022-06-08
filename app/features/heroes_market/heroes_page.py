@@ -12,6 +12,7 @@ def heroes_page(HISTORY_COLLECTION_NAME, HERO_LISTINGS_COLLECTION_NAME, HERO_SUM
                 header="Attention",
                 icon_name="bell"
             ),
+            Div([], "mb-4"),
             page_title('shopping-bag', 'Hero Market'),
             summary_row(HERO_SUMMARY_COLLECTION_NAME),
             Tabs(
