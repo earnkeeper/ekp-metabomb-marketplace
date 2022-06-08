@@ -3,7 +3,7 @@ from app.features.dashboard.dashboard_hero_profit_page import hero_dashboard_pro
 from app.utils.game_constants import HERO_BOX_NAME_IMAGE
 from app.utils.page_title import page_title
 from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Div, Chart, commify, ekp_map, sort_by, json_array, \
-    Hr, Alert
+    Hr, Alert, Icon, Paragraphs
 from app.features.dashboard.dashboard_fusion_page import fusion_table
 
 def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECTION_NAME, CHART_COLLECTION_NAME, RARITIES_FORM_NAME):
@@ -23,10 +23,44 @@ def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECT
             Div(class_name="my-4"),
             hero_drop_rates(OPENS_COLLECTION_NAME),
             Div(class_name="my-4"),
-            form_row(RARITIES_FORM_NAME),
-            # Div(class_name="my-4"),
-            chart_row(CHART_COLLECTION_NAME),
+            hero_sales_volume_chart(RARITIES_FORM_NAME, CHART_COLLECTION_NAME)
         ]
+    )
+
+def hero_sales_volume_chart(RARITIES_FORM_NAME, CHART_COLLECTION_NAME):
+    return Container(
+        children=[
+            title_row(),
+            Hr("mb-2"),
+            Paragraphs(
+                [
+                    "Check the history of price and number of sales of each hero rarity on the market. Is now a good time to buy or sell?"
+                ],
+            ),
+            Div(class_name="my-4"),
+            Card(
+                children=[
+                    form_row(RARITIES_FORM_NAME),
+                    chart_row(CHART_COLLECTION_NAME),
+                ],
+            )
+        ]
+    )
+
+def title_row():
+    return Row(
+        children=[
+            Col(
+                children=[Icon("box")],
+                class_name='col-auto pr-0'
+            ),
+            Col(
+                children=[
+                    Span("Hero sale price and volume", "font-medium-3")
+                ]
+            )
+        ],
+        class_name="mb-2"
     )
 
 def hero_drop_rates(OPENS_COLLECTION_NAME):

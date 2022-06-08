@@ -41,6 +41,7 @@ def chart_row(CHART_COLLECTION_NAME):
         title="",
         height=200,
         type="line",
+        card=False,
         data=documents(CHART_COLLECTION_NAME),
         options={
             "chart": {
