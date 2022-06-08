@@ -1,19 +1,24 @@
 from ekp_sdk.ui import (Card, Col, Container, Div, Image, Row, Span, Tab, Tabs,
                         format_currency, format_template, switch_case)
-from app.features.heroes_market.history.heroes_history_tab import history_tab
-from app.features.heroes_market.listings.heroes_listings_tab import heroes_listings_tab
+from app.features.bombs_market.history.bombs_history_tab import history_tab
+from app.features.bombs_market.listings.bombs_listings_tab import bombs_listings_tab
+
 from app.utils.page_title import page_title
 
-def bombs_page(BOMBS_HISTORY_COLLECTION_NAME, BOMBS_LISTINGS_COLLECTION_NAME, BOMBS_SUMMARY_COLLECTION_NAME):
+def bombs_page(
+        BOMBS_HISTORY_COLLECTION_NAME,
+        BOMBS_LISTINGS_COLLECTION_NAME,
+        BOMBS_SUMMARY_COLLECTION_NAME
+):
     return Container(
         children=[
-            page_title('shopping-bag', 'Hero Market'),
+            page_title('shopping-bag', 'Bomb Market'),
             summary_row(BOMBS_SUMMARY_COLLECTION_NAME),
             Tabs(
                 [
                     Tab(
                         label="Listings",
-                        children=[heroes_listings_tab(BOMBS_LISTINGS_COLLECTION_NAME)]
+                        children=[bombs_listings_tab(BOMBS_LISTINGS_COLLECTION_NAME)]
                     ),
                     Tab(
                         label="History",
@@ -47,9 +52,9 @@ def summary_row(SUMMARY_COLLECTION_NAME):
     )
 
 
-def summary_card(boxId):
+def summary_card(bombId):
     return Container(
-        context=f"$.{boxId}",
+        context=f"$.{bombId}",
         children=[
             Card(
                 class_name="p-1",
@@ -57,7 +62,7 @@ def summary_card(boxId):
                     Row([
                         Col("col-auto my-auto", [
                             Image(
-                                src=format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+                                src=format_template("https://app.metabomb.io/gifs/bomb-gif/{{ display_id }}.gif", {
                                     "display_id": '$.display_id'
                                 }),
                                 style={"height": "64px"}

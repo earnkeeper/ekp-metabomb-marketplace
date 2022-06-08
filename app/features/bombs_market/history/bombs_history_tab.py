@@ -4,13 +4,13 @@ from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         format_age, format_currency, format_mask_address,
                         format_template, is_busy, switch_case)
 
-from shared.constants import HERO_CONTRACT_ADDRESS
+from shared.constants import BOMB_CONTRACT_ADDRESS
 
 
 def history_tab(HISTORY_COLLECTION_NAME):
     return Container([
         Paragraphs(["Browse the last 1000 sales from the market place right here.",
-                   "Check out our discord for real time notifications of new listings"]),
+                    "Check out our discord for real time notifications of new listings"]),
         Div([], class_name="mb-2"),
         table_row(HISTORY_COLLECTION_NAME)
     ])
@@ -24,7 +24,7 @@ def table_row(HISTORY_COLLECTION_NAME):
         default_sort_asc=False,
         filters=[
             {"columnId": "rarity", "icon": "cil-spa"},
-            {"columnId": "level", "icon": "cil-shield-alt"},
+            # {"columnId": "level", "icon": "cil-shield-alt"},
         ],
         columns=[
             Column(
@@ -40,6 +40,12 @@ def table_row(HISTORY_COLLECTION_NAME):
                 sortable=True,
                 searchable=True,
                 cell=name_cell(),
+                min_width="200px"
+            ),
+            Column(
+                id="skills",
+                title="Skills",
+                cell=skills_cell(),
                 min_width="200px"
             ),
             Column(
@@ -66,6 +72,34 @@ def table_row(HISTORY_COLLECTION_NAME):
                 title="",
                 width="2px"
             ),
+        ]
+    )
+
+
+def skills_cell():
+    return Row(
+        children=[
+            skill_col(s_id) for s_id in range(1, 7)
+            # skill_col("1"),
+            # skill_col("2"),
+            # skill_col("3"),
+            # skill_col("4"),
+            # skill_col("5"),
+            # skill_col("6"),
+        ]
+    )
+
+
+def skill_col(skill_id):
+    return Col(
+        class_name="my-auto col-auto pr-0",
+        children=[
+            Image(
+                src=format_template("https://app.metabomb.io/icons/skill-icon/skill-{{ skill_id }}.png", {
+                    "skill_id": f"$.skill_{skill_id}"
+                }),
+                style={"height": "38px"}
+            )
         ]
     )
 
@@ -100,7 +134,7 @@ def name_cell():
                 class_name="my-auto col-auto pr-0",
                 children=[
                     Image(
-                        src=format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+                        src=format_template("https://app.metabomb.io/gifs/bomb-gif/{{ display_id }}.gif", {
                             "display_id": '$.display_id'
                         }),
                         style={"height": "38px"}
@@ -125,7 +159,7 @@ def name_cell():
                                         href=format_template(
                                             "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
                                             {
-                                                "contractAddress": HERO_CONTRACT_ADDRESS,
+                                                "contractAddress": BOMB_CONTRACT_ADDRESS,
                                                 "tokenId": "$.tokenId"
                                             }
                                         ),

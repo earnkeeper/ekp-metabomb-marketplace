@@ -1,6 +1,9 @@
 from decouple import AutoConfig
 from ekp_sdk import BaseContainer
 
+from app.features.bombs_market.bombs_market_controller import BombsMarketController
+from app.features.bombs_market.history.bombs_history_service import BombsHistoryService
+from app.features.bombs_market.listings.bombs_listings_service import BombsListingsService
 from app.features.boxes_market.boxes_summary_service import BoxesSummaryService
 from app.features.boxes_market.history.boxes_history_service import \
     BoxesHistoryService
@@ -22,6 +25,8 @@ from app.features.inventory.players.players_controller import InventoryPlayersCo
 from app.features.inventory.players.players_service import InventoryPlayersService
 from app.features.heroes_market.heroes_summary_service import HeroesSummaryService
 from db.activity_repo import ActivityRepo
+from db.bomb_listing_timestamp_repo import BombListingTimestampRepo
+from db.bombs_sales_repo import BombsSalesRepo
 from db.box_listing_timestamp_repo import BoxListingTimestampRepo
 from db.box_opens_repo import BoxOpensRepo
 from db.market_sales_repo import MarketSalesRepo
@@ -83,6 +88,14 @@ class AppContainer(BaseContainer):
             mg_client=self.mg_client
         )
 
+        self.bomb_listing_timestamp_repo = BombListingTimestampRepo(
+            mg_client=self.mg_client
+        )
+
+        self.bombs_sales_repo = BombsSalesRepo(
+            mg_client=self.mg_client
+        )
+
         # FEATURES - BOXES MARKET
 
         self.box_listing_timestamp_repo = BoxListingTimestampRepo(
@@ -131,6 +144,30 @@ class AppContainer(BaseContainer):
             heroes_history_service=self.heroes_history_service,
             heroes_listings_service=self.heroes_listings_service,
             heroes_summary_service=self.heroes_summary_service
+        )
+
+        # FEATURES - BOMBS MARKET
+
+        self.bombs_listings_service = BombsListingsService(
+            metabomb_api_service=self.metabomb_api_service,
+            metabomb_coingecko_service=self.metabomb_coingecko_service,
+            mapper_service=self.mapper_service,
+            bomb_listing_timestamp_repo=self.bomb_listing_timestamp_repo
+        )
+
+        self.bombs_history_service = BombsHistoryService(
+            bombs_sales_repo=self.bombs_sales_repo,
+            metabomb_coingecko_service=self.metabomb_coingecko_service,
+            mapper_service=self.mapper_service
+        )
+
+        # self.heroes_summary_service = HeroesSummaryService()
+
+        self.bombs_market_controller = BombsMarketController(
+            client_service=self.client_service,
+            bombs_history_service=self.bombs_history_service,
+            bombs_listings_service=self.bombs_listings_service,
+            # heroes_summary_service=self.heroes_summary_service
         )
 
         # FEATURES - DASHBOARD
@@ -211,6 +248,7 @@ if __name__ == '__main__':
     container.client_service.add_controller(container.boxes_market_controller)
     container.client_service.add_controller(container.dashboard_controller)
     container.client_service.add_controller(container.heroes_market_controller)
+    container.client_service.add_controller(container.bombs_market_controller)
     container.client_service.add_controller(
         container.inventory_players_controller
     )

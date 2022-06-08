@@ -5,16 +5,16 @@ from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
 
 from app.utils.game_constants import MTB_ICON
 from app.utils.image_cell import image_cell
-from shared.constants import HERO_CONTRACT_ADDRESS
+from shared.constants import BOMB_CONTRACT_ADDRESS
 
 
-def heroes_listings_tab(LISTINGS_COLLECTION_NAME):
+def bombs_listings_tab(LISTINGS_COLLECTION_NAME):
     return Container(
         children=[
             Paragraphs(
                 [
                     "Browse the live Metabomb Marketplace for the best deals.",
-                    "The heroes with the best Return on Investment are shown at the top. (Based on Testnet gameplay mechanics) ",
+                    # "The bombs with the best Return on Investment are shown at the top. (Based on Testnet gameplay mechanics) ",
                 ],
             ),
             Div([], "mb-3"),
@@ -27,15 +27,15 @@ def market_row(LISTINGS_COLLECTION_NAME):
     return Datatable(
         data=documents(LISTINGS_COLLECTION_NAME),
         busy_when=is_busy(collection(LISTINGS_COLLECTION_NAME)),
-        default_sort_field_id="est_roi",
+        # default_sort_field_id="est_roi",
         default_sort_asc=False,
         pagination_per_page=18,
         disable_list_view=True,
         search_hint="Search by token id or token name...",
-        filters=[
-            {"columnId": "rarity_name", "icon": "cil-spa"},
-            {"columnId": "level", "icon": "cil-shield-alt"},
-        ],
+        # filters=[
+        #     {"columnId": "rarity_name", "icon": "cil-spa"},
+        #     {"columnId": "level", "icon": "cil-shield-alt"},
+        # ],
         columns=[
             Column(
                 id="last_listing_timestamp",
@@ -51,15 +51,13 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 sortable=True,
                 searchable=True,
                 cell=name_cell(),
-                min_width="250px"
+                min_width="200px"
             ),
             Column(
-                id="est_payback",
-                title="ROI",
-                sortable=True,
-                searchable=True,
-                cell=earn_cell(),
-                min_width="120px"
+                id="skills",
+                title="Skills",
+                cell=skills_cell(),
+                min_width="200px"
             ),
             Column(
                 id="priceFiat",
@@ -77,68 +75,11 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 cell=__avg_price_cell
             ),
             Column(
-                id="hero_power",
-                title="Power",
-                cell=set_image(icon_name='stats-power',
-                               attr_name='hero_power'),
-                width="80px",
-                right=True,
-                sortable=True,
-            ),
-            Column(
-                id="hero_health",
-                title="Health",
-                cell=set_image(icon_name='stats-health',
-                               attr_name='hero_health'),
-                width="80px",
-                right=True,
-                sortable=True,
-            ),
-            Column(
-                id="hero_speed",
-                title="Speed",
-                cell=set_image(icon_name='stats-speed',
-                               attr_name='hero_speed'),
-                width="80px",
-                right=True,
-                sortable=True,
-            ),
-            Column(
-                id="hero_stamina",
-                title="Stamina",
-                cell=set_image(icon_name='stats-stamina',
-                               attr_name='hero_stamina'),
-                width="90px",
-                right=True,
-                sortable=True,
-            ),
-            Column(
-                id="hero_bomb_num",
-                title="Bomb num",
-                cell=set_image(icon_name='stats-bombnum',
-                               attr_name='hero_bomb_num'),
-                width="80px",
-                right=True,
-                sortable=True,
-            ),
-            Column(
-                id="hero_bomb_range",
-                title="Bomb range",
-                cell=set_image(icon_name='stats-bombrange',
-                               attr_name='hero_bomb_range'),
-                width="80px",
-                right=True,
-                sortable=True,
-            ),
-            Column(
                 id="rarity_name",
                 omit=True,
                 title="Rarity"
             ),
-            Column(
-                id="level",
-                omit=True
-            ),
+
             Column(
                 id="spacer",
                 title="",
@@ -147,6 +88,31 @@ def market_row(LISTINGS_COLLECTION_NAME):
         ]
     )
 
+def skills_cell():
+    return Row(
+        children=[
+            skill_col(s_id) for s_id in range(1, 7)
+            # skill_col("1"),
+            # skill_col("2"),
+            # skill_col("3"),
+            # skill_col("4"),
+            # skill_col("5"),
+            # skill_col("6"),
+        ]
+    )
+
+def skill_col(skill_id):
+    return Col(
+        class_name="my-auto col-auto pr-0",
+        children=[
+            Image(
+                src=format_template("https://app.metabomb.io/icons/skill-icon/skill-{{ skill_id }}.png", {
+                    "skill_id": f"$.skill_{skill_id}"
+                }),
+                style={"height": "38px"}
+            )
+        ]
+    )
 
 def earn_cell():
     return Row(
@@ -248,7 +214,7 @@ def name_cell():
                 class_name="my-auto col-auto pr-0",
                 children=[
                     Image(
-                        src=format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+                        src=format_template("https://app.metabomb.io/gifs/bomb-gif/{{ display_id }}.gif", {
                             "display_id": '$.display_id'
                         }),
                         style={"height": "38px"}
@@ -273,7 +239,7 @@ def name_cell():
                                         href=format_template(
                                             "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
                                             {
-                                                "contractAddress": HERO_CONTRACT_ADDRESS,
+                                                "contractAddress": BOMB_CONTRACT_ADDRESS,
                                                 "tokenId": "$.tokenId"
                                             }
                                         ),
@@ -310,18 +276,6 @@ def set_image(icon_name, attr_name):
         image_size="16px"
     )
 
-
-__id_cell = Link(
-    href=format_template(
-        "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
-        {
-            "contractAddress": HERO_CONTRACT_ADDRESS,
-            "tokenId": "$.tokenId"
-        }
-    ),
-    external=True,
-    content="$.tokenId"
-)
 
 __seller_cell = Link(
     href=format_template(

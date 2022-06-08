@@ -209,6 +209,12 @@ class MapperService(BaseMapperService):
             'element_name': self.BOMB_ELEMENT_TO_NAME[dto['element']],
             'rarity': dto['rarity'],
             'rarity_name': self.BOMB_RARITY_TO_NAME[dto['rarity']],
+            'skill_1': dto['skill_1'],
+            'skill_2': dto['skill_2'],
+            'skill_3': dto['skill_3'],
+            'skill_4': dto['skill_4'],
+            'skill_5': dto['skill_5'],
+            'skill_6': dto['skill_6'],
         }
 
         if mtb_rate is None:
