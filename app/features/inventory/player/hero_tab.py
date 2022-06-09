@@ -1,8 +1,9 @@
-from app.utils.game_constants import HERO_BOX_NAME_IMAGE
+from app.utils.game_constants import HERO_BOX_NAME_IMAGE, METABOMB_IMAGE_URL
 from app.utils.image_cell import image_cell
-from ekp_sdk.ui import (Card, Chart, Column, Container, Datatable, Span,
-                        collection, commify, documents, format_currency,
-                        format_template, is_busy, Div, Row, Icon, Link, Col, format_percent)
+from ekp_sdk.ui import (Column, Container, Datatable,
+                        commify, format_currency,
+                        format_template, is_busy, format_percent)
+from ekp_sdk.util import documents, collection
 
 
 def hero_tab(HEROES_COLLECTION_NAME):
@@ -138,7 +139,7 @@ def hero_tab(HEROES_COLLECTION_NAME):
 
 
 __name_cell = image_cell(
-    format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+    format_template(METABOMB_IMAGE_URL + "/gifs/char-gif/{{ display_id }}.gif", {
         "display_id": '$.display_id'
     }),
     "$.name"
@@ -147,7 +148,7 @@ __name_cell = image_cell(
 
 def set_image(icon_name, attr_name):
     return image_cell(
-        f"https://app.metabomb.io/icons/stats-icon/{icon_name}.svg",
+        f"{METABOMB_IMAGE_URL}/icons/stats-icon/{icon_name}.svg",
         f"$.{attr_name}",
         image_size="16px"
     )

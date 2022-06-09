@@ -3,6 +3,8 @@ from ekp_sdk.ui import (Card, Col, Container, Div, Image, Row, Span, Tab, Tabs,
 from app.features.heroes_market.history.heroes_history_tab import history_tab
 from app.features.heroes_market.listings.heroes_listings_tab import heroes_listings_tab
 from app.utils.page_title import page_title
+from app.utils.game_constants import METABOMB_IMAGE_URL
+
 
 def heroes_page(HISTORY_COLLECTION_NAME, HERO_LISTINGS_COLLECTION_NAME, HERO_SUMMARY_COLLECTION_NAME):
     return Container(
@@ -57,7 +59,7 @@ def summary_card(boxId):
                     Row([
                         Col("col-auto my-auto", [
                             Image(
-                                src=format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+                                src=format_template(METABOMB_IMAGE_URL + "/gifs/char-gif/{{ display_id }}.gif", {
                                     "display_id": '$.display_id'
                                 }),
                                 style={"height": "64px"}

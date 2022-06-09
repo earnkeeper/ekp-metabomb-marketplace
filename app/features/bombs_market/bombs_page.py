@@ -2,6 +2,7 @@ from ekp_sdk.ui import (Card, Col, Container, Div, Image, Row, Span, Tab, Tabs,
                         format_currency, format_template, switch_case)
 from app.features.bombs_market.history.bombs_history_tab import history_tab
 from app.features.bombs_market.listings.bombs_listings_tab import bombs_listings_tab
+from app.utils.game_constants import METABOMB_IMAGE_URL
 
 from app.utils.page_title import page_title
 
@@ -62,7 +63,7 @@ def summary_card(bombId):
                     Row([
                         Col("col-auto my-auto", [
                             Image(
-                                src=format_template("https://app.metabomb.io/gifs/bomb-gif/{{ display_id }}.gif", {
+                                src=format_template(METABOMB_IMAGE_URL +"/gifs/bomb-gif/{{ display_id }}.gif", {
                                     "display_id": '$.display_id'
                                 }),
                                 style={"height": "64px"}

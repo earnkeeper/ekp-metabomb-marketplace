@@ -1,9 +1,10 @@
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
-                        Paragraphs, Row, Span, collection, commify, documents,
+                        Paragraphs, Row, Span, commify,
                         format_currency, format_mask_address, format_percent,
                         format_template, is_busy, switch_case, format_age)
+from ekp_sdk.util import documents, collection
 
-from app.utils.game_constants import MTB_ICON
+from app.utils.game_constants import MTB_ICON, METABOMB_IMAGE_URL
 from app.utils.image_cell import image_cell
 from shared.constants import HERO_CONTRACT_ADDRESS
 
@@ -34,7 +35,8 @@ def market_row(LISTINGS_COLLECTION_NAME):
         search_hint="Search by token id or token name...",
         filters=[
             {"columnId": "rarity_name", "icon": "cil-spa"},
-            {"columnId": "level", "icon": "cil-shield-alt"},
+            {"columnId": "hero_power", "icon": "cil-fire"},
+            {"columnId": "hero_stamina", "icon": "cil-bolt"},
         ],
         columns=[
             Column(
@@ -248,7 +250,7 @@ def name_cell():
                 class_name="my-auto col-auto pr-0",
                 children=[
                     Image(
-                        src=format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+                        src=format_template(METABOMB_IMAGE_URL + "/gifs/char-gif/{{ display_id }}.gif", {
                             "display_id": '$.display_id'
                         }),
                         style={"height": "38px"}
@@ -305,34 +307,10 @@ __avg_price_cell = Span(
 
 def set_image(icon_name, attr_name):
     return image_cell(
-        f"https://app.metabomb.io/icons/stats-icon/{icon_name}.svg",
+        f"{METABOMB_IMAGE_URL}/icons/stats-icon/{icon_name}.svg",
         f"$.{attr_name}",
         image_size="16px"
     )
-
-
-__id_cell = Link(
-    href=format_template(
-        "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
-        {
-            "contractAddress": HERO_CONTRACT_ADDRESS,
-            "tokenId": "$.tokenId"
-        }
-    ),
-    external=True,
-    content="$.tokenId"
-)
-
-__seller_cell = Link(
-    href=format_template(
-        "https://bscscan.com/address/{{ seller }}",
-        {
-            "seller": "$.seller",
-        }
-    ),
-    external=True,
-    content=format_mask_address("$.seller")
-)
 
 
 def image_text_cell(src, text):
@@ -346,14 +324,6 @@ def image_text_cell(src, text):
         Col("pl-0 my-auto", [Span(text)])
     ])
 
-
-__name_cell = image_text_cell(
-
-    format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
-        "display_id": '$.display_id'
-    }),
-    "$.name"
-)
 
 
 def timestamp_cell():

@@ -2,6 +2,7 @@ from decouple import AutoConfig
 from ekp_sdk import BaseContainer
 
 from app.features.bombs_market.bombs_market_controller import BombsMarketController
+from app.features.bombs_market.bombs_summary_service import BombsSummaryService
 from app.features.bombs_market.history.bombs_history_service import BombsHistoryService
 from app.features.bombs_market.listings.bombs_listings_service import BombsListingsService
 from app.features.boxes_market.boxes_summary_service import BoxesSummaryService
@@ -161,13 +162,15 @@ class AppContainer(BaseContainer):
             mapper_service=self.mapper_service
         )
 
+        self.bombs_summary_service = BombsSummaryService()
+
         # self.heroes_summary_service = HeroesSummaryService()
 
         self.bombs_market_controller = BombsMarketController(
             client_service=self.client_service,
             bombs_history_service=self.bombs_history_service,
             bombs_listings_service=self.bombs_listings_service,
-            # heroes_summary_service=self.heroes_summary_service
+            bombs_summary_service=self.bombs_summary_service
         )
 
         # FEATURES - DASHBOARD

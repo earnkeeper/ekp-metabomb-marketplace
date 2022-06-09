@@ -112,7 +112,7 @@ class BombsListingsService:
             "type": listing["__typename"],
             "updated": now,
             "rarity_name": rarity_name,
-            "element": listing["element"],
+            "element": self.mapper_service.BOMB_ELEMENT_TO_NAME[listing["element"]].lower(),
             "last_listing_timestamp": timestamp[0]['lastListingTimestamp'] if timestamp else None,
             "skill_1": listing['skill_1'],
             "skill_2": listing['skill_2'],

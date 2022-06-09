@@ -1,9 +1,11 @@
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
-                        Paragraphs, Row, Span, collection, commify, documents,
+                        Paragraphs, Row, Span, commify,
                         format_currency, format_mask_address, format_percent,
                         format_template, is_busy, switch_case, format_age)
+from ekp_sdk.util import documents, collection
+from ekp_sdk.util.clean_null_terms import clean_null_terms
 
-from app.utils.game_constants import MTB_ICON
+from app.utils.game_constants import MTB_ICON, METABOMB_IMAGE_URL
 from app.utils.image_cell import image_cell
 from shared.constants import BOMB_CONTRACT_ADDRESS
 
@@ -100,16 +102,17 @@ def skills_cell():
             # skill_col("6"),
         ]
     )
-
+# onerror="this.style.display='none'"
 def skill_col(skill_id):
     return Col(
         class_name="my-auto col-auto pr-0",
         children=[
             Image(
-                src=format_template("https://app.metabomb.io/icons/skill-icon/skill-{{ skill_id }}.png", {
+                src=format_template(METABOMB_IMAGE_URL + "/icons/skill-icon/skill-{{ skill_id }}.png", {
                     "skill_id": f"$.skill_{skill_id}"
                 }),
-                style={"height": "38px"}
+                style={"height": "20px", "border-radius": "50%"},
+                when=f"$.skill_{skill_id}"
             )
         ]
     )
@@ -214,10 +217,10 @@ def name_cell():
                 class_name="my-auto col-auto pr-0",
                 children=[
                     Image(
-                        src=format_template("https://app.metabomb.io/gifs/bomb-gif/{{ display_id }}.gif", {
+                        src=format_template(METABOMB_IMAGE_URL + "/gifs/bomb-gif/{{ display_id }}.gif", {
                             "display_id": '$.display_id'
                         }),
-                        style={"height": "38px"}
+                        style={"height": "50px"}
                     )
                 ]
             ),
@@ -228,7 +231,30 @@ def name_cell():
                             Col(
                                 class_name="col-12 font-small-4",
                                 children=[
-                                    Span("$.name")
+                                    Row(
+                                        children=[
+                                            Col(
+                                                class_name="col-auto my-auto pr-0",
+                                                children=[
+                                                    Span("$.name")
+                                                ]
+                                            ),
+                                            Col(
+                                                class_name="col-auto my-auto",
+                                                children=[
+                                                    Image(
+                                                        src=format_template(
+                                                            METABOMB_IMAGE_URL + "/icons/element-icon/{{ element }}.png",
+                                                            {
+                                                                "element": '$.element'
+                                                            }),
+                                                        style={"height": "14px"}
+                                                    )
+                                                ]
+                                            )
+
+                                        ]
+                                    )
                                 ]
                             ),
                             Col(
@@ -271,7 +297,7 @@ __avg_price_cell = Span(
 
 def set_image(icon_name, attr_name):
     return image_cell(
-        f"https://app.metabomb.io/icons/stats-icon/{icon_name}.svg",
+        f"{METABOMB_IMAGE_URL}/icons/stats-icon/{icon_name}.svg",
         f"$.{attr_name}",
         image_size="16px"
     )
@@ -303,7 +329,7 @@ def image_text_cell(src, text):
 
 __name_cell = image_text_cell(
 
-    format_template("https://app.metabomb.io/gifs/char-gif/{{ display_id }}.gif", {
+    format_template(METABOMB_IMAGE_URL + "/gifs/char-gif/{{ display_id }}.gif", {
         "display_id": '$.display_id'
     }),
     "$.name"

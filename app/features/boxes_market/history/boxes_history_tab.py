@@ -1,9 +1,10 @@
 from app.utils.game_constants import (HERO_BOX_NAME_CONTRACT,
                                       HERO_BOX_NAME_IMAGE, MTB_ICON)
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
-                        Paragraphs, Row, Span, collection, commify, documents,
+                        Paragraphs, Row, Span, commify,
                         format_age, format_currency, format_mask_address,
                         format_template, is_busy, switch_case)
+from ekp_sdk.util import documents, collection
 
 
 def history_tab(HISTORY_COLLECTION_NAME):

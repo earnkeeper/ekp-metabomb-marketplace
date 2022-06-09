@@ -50,7 +50,7 @@ class NotificationService:
             hero: Hero = new_listing["hero"]
             name = f"{hero['rarity_name']} Lv {hero['level'] + 1} Hero"
             image_url = self.mapper_service.get_hero_image_url(hero["display_id"])
-            title_url = f"https://app.metabomb.io/hero/{hero['id']}"
+            title_url = f"https://market.metabomb.io/hero/{hero['id']}"
 
             fields.append({
                 "name": "Power",
@@ -93,7 +93,7 @@ class NotificationService:
             box: HeroBox = new_listing["box"]
             name = box["name"]
             image_url = self.mapper_service.get_hero_box_url(box["type"])
-            title_url = "https://app.metabomb.io/trade/boxes"
+            title_url = "https://market.metabomb.io/trade/boxes"
             
             fields.append({
                 "name": "Type",

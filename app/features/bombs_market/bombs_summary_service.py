@@ -8,6 +8,8 @@ class BombsSummaryService:
             "Epic": None,
             "Legend": None,
             "Rare": None,
+            "Mythic": None,
+            "Meta": None
         }
 
         avg_prices = {
@@ -15,6 +17,8 @@ class BombsSummaryService:
             "Epic": None,
             "Legend": None,
             "Rare": None,
+            "Mythic": None,
+            "Meta": None
         }
 
         display_ids = {
@@ -22,6 +26,8 @@ class BombsSummaryService:
             "Epic": None,
             "Legend": None,
             "Rare": None,
+            "Mythic": None,
+            "Meta": None
         }
 
         for listing in listing_documents:
@@ -67,5 +73,19 @@ class BombsSummaryService:
                     "avgPrice": avg_prices["Rare"],
                     "fiatSymbol": currency["symbol"]
                 },
+                "mythic": {
+                    "name": "Mythic",
+                    "display_id": display_ids["Mythic"],
+                    "floorPrice": floor_prices["Mythic"],
+                    "avgPrice": avg_prices["Mythic"],
+                    "fiatSymbol": currency["symbol"]
+                },
+                "meta": {
+                    "name": "Meta",
+                    "display_id": display_ids["Meta"],
+                    "floorPrice": floor_prices["Meta"],
+                    "avgPrice": avg_prices["Meta"],
+                    "fiatSymbol": currency["symbol"]
+                }
             }
         ]

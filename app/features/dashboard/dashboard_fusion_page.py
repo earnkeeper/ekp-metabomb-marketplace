@@ -1,6 +1,7 @@
-from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Form,
-                        Icon, Row, Span, collection, documents, Hr,
+from ekp_sdk.ui import (Col, Column, Container, Datatable, Div,
+                        Icon, Row, Span, Hr,
                         format_currency, format_template, is_busy, switch_case, commify, Paragraphs)
+from ekp_sdk.util import documents, collection
 
 
 def fusion_table(FUSION_COLLECTION_NAME):
@@ -216,7 +217,7 @@ def total_costs():
             class_name="col-12 text-right",
             children=[
                 Span(
-                    format_currency("$.total_cost_fiat", "$.fiat_symbol"), 
+                    format_currency("$.total_cost_fiat", "$.fiat_symbol"),
                     format_template("text-{{ color }}", {
                         "color": "$.total_cost_color"
                     })
@@ -235,7 +236,7 @@ def market_value():
                     format_currency("$.market_value_fiat", "$.fiat_symbol"),
                     format_template("text-{{ color }}", {
                         "color": "$.market_value_color"
-                    })                    
+                    })
                 )
             ],
         ),

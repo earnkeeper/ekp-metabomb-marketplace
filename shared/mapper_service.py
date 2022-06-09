@@ -51,7 +51,7 @@ class MapperService(BaseMapperService):
         return hero
 
     def get_hero_image_url(self, display_id):
-        return f"https://app.metabomb.io/gifs/char-gif/{display_id}.gif"
+        return f"https://market.metabomb.io/gifs/char-gif/{display_id}.gif"
 
     def get_hero_box_url(self, box_type):
         return self.HERO_BOX_TYPE_TO_IMAGE_URL[box_type]
@@ -287,8 +287,8 @@ class MapperService(BaseMapperService):
     }
 
     HERO_BOX_TYPE_TO_IMAGE_URL = {
-        0: "https://app.metabomb.io/gifs/herobox-gif/normal-box.gif",
-        1: "https://app.metabomb.io/gifs/herobox-gif/premium-box.gif",
-        2: "https://app.metabomb.io/gifs/herobox-gif/ultra-box.gif",
-        3: "https://app.metabomb.io/gifs/herobox-gif/bomb-box.gif"
+        0: "https://market.metabomb.io/gifs/herobox-gif/normal-box.gif",
+        1: "https://market.metabomb.io/gifs/herobox-gif/premium-box.gif",
+        2: "https://market.metabomb.io/gifs/herobox-gif/ultra-box.gif",
+        3: "https://market.metabomb.io/gifs/herobox-gif/bomb-box.gif"
     }

@@ -1,6 +1,8 @@
 from shared.constants import COMMON_BOX_CONTRACT_ADDRESS, PREMIUM_BOX_CONTRACT_ADDRESS, ULTRA_BOX_CONTRACT_ADDRESS, \
     BOMB_BOX_CONTRACT_ADDRESS
 
+METABOMB_IMAGE_URL = "https://market.metabomb.io"
+
 
 def rarity_names():
     return {
@@ -31,10 +33,10 @@ HERO_BOX_NAME_CONTRACT = {
 }
 
 HERO_BOX_NAME_IMAGE = {
-    "Common Box": "https://app.metabomb.io/gifs/herobox-gif/normal-box.gif",
-    "Premium Box": "https://app.metabomb.io/gifs/herobox-gif/premium-box.gif",
-    "Ultra Box": "https://app.metabomb.io/gifs/herobox-gif/ultra-box.gif",
-    "Bomb Box": "https://app.metabomb.io/gifs/herobox-gif/bomb-box.gif"
+    "Common Box": f"{METABOMB_IMAGE_URL}/gifs/herobox-gif/normal-box.gif",
+    "Premium Box": f"{METABOMB_IMAGE_URL}/gifs/herobox-gif/premium-box.gif",
+    "Ultra Box": f"{METABOMB_IMAGE_URL}/gifs/herobox-gif/ultra-box.gif",
+    "Bomb Box": f"{METABOMB_IMAGE_URL}/gifs/herobox-gif/bomb-box.gif"
 }
 
-MTB_ICON = "https://app.metabomb.io/icons/mtb-token.png"
+MTB_ICON = f"{METABOMB_IMAGE_URL}/icons/mtb-token.png"
