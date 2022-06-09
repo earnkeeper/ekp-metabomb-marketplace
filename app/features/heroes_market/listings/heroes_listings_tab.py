@@ -44,6 +44,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
             {"columnId": "rarity_name", "icon": "cil-spa"},
             {"columnId": "hero_power", "icon": "cil-fire"},
             {"columnId": "hero_stamina", "icon": "cil-bolt"},
+            {"columnId": "hero_class", "icon": "cil-bolt"},
         ],
         columns=[
             Column(
