@@ -1,7 +1,7 @@
 from ekp_sdk.ui import (Card, Col, Container, Div, Image, Row, Span, Tab, Tabs,
                         format_currency, format_template, switch_case)
 from app.features.bombs_market.history.bombs_history_tab import history_tab
-from app.features.bombs_market.listings.bombs_listings_tab import bombs_listings_tab
+from app.features.bombs_market.listings.bomb_listings_tab import bomb_listings_tab
 from app.utils.game_constants import METABOMB_IMAGE_URL
 
 from app.utils.page_title import page_title
@@ -19,7 +19,7 @@ def bombs_page(
                 [
                     Tab(
                         label="Listings",
-                        children=[bombs_listings_tab(BOMBS_LISTINGS_COLLECTION_NAME)]
+                        children=[bomb_listings_tab(BOMBS_LISTINGS_COLLECTION_NAME)]
                     ),
                     Tab(
                         label="History",
@@ -61,7 +61,7 @@ def summary_card(bombId):
                 class_name="p-1",
                 children=[
                     Row([
-                        Col("col-auto my-auto", [
+                        Col("col-auto my-auto pr-0", [
                             Image(
                                 src=format_template(METABOMB_IMAGE_URL +"/gifs/bomb-gif/{{ display_id }}.gif", {
                                     "display_id": '$.display_id'

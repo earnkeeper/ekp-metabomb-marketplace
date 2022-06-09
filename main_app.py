@@ -4,7 +4,7 @@ from ekp_sdk import BaseContainer
 from app.features.bombs_market.bombs_market_controller import BombsMarketController
 from app.features.bombs_market.bombs_summary_service import BombsSummaryService
 from app.features.bombs_market.history.bombs_history_service import BombsHistoryService
-from app.features.bombs_market.listings.bombs_listings_service import BombsListingsService
+from app.features.bombs_market.listings.bomb_listings_service import BombListingsService
 from app.features.boxes_market.boxes_summary_service import BoxesSummaryService
 from app.features.boxes_market.history.boxes_history_service import \
     BoxesHistoryService
@@ -149,7 +149,7 @@ class AppContainer(BaseContainer):
 
         # FEATURES - BOMBS MARKET
 
-        self.bombs_listings_service = BombsListingsService(
+        self.bombs_listings_service = BombListingsService(
             metabomb_api_service=self.metabomb_api_service,
             metabomb_coingecko_service=self.metabomb_coingecko_service,
             mapper_service=self.mapper_service,

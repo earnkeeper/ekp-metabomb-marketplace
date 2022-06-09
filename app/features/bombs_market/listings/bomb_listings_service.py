@@ -6,7 +6,7 @@ from shared.metabomb_api_service import MetabombApiService
 from shared.metabomb_coingecko_service import MetabombCoingeckoService
 
 
-class BombsListingsService:
+class BombListingsService:
     def __init__(
             self,
             metabomb_coingecko_service: MetabombCoingeckoService,
@@ -86,16 +86,6 @@ class BombsListingsService:
 
         price_fiat = price * rate
 
-        # mtb_per_day = 0.145 * 0.5 * 1440 * listing['power']
-        # fiat_per_day = mtb_per_day * rate
-
-        # est_payback = None
-        # est_roi = None
-
-        # if price_fiat:
-        #     est_payback = int(price_fiat / fiat_per_day)
-        #     est_roi = int(fiat_per_day * 365 * 100 / price_fiat)
-
         return {
             "fiatSymbol": currency["symbol"],
             "id": int(listing["id"]),
@@ -120,10 +110,6 @@ class BombsListingsService:
             "skill_4": listing['skill_4'],
             "skill_5": listing['skill_5'],
             "skill_6": listing['skill_6'],
-            # "mtb_per_day": mtb_per_day,
-            # "fiat_per_day": fiat_per_day,
-            # "est_payback": est_payback,
-            # "est_roi": est_roi
         }
 
     def get_name_totals(self, history_documents, now):

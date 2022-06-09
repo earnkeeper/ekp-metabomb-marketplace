@@ -1,22 +1,20 @@
-from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
-                        Paragraphs, Row, Span, commify,
-                        format_currency, format_mask_address, format_percent,
-                        format_template, is_busy, switch_case, format_age)
-from ekp_sdk.util import documents, collection
-from ekp_sdk.util.clean_null_terms import clean_null_terms
-
-from app.utils.game_constants import MTB_ICON, METABOMB_IMAGE_URL
+from app.utils.game_constants import METABOMB_IMAGE_URL, MTB_ICON
 from app.utils.image_cell import image_cell
+from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
+                        Paragraphs, Row, Span, commify, format_age,
+                        format_currency, format_percent,
+                        format_template, is_busy, switch_case)
+from ekp_sdk.util import collection, documents
 from shared.constants import BOMB_CONTRACT_ADDRESS
 
 
-def bombs_listings_tab(LISTINGS_COLLECTION_NAME):
+def bomb_listings_tab(LISTINGS_COLLECTION_NAME):
     return Container(
         children=[
             Paragraphs(
                 [
-                    "Browse the live Metabomb Marketplace for the best deals.",
-                    # "The bombs with the best Return on Investment are shown at the top. (Based on Testnet gameplay mechanics) ",
+                    "Browse the live Metabomb Bomb Market for the best deals on bombs.",
+                    "🤔 Bombs with skill 3 increase earning by 100%, look out for deals on these ones",
                 ],
             ),
             Div([], "mb-3"),
@@ -29,15 +27,10 @@ def market_row(LISTINGS_COLLECTION_NAME):
     return Datatable(
         data=documents(LISTINGS_COLLECTION_NAME),
         busy_when=is_busy(collection(LISTINGS_COLLECTION_NAME)),
-        # default_sort_field_id="est_roi",
         default_sort_asc=False,
         pagination_per_page=18,
         disable_list_view=True,
         search_hint="Search by token id or token name...",
-        # filters=[
-        #     {"columnId": "rarity_name", "icon": "cil-spa"},
-        #     {"columnId": "level", "icon": "cil-shield-alt"},
-        # ],
         columns=[
             Column(
                 id="last_listing_timestamp",
@@ -67,13 +60,15 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 sortable=True,
                 searchable=True,
                 cell=cost_cell(),
+                right=True,
                 min_width="100px"
             ),
             Column(
                 id="avgPriceFiat",
                 title="Vs 24h Avg",
-                width="120px",
+                width="140px",
                 sortable=True,
+                right=True,
                 cell=__avg_price_cell
             ),
             Column(
@@ -177,6 +172,7 @@ def cost_cell():
             children=[
                 Span(
                     format_currency("$.priceFiat", "$.fiatSymbol"),
+                    "float-right"
                 ),
             ]
         ),
@@ -184,6 +180,7 @@ def cost_cell():
             class_name="col-12 font-small-1",
             children=[
                 Row([
+                    Col("", []),
                     Col(
                         class_name="col-auto pr-0 my-auto",
                         children=[
@@ -214,7 +211,7 @@ def name_cell():
     return Row(
         children=[
             Col(
-                class_name="my-auto col-auto pr-0",
+                class_name="my-auto col-auto px-0",
                 children=[
                     Image(
                         src=format_template(METABOMB_IMAGE_URL + "/gifs/bomb-gif/{{ display_id }}.gif", {
@@ -225,6 +222,7 @@ def name_cell():
                 ]
             ),
             Col(
+                "px-0",
                 children=[
                     Row(
                         children=[
@@ -291,7 +289,7 @@ def name_cell():
 
 __avg_price_cell = Span(
     format_percent("$.pcAboveAvgFiat"),
-    switch_case("$.deal", {"no": "text-success", "yes": "text-danger"})
+    switch_case("$.deal", {"no": "float-right text-success", "yes": "float-right text-danger"})
 ),
 
 
@@ -301,18 +299,6 @@ def set_image(icon_name, attr_name):
         f"$.{attr_name}",
         image_size="16px"
     )
-
-
-__seller_cell = Link(
-    href=format_template(
-        "https://bscscan.com/address/{{ seller }}",
-        {
-            "seller": "$.seller",
-        }
-    ),
-    external=True,
-    content=format_mask_address("$.seller")
-)
 
 
 def image_text_cell(src, text):
@@ -325,16 +311,6 @@ def image_text_cell(src, text):
         ]),
         Col("pl-0 my-auto", [Span(text)])
     ])
-
-
-__name_cell = image_text_cell(
-
-    format_template(METABOMB_IMAGE_URL + "/gifs/char-gif/{{ display_id }}.gif", {
-        "display_id": '$.display_id'
-    }),
-    "$.name"
-)
-
 
 def timestamp_cell():
     return Row([

@@ -6,7 +6,7 @@ from ekp_sdk.util import client_currency, client_path
 from app.features.bombs_market.bombs_page import bombs_page
 from app.features.bombs_market.bombs_summary_service import BombsSummaryService
 from app.features.bombs_market.history.bombs_history_service import BombsHistoryService
-from app.features.bombs_market.listings.bombs_listings_service import BombsListingsService
+from app.features.bombs_market.listings.bomb_listings_service import BombListingsService
 
 BOMBS_LISTINGS_COLLECTION_NAME = "metabomb_bomb_listings"
 BOMBS_HISTORY_COLLECTION_NAME = "metabomb_bomb_history"
@@ -18,7 +18,7 @@ class BombsMarketController:
             self,
             client_service: ClientService,
             bombs_history_service: BombsHistoryService,
-            bombs_listings_service: BombsListingsService,
+            bombs_listings_service: BombListingsService,
             bombs_summary_service: BombsSummaryService,
     ):
         self.client_service = client_service
@@ -26,7 +26,6 @@ class BombsMarketController:
         self.bombs_listings_service = bombs_listings_service
         self.bombs_summary_service = bombs_summary_service
         self.path = 'bombs'
-        self.short_link = 'mtb-market'
 
     async def on_connect(self, sid):
         await self.client_service.emit_menu(
@@ -34,7 +33,6 @@ class BombsMarketController:
             'shopping-bag',
             'Bomb Market',
             self.path,
-            short_link=self.short_link,
             order=200,
             id="metabomb_bomb_market"
         )
@@ -72,7 +70,6 @@ class BombsMarketController:
         # Listings
 
         listing_documents = await self.bombs_listings_service.get_documents(currency, history_documents)
-        # pprint(listing_documents)
 
         await self.client_service.emit_documents(
             sid,
