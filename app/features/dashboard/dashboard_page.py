@@ -1,3 +1,4 @@
+from app.features.dashboard.dash_bomb_sale_price_and_volume_page import bomb_form_row, bomb_chart_row
 from app.features.dashboard.dash_hero_sale_price_and_volume_page import chart_row, form_row
 from app.features.dashboard.dashboard_hero_profit_page import hero_dashboard_profit_calc_page
 from app.utils.game_constants import HERO_BOX_NAME_IMAGE
@@ -6,13 +7,17 @@ from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Div, Chart
     Hr, Alert, Icon, Paragraphs
 from app.features.dashboard.dashboard_fusion_page import fusion_table
 
-def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECTION_NAME, CHART_COLLECTION_NAME, RARITIES_FORM_NAME):
+
+def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECTION_NAME, CHART_COLLECTION_NAME,
+         RARITIES_FORM_NAME, BOMB_RARITIES_FORM_NAME, BOMB_CHART_COLLECTION_NAME):
     return Container(
         children=[
             Div([], "mb-4"),
             page_title('activity', 'Dashboard'),
             Div(class_name="my-4"),
             hero_sales_volume_chart(RARITIES_FORM_NAME, CHART_COLLECTION_NAME),
+            Div(class_name="my-4"),
+            bomb_sales_volume_chart(BOMB_RARITIES_FORM_NAME, BOMB_CHART_COLLECTION_NAME),
             Div(class_name="my-4"),
             hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME),
             Div(class_name="my-4"),
@@ -22,10 +27,32 @@ def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECT
         ]
     )
 
+
+def bomb_sales_volume_chart(BOMB_RARITIES_FORM_NAME, BOMB_CHART_COLLECTION_NAME):
+    return Div(
+        children=[
+            title_row("Bomb"),
+            Hr("mb-2"),
+            Paragraphs(
+                [
+                    "Check the history of price and number of sales of each bomb rarity on the market. Is now a good time to buy or sell?"
+                ],
+            ),
+            Div(class_name="mt-2"),
+            Card(
+                children=[
+                    bomb_form_row(BOMB_RARITIES_FORM_NAME, BOMB_CHART_COLLECTION_NAME),
+                    bomb_chart_row(BOMB_CHART_COLLECTION_NAME),
+                ],
+            )
+        ]
+    )
+
+
 def hero_sales_volume_chart(RARITIES_FORM_NAME, CHART_COLLECTION_NAME):
     return Div(
         children=[
-            title_row(),
+            title_row("Hero"),
             Hr("mb-2"),
             Paragraphs(
                 [
@@ -42,7 +69,8 @@ def hero_sales_volume_chart(RARITIES_FORM_NAME, CHART_COLLECTION_NAME):
         ]
     )
 
-def title_row():
+
+def title_row(nft_type):
     return Row(
         children=[
             Col(
@@ -51,18 +79,20 @@ def title_row():
             ),
             Col(
                 children=[
-                    Span("Hero Price History", "font-medium-3")
+                    Span(f"{nft_type} Price History", "font-medium-3")
                 ]
             )
         ],
         class_name="mb-2"
     )
 
+
 def hero_drop_rates(OPENS_COLLECTION_NAME):
     return Div([
         Span('Actual Hero Drop Rates', 'font-medium-4 font-weight-bold'),
-        Hr("mb-2"),        
-        Span('We scan the binance smart chain in real time, to give you the real hero drop rates as boxes are opened.', "d-block mb-2 mt-1"),
+        Hr("mb-2"),
+        Span('We scan the binance smart chain in real time, to give you the real hero drop rates as boxes are opened.',
+             "d-block mb-2 mt-1"),
         Row([
             Col("col-12 col-md-6", [
                 opens_chart_row(

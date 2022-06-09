@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from app.features.dashboard.dash_bomb_sale_price_and_volume_service import BombSalePriceAndVolumeService
 from app.features.dashboard.dash_hero_sale_price_and_volume_service import HeroSalePriceAndVolumeService
 from app.features.dashboard.dashboard_fusion_service import DashboardFusionService
 from app.features.dashboard.dashboard_hero_profit_service import DashboardHeroProfitService
@@ -16,6 +17,9 @@ FUSION_COLLECTION_NAME = "metabomb_dashboard_fusion"
 HERO_DASH_PROFIT_COLLECTION_NAME = "metabomb_dashboard_hero_profit_calc"
 RARITIES_FORM_NAME = "rarities_form_name"
 CHART_COLLECTION_NAME = "chart_collection_name"
+BOMB_RARITIES_FORM_NAME = "bomb_rarities_form_name"
+BOMB_CHART_COLLECTION_NAME = "bomb_chart_collection_name"
+
 
 class DashboardController:
     def __init__(
@@ -25,13 +29,14 @@ class DashboardController:
             dashboard_fusion_service: DashboardFusionService,
             dashboard_hero_profit_service: DashboardHeroProfitService,
             dash_hero_sale_price_and_volume_service: HeroSalePriceAndVolumeService,
+            dash_bomb_sale_price_and_volume_service: BombSalePriceAndVolumeService
     ):
         self.client_service = client_service
         self.dashboard_opens_service = dashboard_opens_service
         self.dashboard_fusion_service = dashboard_fusion_service
         self.dashboard_hero_profit_service = dashboard_hero_profit_service
         self.dash_hero_sale_price_and_volume_service = dash_hero_sale_price_and_volume_service
-
+        self.dash_bomb_sale_price_and_volume_service = dash_bomb_sale_price_and_volume_service
         self.path = 'dashboard'
 
     async def on_connect(self, sid):
@@ -48,7 +53,8 @@ class DashboardController:
             sid,
             self.path,
             page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME,
-                 HERO_DASH_PROFIT_COLLECTION_NAME, CHART_COLLECTION_NAME, RARITIES_FORM_NAME),
+                 HERO_DASH_PROFIT_COLLECTION_NAME, CHART_COLLECTION_NAME, RARITIES_FORM_NAME,
+                 BOMB_RARITIES_FORM_NAME, BOMB_CHART_COLLECTION_NAME),
         )
 
     async def on_client_state_changed(self, sid, event):
@@ -61,6 +67,7 @@ class DashboardController:
         await self.client_service.emit_busy(sid, FUSION_COLLECTION_NAME)
         await self.client_service.emit_busy(sid, HERO_DASH_PROFIT_COLLECTION_NAME)
         await self.client_service.emit_busy(sid, CHART_COLLECTION_NAME)
+        await self.client_service.emit_busy(sid, BOMB_CHART_COLLECTION_NAME)
 
         currency = client_currency(event)
 
@@ -92,19 +99,34 @@ class DashboardController:
             hero_profit_calc_documents
         )
 
-        address_form_value = form_values(event, RARITIES_FORM_NAME)
+        hero_rarity_form_value = form_values(event, RARITIES_FORM_NAME)
 
-        if address_form_value and  ("rarity" in address_form_value):
-            chart_documents = await self.dash_hero_sale_price_and_volume_service.get_documents(currency, address_form_value['rarity'] or [])
+        if hero_rarity_form_value and  ("rarity" in hero_rarity_form_value):
+            hero_chart_documents = await self.dash_hero_sale_price_and_volume_service.get_documents(currency, hero_rarity_form_value['rarity'] or [])
 
             await self.client_service.emit_documents(
                 sid,
                 CHART_COLLECTION_NAME,
-                chart_documents
+                hero_chart_documents
             )
+
+        bomb_rarity_form_value = form_values(event, BOMB_RARITIES_FORM_NAME)
+
+        if bomb_rarity_form_value and ("rarity" in bomb_rarity_form_value):
+            bomb_chart_documents = await self.dash_bomb_sale_price_and_volume_service.get_documents(currency,
+                                                                                               bomb_rarity_form_value[
+                                                                                                   'rarity'] or [])
+
+            await self.client_service.emit_documents(
+                sid,
+                BOMB_CHART_COLLECTION_NAME,
+                bomb_chart_documents
+            )
+
 
 
         await self.client_service.emit_done(sid, OPENS_COLLECTION_NAME)
         await self.client_service.emit_done(sid, FUSION_COLLECTION_NAME)
         await self.client_service.emit_done(sid, HERO_DASH_PROFIT_COLLECTION_NAME)
         await self.client_service.emit_done(sid, CHART_COLLECTION_NAME)
+        await self.client_service.emit_done(sid, BOMB_CHART_COLLECTION_NAME)
