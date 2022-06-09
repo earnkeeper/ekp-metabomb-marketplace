@@ -1,4 +1,4 @@
-ekp-sdk==0.5.26
+ekp-sdk==0.5.27
 gql[aiohttp]==3.2.0
 python-dateutil==2.8.2
 pytz==2022.1
