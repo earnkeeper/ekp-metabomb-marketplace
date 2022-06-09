@@ -33,7 +33,8 @@ def market_row(LISTINGS_COLLECTION_NAME):
         search_hint="Search by token id or token name...",
         filters=[
             {"columnId": "rarity_name", "icon": "cil-spa"},
-            {"columnId": "skills", "icon": "cil-leaf", "imageMap": __SKILL_IMAGE_MAP, "imageMapClassName": "image-cover"}
+            {"columnId": "skills", "icon": "cil-leaf", "imageMap": __SKILL_IMAGE_MAP, "imageMapClassName": "image-cover"},
+            {"columnId": "element_capital", "icon": "cil-leaf", "imageMap": __ELEMENT_IMAGE_MAP},
         ],
         columns=[
             Column(
@@ -79,6 +80,11 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 id="rarity_name",
                 omit=True,
                 title="Rarity"
+            ),
+            Column(
+                id="element_capital",
+                title="Element",
+                omit=True,
             ),
             Column(
                 id="skills",
@@ -343,4 +349,9 @@ __SKILL_IMAGE_MAP = {
     "5. Mana/Min +0.5": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-5.png",
     "6. Walk Thru Blocks": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-6.png",
     "7. Walk Thru Bombs": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-7.png",
+}
+
+__ELEMENT_IMAGE_MAP = {
+    element.capitalize(): f"{METABOMB_IMAGE_URL}/icons/element-icon/{element}.png" for element in
+    ["earth", "fire", "thunder", "water", "wood"]
 }

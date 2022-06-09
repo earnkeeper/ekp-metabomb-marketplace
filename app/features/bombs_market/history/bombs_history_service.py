@@ -33,7 +33,7 @@ class BombsHistoryService:
         rarity_name = bomb['rarity_name']
         element_name = bomb['element_name'].lower()
         name = f"{rarity_name} Bomb"
-
+        skills = self.get_skills_list(bomb)
         
         return {
             "bnbCost": model["bnbCost"],
@@ -45,6 +45,8 @@ class BombsHistoryService:
             "name": name,
             "rarity": rarity_name,
             "element_name": element_name,
+            "element_name_capital": element_name.capitalize(),
+            "skills": skills,
             "skill_1": {'skill': bomb['skill_1'], 'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[bomb['skill_1']]},
             "skill_2": {'skill': bomb['skill_2'], 'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[bomb['skill_2']]},
             "skill_3": {'skill': bomb['skill_3'], 'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[bomb['skill_3']]},
@@ -59,3 +61,22 @@ class BombsHistoryService:
             "timestamp": model["timestamp"],
             "tokenId": model["tokenId"],
         }
+
+    def get_skills_list(self, listing):
+        skills = []
+
+        for i in range(1, 7):
+            if listing[f'skill_{i}']:
+                skills.append(self.__SKILL_NUMBER_TO_NAME[listing[f'skill_{i}']])
+
+        return skills
+
+    __SKILL_NUMBER_TO_NAME = {
+        1: "1. Diam. Chest +2",
+        2: "2. Meta Chest +5",
+        3: "3. Dmg Thru Blocks",
+        4: "4. Free Bomb +20%",
+        5: "5. Mana/Min +0.5",
+        6: "6. Walk Thru Blocks",
+        7: "7. Walk Thru Bombs",
+    }

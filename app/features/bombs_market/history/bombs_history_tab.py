@@ -25,7 +25,9 @@ def table_row(HISTORY_COLLECTION_NAME):
         default_sort_asc=False,
         filters=[
             {"columnId": "rarity", "icon": "cil-spa"},
-            # {"columnId": "level", "icon": "cil-shield-alt"},
+            {"columnId": "skills", "icon": "cil-leaf", "imageMap": __SKILL_IMAGE_MAP,
+             "imageMapClassName": "image-cover"},
+            {"columnId": "element_name_capital", "icon": "cil-leaf", "imageMap": __ELEMENT_IMAGE_MAP},
         ],
         columns=[
             Column(
@@ -65,9 +67,20 @@ def table_row(HISTORY_COLLECTION_NAME):
                 omit=True,
             ),
             Column(
-                id="level",
+                id="skills",
+                omit=True,
+                title="Skills"
+            ),
+            Column(
+                id="element_name",
                 omit=True,
             ),
+            Column(
+                id="element_name_capital",
+                title="Element",
+                omit=True,
+            ),
+
             Column(
                 id="spacer",
                 title="",
@@ -237,3 +250,19 @@ def price_cell():
             ]
         ),
     ])
+
+
+__SKILL_IMAGE_MAP = {
+    "1. Diam. Chest +2": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-1.png",
+    "2. Meta Chest +5": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-2.png",
+    "3. Dmg Thru Blocks": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-3.png",
+    "4. Free Bomb +20%": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-4.png",
+    "5. Mana/Min +0.5": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-5.png",
+    "6. Walk Thru Blocks": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-6.png",
+    "7. Walk Thru Bombs": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-7.png",
+}
+
+__ELEMENT_IMAGE_MAP = {
+    element.capitalize(): f"{METABOMB_IMAGE_URL}/icons/element-icon/{element}.png" for element in
+    ["earth", "fire", "thunder", "water", "wood"]
+}

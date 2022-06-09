@@ -104,6 +104,7 @@ class BombListingsService:
             "type": listing["__typename"],
             "updated": now,
             "rarity_name": rarity_name,
+            "element_capital": self.mapper_service.BOMB_ELEMENT_TO_NAME[listing["element"]].capitalize(),
             "element": self.mapper_service.BOMB_ELEMENT_TO_NAME[listing["element"]].lower(),
             "last_listing_timestamp": timestamp[0]['lastListingTimestamp'] if timestamp else None,
             "skills": skills,
