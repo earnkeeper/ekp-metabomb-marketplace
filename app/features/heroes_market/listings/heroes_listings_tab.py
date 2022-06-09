@@ -44,7 +44,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
             {"columnId": "rarity_name", "icon": "cil-spa"},
             {"columnId": "hero_power", "icon": "cil-fire"},
             {"columnId": "hero_stamina", "icon": "cil-bolt"},
-            {"columnId": "hero_class", "icon": "cil-bolt"},
+            {"columnId": "hero_class_capital", "icon": "cil-shield-alt", "imageMap": __CLASS_IMAGE_MAP},
         ],
         columns=[
             Column(
@@ -91,7 +91,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 id="hero_class",
                 title="Class",
                 cell=class_image(),
-                width="80px",
+                width="120px",
                 right=True,
                 sortable=True,
             ),
@@ -153,6 +153,11 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 id="rarity_name",
                 omit=True,
                 title="Rarity"
+            ),
+            Column(
+                id="hero_class_capital",
+                omit=True,
+                title="Class"
             ),
             Column(
                 id="level",
@@ -338,11 +343,12 @@ def set_image(icon_name, attr_name):
 
 
 def class_image():
-    return Image(
-        src=format_template(METABOMB_IMAGE_URL + "/icons/class-{{ hero_class }}.png", {
+    return image_cell(
+        image=format_template(METABOMB_IMAGE_URL + "/icons/class-{{ hero_class }}.png", {
             "hero_class": '$.hero_class'
         }),
-        style={"height": "20px"}
+        content="$.hero_class",
+        image_size="16px"
     )
 
 
@@ -373,3 +379,9 @@ def timestamp_cell():
         #     ]
         # ),
     ])
+
+
+__CLASS_IMAGE_MAP = {
+    element.capitalize(): f"{METABOMB_IMAGE_URL}/icons/class-{element}.png" for element in
+    ["warrior", "assassin", "mage", "support", "ranger"]
+}

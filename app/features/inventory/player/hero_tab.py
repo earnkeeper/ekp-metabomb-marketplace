@@ -75,7 +75,7 @@ def hero_tab(HEROES_COLLECTION_NAME):
                         id="hero_class",
                         title="Class",
                         cell=class_image(),
-                        width="80px",
+                        width="120px",
                         right=True,
                         sortable=True,
                     ),
@@ -162,11 +162,12 @@ __name_cell = image_cell(
 )
 
 def class_image():
-    return Image(
-        src=format_template(METABOMB_IMAGE_URL + "/icons/class-{{ hero_class }}.png", {
+    return image_cell(
+        image=format_template(METABOMB_IMAGE_URL + "/icons/class-{{ hero_class }}.png", {
             "hero_class": '$.hero_class'
         }),
-        style={"height": "20px"}
+        content="$.hero_class",
+        image_size="16px"
     )
 
 
