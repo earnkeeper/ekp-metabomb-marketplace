@@ -1,8 +1,10 @@
-from app.utils.game_constants import HERO_BOX_NAME_IMAGE, METABOMB_IMAGE_URL
+from app.utils.game_constants import METABOMB_IMAGE_URL
 from app.utils.image_cell import image_cell
-from ekp_sdk.ui import (Card, Chart, Column, Container, Datatable, Span,
-                        collection, commify, documents, format_currency,
-                        format_template, is_busy, Div, Row, Icon, Link, Col, format_percent)
+from ekp_sdk.ui import (Column, Container, Datatable,
+                        commify, format_currency,
+                        format_template, is_busy, format_percent)
+from ekp_sdk.util import collection, documents
+
 
 
 def hero_tab(HEROES_COLLECTION_NAME):

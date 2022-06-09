@@ -1,8 +1,9 @@
 from app.utils.game_constants import (METABOMB_IMAGE_URL, MTB_ICON)
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
-                        Paragraphs, Row, Span, collection, commify, documents,
+                        Paragraphs, Row, Span, commify,
                         format_age, format_currency, format_mask_address,
-                        format_template, is_busy, switch_case)
+                        format_template, is_busy)
+from ekp_sdk.util import collection, documents
 
 from shared.constants import HERO_CONTRACT_ADDRESS
 

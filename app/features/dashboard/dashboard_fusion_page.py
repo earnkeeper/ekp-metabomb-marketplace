@@ -1,7 +1,7 @@
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Form,
-                        Icon, Row, Span, collection, documents, Hr,
+                        Icon, Row, Span, Hr,
                         format_currency, format_template, is_busy, switch_case, commify, Paragraphs)
-
+from ekp_sdk.util import collection, documents
 
 def fusion_table(FUSION_COLLECTION_NAME):
     return Container(
