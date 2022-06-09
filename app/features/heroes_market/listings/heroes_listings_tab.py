@@ -87,6 +87,14 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 cell=__avg_price_cell
             ),
             Column(
+                id="hero_class",
+                title="Class",
+                cell=class_image(),
+                width="80px",
+                right=True,
+                sortable=True,
+            ),
+            Column(
                 id="hero_power",
                 title="Power",
                 cell=set_image(icon_name='stats-power',
@@ -325,6 +333,15 @@ def set_image(icon_name, attr_name):
         f"{METABOMB_IMAGE_URL}/icons/stats-icon/{icon_name}.svg",
         f"$.{attr_name}",
         image_size="16px"
+    )
+
+
+def class_image():
+    return Image(
+        src=format_template(METABOMB_IMAGE_URL + "/icons/class-{{ hero_class }}.png", {
+            "hero_class": '$.hero_class'
+        }),
+        style={"height": "20px"}
     )
 
 

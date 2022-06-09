@@ -113,6 +113,8 @@ class HeroListingsService:
             "rarity_name": rarity_name,
             "level": listing["level"] + 1,
             "last_listing_timestamp": timestamp[0]['lastListingTimestamp'] if timestamp else None,
+            "hero_class": self.mapper_service.HERO_CLASS_TO_NAME[listing['hero_class']].lower(),
+            # "hero_class_name": self.mapper_service.HERO_CLASS_TO_NAME[listing['hero_class']],
             "hero_power": listing['power'],
             "hero_health": listing['health'],
             "hero_speed": listing['speed'],
