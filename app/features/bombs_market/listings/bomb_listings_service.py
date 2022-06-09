@@ -151,11 +151,11 @@ class BombListingsService:
         return name_totals
 
     __SKILL_NUMBER_TO_NAME = {
-        1: "+2 Diamond Chest",
-        2: "+5 Meta Chest",
-        3: "Damage Thru Blocks",
-        4: "+20% Free Bomb",
-        5: "+0.5 Mana/Min",
-        6: "Walk Thru Blocks",
-        7: "Walk Thru Bombs",
+        1: "1. Diam. Chest +2",
+        2: "2. Meta Chest +5",
+        3: "3. Dmg Thru Blocks",
+        4: "4. Free Bomb +20%",
+        5: "5. Mana/Min +0.5",
+        6: "6. Walk Thru Blocks",
+        7: "7. Walk Thru Bombs",
     }

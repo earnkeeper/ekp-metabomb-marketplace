@@ -14,7 +14,7 @@ def bomb_listings_tab(LISTINGS_COLLECTION_NAME):
             Paragraphs(
                 [
                     "Browse the live Metabomb Bomb Market for the best deals on bombs.",
-                    "🤔 Bombs with skill 3 increase earning by 100%, look out for deals on these ones",
+                    "🤔 Bombs with skill 5 increase earning by 100%, look out for deals on these ones",
                 ],
             ),
             Div([], "mb-3"),
@@ -336,11 +336,11 @@ def timestamp_cell():
 
 
 __SKILL_IMAGE_MAP = {
-    "+2 Diamond Chest": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-1.png",
-    "+5 Meta Chest": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-2.png",
-    "Damage Thru Blocks": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-3.png",
-    "+20% Free Bomb": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-4.png",
-    "+0.5 Mana/Min": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-5.png",
-    "Walk Thru Blocks": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-6.png",
-    "Walk Thru Bombs": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-7.png",
+    "1. Diam. Chest +2": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-1.png",
+    "2. Meta Chest +5": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-2.png",
+    "3. Dmg Thru Blocks": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-3.png",
+    "4. Free Bomb +20%": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-4.png",
+    "5. Mana/Min +0.5": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-5.png",
+    "6. Walk Thru Blocks": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-6.png",
+    "7. Walk Thru Bombs": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-7.png",
 }
