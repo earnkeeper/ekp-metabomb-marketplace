@@ -153,43 +153,43 @@ if __name__ == '__main__':
 
     futures = []
 
-    # for contract_address in contract_addresses:
-    #     futures.append(
-    #         container.transaction_sync_service.sync_transactions(contract_address, 17394713)
-    #     )
-    #
-    # for log_address in log_addresses:
-    #     futures.append(
-    #         container.transaction_sync_service.sync_logs(log_address, 17394713)
-    #     )
-    #
-    # loop.run_until_complete(
-    #     asyncio.gather(*futures)
-    # )
-    #
-    # loop.run_until_complete(
-    #     container.box_sale_decoder_service.decode_box_sales()
-    # )
-    #
-    # loop.run_until_complete(
-    #     container.hero_sale_decoder_service.decode_hero_sales()
-    # )
-    #
-    # loop.run_until_complete(
-    #     container.box_open_decoder_service.decode_box_openings()
-    # )
-    #
-    # loop.run_until_complete(
-    #     container.hero_listing_timestamp_decoder_service.decode_hero_listing_timestamp()
-    # )
-    #
-    # loop.run_until_complete(
-    #     container.box_listing_timestamp_decoder_service.decode_box_listing_timestamp()
-    # )
+    for contract_address in contract_addresses:
+        futures.append(
+            container.transaction_sync_service.sync_transactions(contract_address, 17394713)
+        )
+    
+    for log_address in log_addresses:
+        futures.append(
+            container.transaction_sync_service.sync_logs(log_address, 17394713)
+        )
+    
+    loop.run_until_complete(
+        asyncio.gather(*futures)
+    )
+    
+    loop.run_until_complete(
+        container.box_sale_decoder_service.decode_box_sales()
+    )
+    
+    loop.run_until_complete(
+        container.hero_sale_decoder_service.decode_hero_sales()
+    )
+    
+    loop.run_until_complete(
+        container.box_open_decoder_service.decode_box_openings()
+    )
+    
+    loop.run_until_complete(
+        container.hero_listing_timestamp_decoder_service.decode_hero_listing_timestamp()
+    )
+    
+    loop.run_until_complete(
+        container.box_listing_timestamp_decoder_service.decode_box_listing_timestamp()
+    )
 
-    # loop.run_until_complete(
-    #     container.bomb_sale_decoder_service.decode_bomb_sales()
-    # )
+    loop.run_until_complete(
+        container.bomb_sale_decoder_service.decode_bomb_sales()
+    )
 
     loop.run_until_complete(
         container.bomb_listing_timestamp_decoder_service.decode_bomb_listing_timestamp()
