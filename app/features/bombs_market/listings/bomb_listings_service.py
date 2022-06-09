@@ -107,12 +107,12 @@ class BombListingsService:
             "element": self.mapper_service.BOMB_ELEMENT_TO_NAME[listing["element"]].lower(),
             "last_listing_timestamp": timestamp[0]['lastListingTimestamp'] if timestamp else None,
             "skills": skills,
-            "skill_1": listing['skill_1'],
-            "skill_2": listing['skill_2'],
-            "skill_3": listing['skill_3'],
-            "skill_4": listing['skill_4'],
-            "skill_5": listing['skill_5'],
-            "skill_6": listing['skill_6'],
+            "skill_1": {'skill': listing['skill_1'], 'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[listing['skill_1']]},
+            "skill_2": {'skill': listing['skill_2'], 'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[listing['skill_2']]},
+            "skill_3": {'skill': listing['skill_3'], 'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[listing['skill_3']]},
+            "skill_4": {'skill': listing['skill_4'], 'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[listing['skill_4']]},
+            "skill_5": {'skill': listing['skill_5'], 'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[listing['skill_5']]},
+            "skill_6": {'skill': listing['skill_6'], 'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[listing['skill_6']]},
         }
         
     def get_skills_list(self, listing):
