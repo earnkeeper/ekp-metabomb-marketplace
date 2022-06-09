@@ -1,7 +1,7 @@
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         Paragraphs, Row, Span, commify,
                         format_currency, format_percent,
-                        format_template, is_busy, switch_case, format_age)
+                        format_template, is_busy, switch_case, format_age, navigate)
 from ekp_sdk.util import collection, documents
 
 from app.utils.game_constants import METABOMB_IMAGE_URL, MTB_ICON
@@ -30,6 +30,13 @@ def market_row(LISTINGS_COLLECTION_NAME):
         busy_when=is_busy(collection(LISTINGS_COLLECTION_NAME)),
         default_sort_field_id="est_roi",
         default_sort_asc=False,
+        on_row_clicked=navigate(
+            format_template("https://market.metabomb.io/hero/{{ token_id }}", {
+                "token_id": "$.tokenId"
+            }),
+            True,
+            True
+        ),
         pagination_per_page=18,
         disable_list_view=True,
         search_hint="Search by token id or token name...",
@@ -271,23 +278,30 @@ def name_cell():
                             Col(
                                 class_name="col-12",
                                 children=[
-                                    Link(
-                                        class_name="font-small-1",
-                                        href=format_template(
-                                            "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
-                                            {
-                                                "contractAddress": HERO_CONTRACT_ADDRESS,
-                                                "tokenId": "$.tokenId"
-                                            }
-                                        ),
-                                        external=True,
-                                        content=format_template(
-                                            "Token Id: {{ tokenId }}",
-                                            {
-                                                "tokenId": "$.tokenId"
-                                            }
-                                        ),
-                                    )
+                                    Span(content=format_template(
+                                        "Token Id: {{ tokenId }}",
+                                        {
+                                            "tokenId": "$.tokenId"
+                                        }
+                                    ),
+                                        class_name="font-small-1")
+                                    # Link(
+                                    #     class_name="font-small-1",
+                                    #     href=format_template(
+                                    #         "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
+                                    #         {
+                                    #             "contractAddress": HERO_CONTRACT_ADDRESS,
+                                    #             "tokenId": "$.tokenId"
+                                    #         }
+                                    #     ),
+                                    #     external=True,
+                                    #     content=format_template(
+                                    #         "Token Id: {{ tokenId }}",
+                                    #         {
+                                    #             "tokenId": "$.tokenId"
+                                    #         }
+                                    #     ),
+                                    # )
                                 ]
                             )
                         ]
@@ -312,6 +326,7 @@ def set_image(icon_name, attr_name):
         f"$.{attr_name}",
         image_size="16px"
     )
+
 
 def image_text_cell(src, text):
     return Row([
