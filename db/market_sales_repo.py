@@ -24,7 +24,7 @@ class MarketSalesRepo:
         results = list(
             self.collection
             .find({ "nftType": nftType })
-            .sort("timestamp")
+            .sort("timestamp", -1)
             .limit(limit)
         )
         
