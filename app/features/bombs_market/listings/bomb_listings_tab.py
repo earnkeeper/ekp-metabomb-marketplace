@@ -215,6 +215,7 @@ def cost_cell():
 
 def name_cell():
     return Row(
+        class_name="mt-1",
         children=[
             Col(
                 class_name="my-auto col-auto px-0",
