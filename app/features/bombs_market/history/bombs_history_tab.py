@@ -81,12 +81,6 @@ def skills_cell():
     return Row(
         children=[
             skill_col(s_id) for s_id in range(1, 7)
-            # skill_col("1"),
-            # skill_col("2"),
-            # skill_col("3"),
-            # skill_col("4"),
-            # skill_col("5"),
-            # skill_col("6"),
         ]
     )
 
@@ -97,10 +91,11 @@ def skill_col(skill_id):
         children=[
             Image(
                 src=format_template(METABOMB_IMAGE_URL + "/icons/skill-icon/skill-{{ skill_id }}.png", {
-                    "skill_id": f"$.skill_{skill_id}"
+                    "skill_id": f"$.skill_{skill_id}['skill']"
                 }),
                 style={"height": "20px", "border-radius": "50%"},
-                when=f"$.skill_{skill_id}"
+                when=f"$.skill_{skill_id}['skill']",
+                tooltip=f"$.skill_{skill_id}['tooltip']",
             )
         ]
     )

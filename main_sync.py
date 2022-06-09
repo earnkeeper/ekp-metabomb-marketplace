@@ -187,9 +187,9 @@ if __name__ == '__main__':
     #     container.box_listing_timestamp_decoder_service.decode_box_listing_timestamp()
     # )
 
-    # loop.run_until_complete(
-    #     container.bomb_sale_decoder_service.decode_bomb_sales()
-    # )
+    loop.run_until_complete(
+        container.bomb_sale_decoder_service.decode_bomb_sales()
+    )
 
     loop.run_until_complete(
         container.bomb_listing_timestamp_decoder_service.decode_bomb_listing_timestamp()

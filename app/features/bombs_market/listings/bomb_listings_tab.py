@@ -104,10 +104,11 @@ def skill_col(skill_id):
         children=[
             Image(
                 src=format_template(METABOMB_IMAGE_URL + "/icons/skill-icon/skill-{{ skill_id }}.png", {
-                    "skill_id": f"$.skill_{skill_id}"
+                    "skill_id": f"$.skill_{skill_id}['skill']"
                 }),
                 style={"height": "20px", "border-radius": "50%"},
-                when=f"$.skill_{skill_id}"
+                when=f"$.skill_{skill_id}['skill']",
+                tooltip=f"$.skill_{skill_id}['tooltip']",
             )
         ]
     )

@@ -286,6 +286,17 @@ class MapperService(BaseMapperService):
         5: "Meta",
     }
 
+    SKILLS_TO_TOOLTIP = {
+        0: "",
+        1: "+2 Damage on diamond chest",
+        2: "+5 Damage on meta chest",
+        3: "Explosion caused damage through blocks",
+        4: "+20% Change of not losing mana when placing bombs",
+        5: "+0.5 Mana/Min when resting",
+        6: "Go through blocks",
+        7: "Go through bombs",
+    }
+
     HERO_BOX_TYPE_TO_IMAGE_URL = {
         0: "https://market.metabomb.io/gifs/herobox-gif/normal-box.gif",
         1: "https://market.metabomb.io/gifs/herobox-gif/premium-box.gif",
