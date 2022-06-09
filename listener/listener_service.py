@@ -24,14 +24,12 @@ class ListenerService:
     def __init__(
         self,
         cache_service: CacheService,
-        coingecko_service: CoingeckoService,
         notification_service: NotificationService,
         mapper_service: MapperService,
         metabomb_api_service: MetabombApiService,
         web3_service: Web3Service,
     ):
         self.cache_service = cache_service
-        self.coingecko_service = coingecko_service
         self.mapper_service = mapper_service
         self.metabomb_api_service = metabomb_api_service
         self.notification_service = notification_service
