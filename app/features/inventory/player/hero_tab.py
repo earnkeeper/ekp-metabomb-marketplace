@@ -2,7 +2,7 @@ from app.utils.game_constants import METABOMB_IMAGE_URL
 from app.utils.image_cell import image_cell
 from ekp_sdk.ui import (Column, Container, Datatable,
                         commify, format_currency,
-                        format_template, is_busy, format_percent)
+                        format_template, is_busy, format_percent, navigate)
 from ekp_sdk.util import collection, documents
 
 
@@ -13,6 +13,13 @@ def hero_tab(HEROES_COLLECTION_NAME):
             Datatable(
                 data=documents(HEROES_COLLECTION_NAME),
                 busy_when=is_busy(collection(HEROES_COLLECTION_NAME)),
+                on_row_clicked=navigate(
+                    format_template("https://market.metabomb.io/hero/{{ token_id }}", {
+                        "token_id": "$.id"
+                    }),
+                    True,
+                    True
+                ),
                 columns=[
                     Column(
                         id="id",
