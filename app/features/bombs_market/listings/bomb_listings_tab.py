@@ -31,6 +31,10 @@ def market_row(LISTINGS_COLLECTION_NAME):
         pagination_per_page=18,
         disable_list_view=True,
         search_hint="Search by token id or token name...",
+        filters=[
+            {"columnId": "rarity_name", "icon": "cil-spa"},
+            {"columnId": "skills", "icon": "cil-leaf", "imageMap": __SKILL_IMAGE_MAP, "imageMapClassName": "image-cover"}
+        ],
         columns=[
             Column(
                 id="last_listing_timestamp",
@@ -46,7 +50,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 sortable=True,
                 searchable=True,
                 cell=name_cell(),
-                min_width="200px"
+                min_width="260px"
             ),
             Column(
                 id="skills",
@@ -76,6 +80,11 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 omit=True,
                 title="Rarity"
             ),
+            Column(
+                id="skills",
+                omit=True,
+                title="Skills"
+            ),
 
             Column(
                 id="spacer",
@@ -85,19 +94,15 @@ def market_row(LISTINGS_COLLECTION_NAME):
         ]
     )
 
+
 def skills_cell():
     return Row(
         children=[
             skill_col(s_id) for s_id in range(1, 7)
-            # skill_col("1"),
-            # skill_col("2"),
-            # skill_col("3"),
-            # skill_col("4"),
-            # skill_col("5"),
-            # skill_col("6"),
         ]
     )
-# onerror="this.style.display='none'"
+
+
 def skill_col(skill_id):
     return Col(
         class_name="my-auto col-auto pr-0",
@@ -111,6 +116,7 @@ def skill_col(skill_id):
             )
         ]
     )
+
 
 def earn_cell():
     return Row(
@@ -242,11 +248,13 @@ def name_cell():
                                                 children=[
                                                     Image(
                                                         src=format_template(
-                                                            METABOMB_IMAGE_URL + "/icons/element-icon/{{ element }}.png",
+                                                            METABOMB_IMAGE_URL +
+                                                            "/icons/element-icon/{{ element }}.png",
                                                             {
                                                                 "element": '$.element'
                                                             }),
-                                                        style={"height": "14px"}
+                                                        style={
+                                                            "height": "14px"}
                                                     )
                                                 ]
                                             )
@@ -289,7 +297,8 @@ def name_cell():
 
 __avg_price_cell = Span(
     format_percent("$.pcAboveAvgFiat"),
-    switch_case("$.deal", {"no": "float-right text-success", "yes": "float-right text-danger"})
+    switch_case("$.deal", {"no": "float-right text-success",
+                "yes": "float-right text-danger"})
 ),
 
 
@@ -312,6 +321,7 @@ def image_text_cell(src, text):
         Col("pl-0 my-auto", [Span(text)])
     ])
 
+
 def timestamp_cell():
     return Row([
         Col(
@@ -320,10 +330,15 @@ def timestamp_cell():
                 Span(format_age("$.last_listing_timestamp"))
             ]
         ),
-        # Col(
-        #     class_name="my-auto col-auto pr-0",
-        #     children=[
-        #         Span(format_datetime("$.last_listing_timestamp"))
-        #     ]
-        # ),
     ])
+
+
+__SKILL_IMAGE_MAP = {
+    "+2 Diamond Chest": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-1.png",
+    "+5 Meta Chest": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-2.png",
+    "Damage Thru Blocks": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-3.png",
+    "+20% Free Bomb": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-4.png",
+    "+0.5 Mana/Min": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-5.png",
+    "Walk Thru Blocks": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-6.png",
+    "Walk Thru Bombs": f"{METABOMB_IMAGE_URL}/icons/skill-icon/skill-7.png",
+}

@@ -86,6 +86,8 @@ class BombListingsService:
 
         price_fiat = price * rate
 
+        skills = self.get_skills_list(listing)
+
         return {
             "fiatSymbol": currency["symbol"],
             "id": int(listing["id"]),
@@ -104,6 +106,7 @@ class BombListingsService:
             "rarity_name": rarity_name,
             "element": self.mapper_service.BOMB_ELEMENT_TO_NAME[listing["element"]].lower(),
             "last_listing_timestamp": timestamp[0]['lastListingTimestamp'] if timestamp else None,
+            "skills": skills,
             "skill_1": listing['skill_1'],
             "skill_2": listing['skill_2'],
             "skill_3": listing['skill_3'],
@@ -111,6 +114,17 @@ class BombListingsService:
             "skill_5": listing['skill_5'],
             "skill_6": listing['skill_6'],
         }
+        
+    def get_skills_list(self, listing):
+        skills = []
+        
+        for i in range(1, 7):
+            if listing[f'skill_{i}']:
+                skills.append(self.__SKILL_NUMBER_TO_NAME[listing[f'skill_{i}']])
+            
+        return skills
+            
+
 
     def get_name_totals(self, history_documents, now):
         name_totals = {}
@@ -135,3 +149,13 @@ class BombListingsService:
             name_totals[name]["count"] += 1
 
         return name_totals
+
+    __SKILL_NUMBER_TO_NAME = {
+        1: "+2 Diamond Chest",
+        2: "+5 Meta Chest",
+        3: "Damage Thru Blocks",
+        4: "+20% Free Bomb",
+        5: "+0.5 Mana/Min",
+        6: "Walk Thru Blocks",
+        7: "Walk Thru Bombs",
+    }
