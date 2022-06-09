@@ -1,7 +1,7 @@
 from ekp_sdk.ui import (Button, Chart, Col, Div, Form, Row, Select, commify,
-                        documents, ekp_map, format_currency, is_busy,
+                        ekp_map, format_currency, is_busy,
                         json_array, sort_by)
-
+from ekp_sdk.util import documents
 
 def form_row(RARITIES_FORM_NAME, CHART_COLLECTION_NAME):
     return Div(

@@ -1,8 +1,9 @@
 from app.utils.game_constants import HERO_BOX_NAME_IMAGE
 from app.utils.image_cell import image_cell
-from ekp_sdk.ui import (Card, Chart, Column, Container, Datatable, Span,
-                        collection, commify, documents, format_currency,
-                        format_template, is_busy, switch_case)
+from ekp_sdk.ui import (Column, Container, Datatable,
+                        commify, format_currency,
+                        is_busy, switch_case)
+from ekp_sdk.util import collection, documents
 
 
 def box_tab(BOXES_COLLECTION_NAME):

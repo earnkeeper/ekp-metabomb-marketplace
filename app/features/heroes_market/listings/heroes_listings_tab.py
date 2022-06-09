@@ -1,7 +1,8 @@
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
-                        Paragraphs, Row, Span, collection, commify, documents,
-                        format_currency, format_mask_address, format_percent,
+                        Paragraphs, Row, Span, commify,
+                        format_currency, format_percent,
                         format_template, is_busy, switch_case, format_age)
+from ekp_sdk.util import collection, documents
 
 from app.utils.game_constants import METABOMB_IMAGE_URL, MTB_ICON
 from app.utils.image_cell import image_cell
