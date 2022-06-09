@@ -2,7 +2,7 @@ from app.utils.game_constants import METABOMB_IMAGE_URL
 from app.utils.image_cell import image_cell
 from ekp_sdk.ui import (Column, Container, Datatable,
                         commify, format_currency,
-                        format_template, is_busy, format_percent, navigate)
+                        format_template, is_busy, format_percent, navigate, Image)
 from ekp_sdk.util import collection, documents
 
 
@@ -68,6 +68,14 @@ def hero_tab(HEROES_COLLECTION_NAME):
                         title="APR",
                         format=format_percent("$.est_roi"),
                         width="100px",
+                        right=True,
+                        sortable=True,
+                    ),
+                    Column(
+                        id="hero_class",
+                        title="Class",
+                        cell=class_image(),
+                        width="80px",
                         right=True,
                         sortable=True,
                     ),
@@ -152,6 +160,14 @@ __name_cell = image_cell(
     }),
     "$.name"
 )
+
+def class_image():
+    return Image(
+        src=format_template(METABOMB_IMAGE_URL + "/icons/class-{{ hero_class }}.png", {
+            "hero_class": '$.hero_class'
+        }),
+        style={"height": "20px"}
+    )
 
 
 def set_image(icon_name, attr_name):
