@@ -33,7 +33,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
         search_hint="Search by token id or token name...",
         filters=[
             {"columnId": "rarity_name", "icon": "cil-spa"},
-            {"columnId": "skills", "icon": "cil-leaf", "imageMap": __SKILL_IMAGE_MAP, "imageMapClassName": "image-cover"},
+            {"columnId": "skills", "icon": "cil-color-palette", "imageMap": __SKILL_IMAGE_MAP, "imageMapClassName": "image-cover"},
             {"columnId": "element_capital", "icon": "cil-leaf", "imageMap": __ELEMENT_IMAGE_MAP},
         ],
         columns=[

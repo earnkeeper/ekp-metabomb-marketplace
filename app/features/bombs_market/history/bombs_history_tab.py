@@ -25,7 +25,7 @@ def table_row(HISTORY_COLLECTION_NAME):
         default_sort_asc=False,
         filters=[
             {"columnId": "rarity", "icon": "cil-spa"},
-            {"columnId": "skills", "icon": "cil-leaf", "imageMap": __SKILL_IMAGE_MAP,
+            {"columnId": "skills", "icon": "cil-color-palette", "imageMap": __SKILL_IMAGE_MAP,
              "imageMapClassName": "image-cover"},
             {"columnId": "element_name_capital", "icon": "cil-leaf", "imageMap": __ELEMENT_IMAGE_MAP},
         ],
