@@ -3,7 +3,7 @@ from app.utils.image_cell import image_cell
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         Paragraphs, Row, Span, commify, format_age,
                         format_currency, format_percent,
-                        format_template, is_busy, switch_case)
+                        format_template, is_busy, switch_case, navigate)
 from ekp_sdk.util import collection, documents
 from shared.constants import BOMB_CONTRACT_ADDRESS
 
@@ -29,6 +29,13 @@ def market_row(LISTINGS_COLLECTION_NAME):
         busy_when=is_busy(collection(LISTINGS_COLLECTION_NAME)),
         default_sort_asc=False,
         pagination_per_page=18,
+        on_row_clicked=navigate(
+            format_template("https://market.metabomb.io/bomb/{{ token_id }}", {
+                "token_id": "$.tokenId"
+            }),
+            True,
+            True
+        ),
         disable_list_view=True,
         search_hint="Search by token id or token name...",
         filters=[
@@ -274,23 +281,30 @@ def name_cell():
                             Col(
                                 class_name="col-12",
                                 children=[
-                                    Link(
-                                        class_name="font-small-1",
-                                        href=format_template(
-                                            "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
-                                            {
-                                                "contractAddress": BOMB_CONTRACT_ADDRESS,
-                                                "tokenId": "$.tokenId"
-                                            }
-                                        ),
-                                        external=True,
-                                        content=format_template(
-                                            "Token Id: {{ tokenId }}",
-                                            {
-                                                "tokenId": "$.tokenId"
-                                            }
-                                        ),
-                                    )
+                                    Span(content=format_template(
+                                        "Token Id: {{ tokenId }}",
+                                        {
+                                            "tokenId": "$.tokenId"
+                                        }
+                                    ),
+                                        class_name="font-small-1")
+                                    # Link(
+                                    #     class_name="font-small-1",
+                                    #     href=format_template(
+                                    #         "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
+                                    #         {
+                                    #             "contractAddress": BOMB_CONTRACT_ADDRESS,
+                                    #             "tokenId": "$.tokenId"
+                                    #         }
+                                    #     ),
+                                    #     external=True,
+                                    #     content=format_template(
+                                    #         "Token Id: {{ tokenId }}",
+                                    #         {
+                                    #             "tokenId": "$.tokenId"
+                                    #         }
+                                    #     ),
+                                    # )
                                 ]
                             )
                         ]
