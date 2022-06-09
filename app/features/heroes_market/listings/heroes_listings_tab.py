@@ -1,10 +1,10 @@
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         Paragraphs, Row, Span, commify,
-                        format_currency, format_mask_address, format_percent,
+                        format_currency, format_percent,
                         format_template, is_busy, switch_case, format_age)
-from ekp_sdk.util import documents, collection
+from ekp_sdk.util import collection, documents
 
-from app.utils.game_constants import MTB_ICON, METABOMB_IMAGE_URL
+from app.utils.game_constants import METABOMB_IMAGE_URL, MTB_ICON
 from app.utils.image_cell import image_cell
 from shared.constants import HERO_CONTRACT_ADDRESS
 
@@ -76,6 +76,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 title="Vs 24h Avg",
                 width="120px",
                 sortable=True,
+                right=True,
                 cell=__avg_price_cell
             ),
             Column(
@@ -301,7 +302,7 @@ def name_cell():
 
 __avg_price_cell = Span(
     format_percent("$.pcAboveAvgFiat"),
-    switch_case("$.deal", {"no": "text-success", "yes": "text-danger"})
+    switch_case("$.deal", {"no": "float-right text-success", "yes": "float-right text-danger"})
 ),
 
 
@@ -311,7 +312,6 @@ def set_image(icon_name, attr_name):
         f"$.{attr_name}",
         image_size="16px"
     )
-
 
 def image_text_cell(src, text):
     return Row([
@@ -323,7 +323,6 @@ def image_text_cell(src, text):
         ]),
         Col("pl-0 my-auto", [Span(text)])
     ])
-
 
 
 def timestamp_cell():

@@ -1,5 +1,6 @@
 from app.utils.game_constants import (HERO_BOX_NAME_CONTRACT,
                                       HERO_BOX_NAME_IMAGE, MTB_ICON)
+from ekp_sdk.util import collection, documents
 from ekp_sdk.ui import (Col, Column, Container, Datatable, Div, Image, Link,
                         Paragraphs, Row, Span, commify,
                         format_currency, format_mask_address, format_percent,
@@ -61,6 +62,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 title="Vs 24h Avg",
                 width="120px",
                 sortable=True,
+                right=True,
                 cell=__avg_price_cell
             ),
             Column(
@@ -79,7 +81,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
 
 __avg_price_cell = Span(
     format_percent("$.pcAboveAvgFiat"),
-    switch_case("$.deal", {"no": "text-success", "yes": "text-danger"})
+    switch_case("$.deal", {"no": "float-right text-success", "yes": "float-right text-danger"})
 ),
 
 

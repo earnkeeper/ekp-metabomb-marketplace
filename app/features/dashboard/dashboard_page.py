@@ -1,14 +1,18 @@
+from app.features.dashboard.dash_hero_sale_price_and_volume_page import chart_row, form_row
 from app.features.dashboard.dashboard_hero_profit_page import hero_dashboard_profit_calc_page
 from app.utils.game_constants import HERO_BOX_NAME_IMAGE
 from app.utils.page_title import page_title
 from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Div, Chart, commify, ekp_map, sort_by, json_array, \
-    Hr
+    Hr, Alert, Icon, Paragraphs
 from app.features.dashboard.dashboard_fusion_page import fusion_table
 
-def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECTION_NAME):
+def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECTION_NAME, CHART_COLLECTION_NAME, RARITIES_FORM_NAME):
     return Container(
         children=[
+            Div([], "mb-4"),
             page_title('activity', 'Dashboard'),
+            Div(class_name="my-4"),
+            hero_sales_volume_chart(RARITIES_FORM_NAME, CHART_COLLECTION_NAME),
             Div(class_name="my-4"),
             hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME),
             Div(class_name="my-4"),
@@ -16,6 +20,42 @@ def page(OPENS_COLLECTION_NAME, FUSION_COLLECTION_NAME, HERO_DASH_PROFIT_COLLECT
             Div(class_name="my-4"),
             hero_drop_rates(OPENS_COLLECTION_NAME),
         ]
+    )
+
+def hero_sales_volume_chart(RARITIES_FORM_NAME, CHART_COLLECTION_NAME):
+    return Div(
+        children=[
+            title_row(),
+            Hr("mb-2"),
+            Paragraphs(
+                [
+                    "Check the history of price and number of sales of each hero rarity on the market. Is now a good time to buy or sell?"
+                ],
+            ),
+            Div(class_name="mt-2"),
+            Card(
+                children=[
+                    form_row(RARITIES_FORM_NAME, CHART_COLLECTION_NAME),
+                    chart_row(CHART_COLLECTION_NAME),
+                ],
+            )
+        ]
+    )
+
+def title_row():
+    return Row(
+        children=[
+            Col(
+                children=[Icon("box")],
+                class_name='col-auto pr-0'
+            ),
+            Col(
+                children=[
+                    Span("Hero Price History", "font-medium-3")
+                ]
+            )
+        ],
+        class_name="mb-2"
     )
 
 def hero_drop_rates(OPENS_COLLECTION_NAME):

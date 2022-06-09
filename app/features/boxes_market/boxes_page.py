@@ -3,12 +3,13 @@ from app.features.boxes_market.listings.boxes_listings_tab import listings_tab
 from app.utils.game_constants import HERO_BOX_NAME_IMAGE
 from app.utils.page_title import page_title
 from ekp_sdk.ui import (Card, Col, Container, Div, Image, Row, Span, Tab, Tabs,
-                        format_currency, format_template, switch_case)
+                        format_currency, format_template, switch_case, Alert)
 
 
 def boxes_page(LISTINGS_COLLECTION_NAME, HISTORY_COLLECTION_NAME, SUMMARY_COLLECTION_NAME):
     return Container(
         children=[
+            Div([], "mb-4"),
             page_title('shopping-bag', 'Box Market'),
             summary_row(SUMMARY_COLLECTION_NAME),
             Tabs(

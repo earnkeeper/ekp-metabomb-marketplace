@@ -3,7 +3,8 @@ from ekp_sdk.ui import (Button, Col, Column, Container, Datatable, Div,
                         Form, Input, Row, Span,
                         format_currency, format_template, is_busy, Link,
                         navigate, remove_form_record, commify, sum, format_mask_address, Icon)
-from ekp_sdk.util import documents, collection
+from ekp_sdk.util import collection, documents
+
 
 from app.utils.summary_card import summary_card
 
@@ -11,6 +12,7 @@ from app.utils.summary_card import summary_card
 def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
     return Container(
         children=[
+            Div([], "mb-4"),
             page_title('users', 'Inventory'),
             Span(
                 "Track Boxes, Heroes, Market Value and ROI for any player. Once you add an address, click on it in the list for full details",
