@@ -24,7 +24,7 @@ class InventoryPlayersController:
             'clipboard',
             'Inventory',
             self.path,
-            order=400,
+            order=500,
             id="metabomb_inventory",
             short_link="mtb-inventory"
         )

@@ -33,7 +33,7 @@ class BombsMarketController:
             'shopping-bag',
             'Bomb Market',
             self.path,
-            order=200,
+            order=400,
             id="metabomb_bomb_market"
         )
         await self.client_service.emit_page(

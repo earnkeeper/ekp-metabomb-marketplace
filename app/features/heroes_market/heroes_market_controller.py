@@ -35,7 +35,7 @@ class HeroesMarketController:
             'Hero Market',
             self.path,
             short_link=self.short_link,
-            order=200,
+            order=300,
             id="metabomb_hero_market"
         )
         await self.client_service.emit_page(

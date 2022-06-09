@@ -36,7 +36,7 @@ class BoxesMarketController:
             self.path,
             self.aliases,
             self.short_link,
-            order=300,
+            order=200,
             id="metabomb_boxes_market"            
         )
         await self.client_service.emit_page(
