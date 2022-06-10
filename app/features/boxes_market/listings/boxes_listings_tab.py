@@ -30,7 +30,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
         default_sort_field_id="timestamp",
         pagination_per_page=18,
         disable_list_view=True,
-        search_hint="Search by token id, seller address or token name...",
+        search_hint="Search by token id or box name...",
         filters=[
             {"columnId": "item", "icon": "cil-spa"},
         ],
@@ -39,7 +39,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 id="last_listing_timestamp",
                 title="Listed",
                 sortable=True,
-                cell=timestamp_cell(),
+                format=format_age("$.last_listing_timestamp"),
                 width="120px"
             ),
             Column(
@@ -85,30 +85,6 @@ __avg_price_cell = Span(
 ),
 
 
-__id_cell = Link(
-    href=format_template(
-        "https://bscscan.com/token/{{ contractAddress }}?a={{ tokenId }}",
-        {
-            "contractAddress": switch_case("$.name", HERO_BOX_NAME_CONTRACT),
-            "tokenId": "$.tokenId"
-        }
-    ),
-    external=True,
-    content="$.tokenId"
-)
-
-__seller_cell = Link(
-    href=format_template(
-        "https://bscscan.com/address/{{ seller }}",
-        {
-            "seller": "$.seller",
-        }
-    ),
-    external=True,
-    content=format_mask_address("$.seller")
-)
-
-
 def image_text_cell(src, text):
     return Row([
         Col("col-auto my-auto", [
@@ -119,33 +95,6 @@ def image_text_cell(src, text):
         ]),
         Col("pl-0 my-auto", [Span(text)])
     ])
-
-
-__name_cell = image_text_cell(switch_case(
-    "$.name", HERO_BOX_NAME_IMAGE), "$.name")
-
-def timestamp_cell():
-    return Row([
-        Col(
-            class_name="my-auto col-auto pr-0",
-            children=[
-                Span(format_age("$.last_listing_timestamp"))
-            ]
-        ),
-        Col(
-            class_name="col-12",
-            children=[
-                Link(
-                    class_name="font-small-1",
-                    href=format_template(
-                        "https://bscscan.com/address/{{ seller }}", {"seller": "$.seller"}),
-                    external=True,
-                    content=format_mask_address("$.seller")
-                )
-            ]
-        )
-    ])
-
 
 def name_cell():
     return Row(

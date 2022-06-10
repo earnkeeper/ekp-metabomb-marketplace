@@ -98,7 +98,6 @@ class BoxesListingsService:
             "deal": deal,
             "price": price,
             "priceFiat": price * rate,
-            # "seller": listing["user"]["wallet_address"],
             "tokenId": int(listing["token_id"]),
             "type": listing["__typename"],
             "updated": now,
