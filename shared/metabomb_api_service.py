@@ -21,17 +21,6 @@ class MetabombApiService:
         self.base_url = "https://api.metabomb.io/graphql/"
         self.cache_service = cache_service
 
-    async def get_market_boxes(self) -> List[BoxMarketListingDto]:
-        return await self.cache_service.wrap(
-            "metabomb_box_listings",
-            lambda: self.__gql_get(
-                self.__MARKET_BOX_QUERY,
-                self.__market_box_params(1, 5000),
-                lambda x: x["box_market"]["boxes"]
-            ),
-            ex=60
-        )
-
     async def get_hero(self, token_id) -> HeroDto:
         return await self.__gql_get(
             self.__HERO_QUERY,
@@ -45,13 +34,23 @@ class MetabombApiService:
             {"id": str(token_id)},
             lambda x: x["bomb"]
         )
-
-    async def get_market_heroes(self) -> List[HeroMarketListingDto]:
+    async def get_market_boxes(self, for_sale=1) -> List[BoxMarketListingDto]:
         return await self.cache_service.wrap(
-            "metabomb_hero_listings",
+            f"metabomb_box_listings_{for_sale}",
+            lambda: self.__gql_get(
+                self.__MARKET_BOX_QUERY,
+                self.__market_box_params(1, 10000, for_sale),
+                lambda x: x["box_market"]["boxes"]
+            ),
+            ex=60
+        )
+        
+    async def get_market_heroes(self, for_sale=1) -> List[HeroMarketListingDto]:
+        return await self.cache_service.wrap(
+            f"metabomb_hero_listings_{for_sale}",
             lambda: self.__gql_get(
                 self.__MARKET_HERO_QUERY,
-                self.__market_hero_params(1, 5000),
+                self.__market_hero_params(1, 10000, for_sale),
                 lambda x: x["hero_market"]["heroes"]
             ),
             ex=60
@@ -59,10 +58,10 @@ class MetabombApiService:
 
     async def get_market_bombs(self, for_sale=1) -> List[BombMarketListingDto]:
         return await self.cache_service.wrap(
-            "metabomb_bomb_listings",
+            f"metabomb_bomb_listings_{for_sale}",
             lambda: self.__gql_get(
                 self.__MARKET_BOMBS_QUERY,
-                self.__market_bombs_params(1, 5000, for_sale),
+                self.__market_bombs_params(1, 10000, for_sale),
                 lambda x: x["bomb_market"]["bombs"]
             ),
             ex=60
@@ -214,7 +213,7 @@ class MetabombApiService:
             }
             """)
 
-    def __market_box_params(self, page, count):
+    def __market_box_params(self, page, count, for_sale = 1):
         return {
             "input": {
                 "f5": 0,
@@ -231,12 +230,12 @@ class MetabombApiService:
                     4,
                     5
                 ],
-                "forSale": 2
+                "forSale": for_sale
 
             }
         }
 
-    def __market_hero_params(self, page, count, for_sale=2):
+    def __market_hero_params(self, page, count, for_sale=1):
         return {
             "input": {
                 "f5": 0,

@@ -25,20 +25,19 @@ class InventoryPlayersService:
     async def get_documents(self, currency, form_values):
         documents = []
 
-        hero_list = await self.metabomb_api_service.get_market_heroes()
-
-        box_list = await self.metabomb_api_service.get_market_boxes()
+        hero_list = await self.metabomb_api_service.get_market_heroes(for_sale=2)
+        box_list = await self.metabomb_api_service.get_market_boxes(for_sale=2)
         bomb_list = await self.metabomb_api_service.get_market_bombs(for_sale=2)
 
         mtb_rate = await self.metabomb_coingecko_service.get_mtb_price(currency["id"])
 
         hero_map = self.mapper_service.get_hero_map(hero_list)
-
         bomb_map = self.mapper_service.get_bomb_map(bomb_list)
+        
         hero_price_map = self.mapper_service.get_hero_price_map(hero_list)
-
         bomb_price_map = self.mapper_service.get_bomb_price_map(bomb_list)
         box_price_map = self.mapper_service.get_box_price_map(box_list)
+        
         for form_value in form_values:
             address = form_value["address"]
 
@@ -72,7 +71,7 @@ class InventoryPlayersService:
         box_nfts = await self.metabomb_moralis_service.get_boxes_by_address(address)
         hero_nfts = await self.metabomb_moralis_service.get_heroes_by_address(address)
         bomb_nfts = await self.metabomb_moralis_service.get_bombs_by_address(address)
-        pprint(bomb_nfts)
+
         total_price = 0
 
         total_mtb_per_day = 0
@@ -82,6 +81,7 @@ class InventoryPlayersService:
 
             if token_id not in bomb_map:
                 continue
+            
             bomb = bomb_map[token_id]
 
             rarity = str(bomb["rarity"])
@@ -97,12 +97,11 @@ class InventoryPlayersService:
             if price:
                 total_price += price
 
-
         for hero_nft in hero_nfts:
-            token_id = hero_nft["token_id"]
+            token_id = str(hero_nft["token_id"])
 
-            stats = await self.metabomb_api_service.get_hero(token_id)
-
+            stats = hero_map[token_id]
+            
             mtb_per_day = 0.145 * 0.5 * 1440 * stats['power']
 
             total_mtb_per_day += mtb_per_day

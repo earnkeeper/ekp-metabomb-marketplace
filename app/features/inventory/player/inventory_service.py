@@ -23,14 +23,11 @@ class InventoryService:
 
     async def get_hero_documents(self, address, currency):
 
-        hero_list = await self.metabomb_api_service.get_market_heroes()
-        # print(f'hero list is: \n {hero_list}')
+        hero_list = await self.metabomb_api_service.get_market_heroes(for_sale=2)
         mtb_rate = await self.metabomb_coingecko_service.get_mtb_price(currency["id"])
 
         hero_map = self.mapper_service.get_hero_map(hero_list)
-        # print(f'hero map is: \n {hero_map}')
         hero_price_map = self.mapper_service.get_hero_price_map(hero_list)
-        # print(f'hero price map is: \n {hero_price_map}')
         hero_nfts = await self.metabomb_moralis_service.get_heroes_by_address(address)
 
         documents = []
@@ -39,8 +36,7 @@ class InventoryService:
 
             token_id = str(hero_nft["token_id"])
 
-            stats = await self.metabomb_api_service.get_hero(token_id)
-            # print(stats)
+            stats = hero_map[token_id]
 
             if token_id not in hero_map:
                 continue
@@ -98,8 +94,6 @@ class InventoryService:
 
             documents.append(document)
 
-        # print(documents)
-
         return documents
 
     async def get_bomb_documents(self, address, currency):
@@ -118,6 +112,7 @@ class InventoryService:
 
             if token_id not in bomb_map:
                 continue
+            
             bomb = bomb_map[token_id]
             rarity = bomb["rarity"]
             rarity_name = self.mapper_service.BOMB_RARITY_TO_NAME[rarity]
@@ -163,7 +158,7 @@ class InventoryService:
         return documents
 
     async def get_box_documents(self, address, currency):
-        box_list = await self.metabomb_api_service.get_market_boxes()
+        box_list = await self.metabomb_api_service.get_market_boxes(for_sale=2)
         mtb_rate = await self.metabomb_coingecko_service.get_mtb_price(currency["id"])
 
         box_price_map = self.mapper_service.get_box_price_map(box_list)

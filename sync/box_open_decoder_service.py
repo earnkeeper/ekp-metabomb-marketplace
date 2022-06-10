@@ -21,7 +21,7 @@ class BoxOpenDecoderService:
         
         
     async def decode_box_openings(self):
-        heroes = await self.metabomb_api_service.get_market_heroes()
+        heroes = await self.metabomb_api_service.get_market_heroes(for_sale=2)
         
         heroes_map = {}
         

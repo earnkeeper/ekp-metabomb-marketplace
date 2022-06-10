@@ -84,15 +84,13 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 title="Vs 24h Avg",
                 width="120px",
                 sortable=True,
-                right=True,
                 cell=__avg_price_cell
             ),
             Column(
                 id="hero_class",
                 title="Class",
                 cell=class_image(),
-                width="120px",
-                right=True,
+                width="130px",
                 sortable=True,
             ),
             Column(

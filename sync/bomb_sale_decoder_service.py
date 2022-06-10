@@ -38,7 +38,7 @@ class BombsSaleDecoderService:
     async def decode_bomb_sales(self):
         latest_block = self.bombs_sales_repo.find_latest_block_number("bomb")
 
-        dtos = await self.metabomb_api_service.get_market_bombs()
+        dtos = await self.metabomb_api_service.get_market_bombs(for_sale=2)
 
         # pprint(dtos)
         current_listings: List[MarketListing] = await self.mapper_service.map_market_bombs_dtos_to_domain(dtos)

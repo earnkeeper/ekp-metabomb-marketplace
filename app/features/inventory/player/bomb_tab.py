@@ -2,9 +2,8 @@ from app.utils.game_constants import METABOMB_IMAGE_URL
 from app.utils.image_cell import image_cell
 from ekp_sdk.ui import (Column, Container, Datatable,
                         commify, format_currency,
-                        format_template, is_busy, format_percent, navigate, Image, Row, Col, Span)
+                        format_template, is_busy, format_percent, navigate, Image, Row, Col, Span, Div)
 from ekp_sdk.util import collection, documents
-
 
 
 def bomb_tab(BOMBS_COLLECTION_NAME):
@@ -36,16 +35,15 @@ def bomb_tab(BOMBS_COLLECTION_NAME):
                         title="MTB Value",
                         format=commify("$.price"),
                         width="120px",
-                        # right=True,
                         sortable=True,
                     ),
                     Column(
                         id="price_fiat",
                         title="Fiat Value",
                         format=format_currency(
-                            "$.price_fiat", "$.fiat_symbol"),
+                            "$.price_fiat", "$.fiat_symbol"
+                        ),
                         width="120px",
-                        # right=True,
                         sortable=True,
                     ),
                     Column(
@@ -77,6 +75,30 @@ def bomb_tab(BOMBS_COLLECTION_NAME):
 
 
 def name_cell():
+    return Div([
+        Image(
+            src=format_template(METABOMB_IMAGE_URL + "/gifs/bomb-gif/{{ display_id }}.gif", {
+                "display_id": '$.display_id'
+            }),
+            style={
+                "height": "32px",
+                "marginRight": "8px"
+            }
+        ),
+        Span("$.name"),
+        Image(
+            src=format_template(
+                METABOMB_IMAGE_URL +
+                "/icons/element-icon/{{ element }}.png",
+                {
+                    "element": '$.element'
+                }),
+            style={
+                "height": "14px",
+                "marginLeft": "8px"
+            }
+        )
+    ])
     return Row(
         class_name="mt-1",
         children=[
@@ -87,7 +109,7 @@ def name_cell():
                         src=format_template(METABOMB_IMAGE_URL + "/gifs/bomb-gif/{{ display_id }}.gif", {
                             "display_id": '$.display_id'
                         }),
-                        style={"height": "50px"}
+                        style={"height": "32px"}
                     )
                 ]
             ),
@@ -159,6 +181,3 @@ def skill_col(skill_id):
             )
         ]
     )
-
-
-

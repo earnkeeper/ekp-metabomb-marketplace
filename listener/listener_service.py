@@ -153,7 +153,7 @@ class ListenerService:
 
         if new_listing["box"] is not None:
 
-            dtos = await self.metabomb_api_service.get_market_boxes()
+            dtos = await self.metabomb_api_service.get_market_boxes(for_sale = 2)
 
             current_listings: List[MarketListing] = await self.mapper_service.map_market_box_dtos_to_domain(dtos)
 
@@ -171,7 +171,7 @@ class ListenerService:
                 return
 
         if new_listing["hero"] is not None:
-            dtos = await self.metabomb_api_service.get_market_heroes()
+            dtos = await self.metabomb_api_service.get_market_heroes(for_sale=2)
 
             current_listings: List[MarketListing] = await self.mapper_service.map_market_hero_dtos_to_domain(dtos)
 

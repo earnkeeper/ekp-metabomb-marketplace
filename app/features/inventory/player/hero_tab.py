@@ -76,7 +76,6 @@ def hero_tab(HEROES_COLLECTION_NAME):
                         title="Class",
                         cell=class_image(),
                         width="120px",
-                        right=True,
                         sortable=True,
                     ),
                     Column(
