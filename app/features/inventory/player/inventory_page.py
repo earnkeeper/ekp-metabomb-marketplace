@@ -177,7 +177,7 @@ def summary_row(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME, BOMBS_COLLECTION_
                     "col-auto",
                     [
                         summary_card(
-                            "Balance",
+                            "Token Value",
                             format_template(
                                 "{{ mtb_balance }} ({{ fiat_balance }} )",
                                 {
