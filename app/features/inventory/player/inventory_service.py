@@ -80,6 +80,7 @@ class InventoryService:
                 "rarity_name": rarity_name,
                 "level": level + 1,
                 "hero_class": self.mapper_service.HERO_CLASS_TO_NAME[hero_class].lower(),
+                "hero_class_capital": self.mapper_service.HERO_CLASS_TO_NAME[hero_class].capitalize(),
                 "fiat_symbol": currency["symbol"],
                 "price": price,
                 "price_fiat": price_fiat,

@@ -166,7 +166,7 @@ def class_image():
         image=format_template(METABOMB_IMAGE_URL + "/icons/class-{{ hero_class }}.png", {
             "hero_class": '$.hero_class'
         }),
-        content="$.hero_class",
+        content="$.hero_class_capital",
         image_size="16px"
     )
 

@@ -59,7 +59,7 @@ class MetabombApiService:
 
     async def get_market_bombs(self, for_sale=1) -> List[BombMarketListingDto]:
         return await self.cache_service.wrap(
-            "metabomb_bombs_v2_listings",
+            "metabomb_bomb_listings",
             lambda: self.__gql_get(
                 self.__MARKET_BOMBS_QUERY,
                 self.__market_bombs_params(1, 5000, for_sale),
