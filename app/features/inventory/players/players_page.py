@@ -73,42 +73,42 @@ def summary_row(PLAYERS_COLLECTION_NAME):
         when=f"$.{PLAYERS_COLLECTION_NAME}[0].id",
         children=[
             Row([
-                Col(
-                    "col-auto",
-                    [
-                        summary_card(
-                            "Total Heroes",
-                            sum(
-                                f"$.{PLAYERS_COLLECTION_NAME}..heroes"
-                            ),
-                        ),
-                    ]
-                ),
-                Col(
-                    "col-auto",
-                    [
-                        summary_card(
-                            "Total Boxes",
-                            sum(
-                                f"$.{PLAYERS_COLLECTION_NAME}..boxes"
-                            ),
-                        ),
-                    ]
-                ),
-                Col(
-                    "col-auto",
-                    [
-                        summary_card(
-                            "Total Bombs",
-                            sum(
-                                f"$.{PLAYERS_COLLECTION_NAME}..bombs"
-                            ),
-                        ),
-                    ]
-                ),
+                # Col(
+                #     "col-auto",
+                #     [
+                #         summary_card(
+                #             "Total Heroes",
+                #             sum(
+                #                 f"$.{PLAYERS_COLLECTION_NAME}..heroes"
+                #             ),
+                #         ),
+                #     ]
+                # ),
+                # Col(
+                #     "col-auto",
+                #     [
+                #         summary_card(
+                #             "Total Boxes",
+                #             sum(
+                #                 f"$.{PLAYERS_COLLECTION_NAME}..boxes"
+                #             ),
+                #         ),
+                #     ]
+                # ),
+                # Col(
+                #     "col-auto",
+                #     [
+                #         summary_card(
+                #             "Total Bombs",
+                #             sum(
+                #                 f"$.{PLAYERS_COLLECTION_NAME}..bombs"
+                #             ),
+                #         ),
+                #     ]
+                # ),
                 Col("col-auto", [
                     summary_card(
-                        "Market Value",
+                        "NFT Value",
                         format_currency(
                             sum(
                                 f"$.{PLAYERS_COLLECTION_NAME}..market_value_fiat"
@@ -119,7 +119,7 @@ def summary_row(PLAYERS_COLLECTION_NAME):
                 ]),
                 Col("col-auto", [
                     summary_card(
-                        "Balance",
+                        "Token Value",
                         format_template(
                             "{{ mtb_balance }} ({{ fiat_balance }} )",
                             {
