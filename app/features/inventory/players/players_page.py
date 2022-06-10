@@ -5,7 +5,6 @@ from ekp_sdk.ui import (Button, Col, Column, Container, Datatable, Div,
                         navigate, remove_form_record, commify, sum, format_mask_address, Icon)
 from ekp_sdk.util import collection, documents
 
-
 from app.utils.summary_card import summary_card
 
 
@@ -118,11 +117,41 @@ def summary_row(PLAYERS_COLLECTION_NAME):
                         ),
                     ),
                 ]),
+                Col("col-auto", [
+                    summary_card(
+                        "Balance",
+                        format_template(
+                            "{{ mtb_balance }} ({{ fiat_balance }} )",
+                            {
+                                "mtb_balance": format_currency(sum(
+                                    f"$.{PLAYERS_COLLECTION_NAME}..balance_mtb"
+                                ), ""),
+                                "fiat_balance": format_currency(sum(
+                                    f"$.{PLAYERS_COLLECTION_NAME}..balance_fiat"
+                                ), "$.fiat_symbol"),
+                            }
+                        )
+                        # format_currency(
+                        #     sum(
+                        #         f"$.{PLAYERS_COLLECTION_NAME}..balance_mtb"
+                        #     ),
+                        #     f"$.{PLAYERS_COLLECTION_NAME}[0].fiat_symbol"
+                        # ),
+                    ),
+                ]),
 
             ])
         ]
     )
 
+
+# format=format_template(
+#                     "{{ mtb_balance }} ({{ fiat_balance }})",
+#                     {
+#                         "mtb_balance": format_currency("$.balance_mtb", ""),
+#                         "fiat_balance": format_currency("$.balance_fiat", "$.fiat_symbol")
+#                     }
+#                 ),
 
 def form_row(PLAYERS_FORM_NAME):
     return Form(
@@ -205,6 +234,20 @@ def table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                 right=True,
                 width="120px",
                 format=format_currency("$.market_value_fiat", "$.fiat_symbol"),
+                sortable=True
+            ),
+            Column(
+                id="balance_mtb",
+                title="Balance",
+                right=True,
+                width="140px",
+                format=format_template(
+                    "{{ mtb_balance }} ({{ fiat_balance }} )",
+                    {
+                        "mtb_balance": format_currency("$.balance_mtb", ""),
+                        "fiat_balance": format_currency("$.balance_fiat", "$.fiat_symbol")
+                    }
+                ),
                 sortable=True
             ),
             Column(

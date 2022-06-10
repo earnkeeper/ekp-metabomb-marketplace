@@ -1,4 +1,6 @@
 from ekp_sdk.services import CoingeckoService
+from web3 import Web3
+
 from shared.metabomb_coingecko_service import MetabombCoingeckoService
 from shared.metabomb_moralis_service import MetabombMoralisService
 
@@ -167,6 +169,9 @@ class InventoryService:
 
         documents = []
 
+        balance = await self.metabomb_moralis_service.get_mtb_balance(address=address)
+        balance_mtb = Web3.fromWei(int(balance), 'ether')
+
         for box_nft in box_nfts:
 
             token_id = str(box_nft["token_id"])
@@ -190,7 +195,9 @@ class InventoryService:
                 "name": name,
                 "fiat_symbol": currency["symbol"],
                 "price": price,
-                "price_fiat": price_fiat
+                "price_fiat": price_fiat,
+                "balance_mtb": float(balance_mtb),
+                "balance_fiat": float(balance_mtb) * mtb_rate,
             }
 
             documents.append(document)

@@ -173,6 +173,31 @@ def summary_row(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME, BOMBS_COLLECTION_
                         ),
                     ]
                 ),
+                Col(
+                    "col-auto",
+                    [
+                        summary_card(
+                            "Balance",
+                            format_template(
+                                "{{ mtb_balance }} ({{ fiat_balance }} )",
+                                {
+                                    "mtb_balance": format_currency(
+                                        f"$.{BOXES_COLLECTION_NAME}[0].balance_mtb"
+                                    , ""),
+                                    "fiat_balance": format_currency(
+                                        f"$.{BOXES_COLLECTION_NAME}[0].balance_fiat"
+                                    , "$.fiat_symbol"),
+                                }
+                            ),
+                            # format_currency(
+                            #     sum(
+                            #         f"$.{BOMBS_COLLECTION_NAME}..price_fiat"
+                            #     ),
+                            #     f"$.{BOMBS_COLLECTION_NAME}[0].fiat_symbol"
+                            # ),
+                        ),
+                    ]
+                ),
             ])
         ]
     )

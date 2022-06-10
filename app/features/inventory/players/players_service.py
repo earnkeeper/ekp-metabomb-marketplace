@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from shared.constants import MTB_CONTRACT_ADDRESS
 from shared.metabomb_coingecko_service import MetabombCoingeckoService
 from shared.metabomb_moralis_service import MetabombMoralisService
 
@@ -7,15 +8,15 @@ from datetime import datetime
 
 from shared.mapper_service import MapperService
 from shared.metabomb_api_service import MetabombApiService
-
+from web3 import Web3
 
 class InventoryPlayersService:
     def __init__(
-        self,
-        mapper_service: MapperService,
-        metabomb_api_service: MetabombApiService,
-        metabomb_coingecko_service: MetabombCoingeckoService,
-        metabomb_moralis_service: MetabombMoralisService,
+            self,
+            mapper_service: MapperService,
+            metabomb_api_service: MetabombApiService,
+            metabomb_coingecko_service: MetabombCoingeckoService,
+            metabomb_moralis_service: MetabombMoralisService,
     ):
         self.mapper_service = mapper_service
         self.metabomb_api_service = metabomb_api_service
@@ -33,17 +34,20 @@ class InventoryPlayersService:
 
         hero_map = self.mapper_service.get_hero_map(hero_list)
         bomb_map = self.mapper_service.get_bomb_map(bomb_list)
-        
+
         hero_price_map = self.mapper_service.get_hero_price_map(hero_list)
         bomb_price_map = self.mapper_service.get_bomb_price_map(bomb_list)
         box_price_map = self.mapper_service.get_box_price_map(box_list)
-        
+
         for form_value in form_values:
             address = form_value["address"]
 
+            balance = await self.metabomb_moralis_service.get_mtb_balance(address=address)
+            balance_mtb = Web3.fromWei(int(balance), 'ether')
             document = await self.__get_document(
                 address,
                 currency,
+                balance_mtb,
                 hero_map,
                 hero_price_map,
                 bomb_map,
@@ -57,15 +61,16 @@ class InventoryPlayersService:
         return documents
 
     async def __get_document(
-        self,
-        address,
-        currency,
-        hero_map,
-        hero_price_map,
-        bomb_map,
-        bomb_price_map,
-        box_price_map,
-        mtb_rate
+            self,
+            address,
+            currency,
+            balance_mtb,
+            hero_map,
+            hero_price_map,
+            bomb_map,
+            bomb_price_map,
+            box_price_map,
+            mtb_rate
     ):
 
         box_nfts = await self.metabomb_moralis_service.get_boxes_by_address(address)
@@ -81,7 +86,7 @@ class InventoryPlayersService:
 
             if token_id not in bomb_map:
                 continue
-            
+
             bomb = bomb_map[token_id]
 
             rarity = str(bomb["rarity"])
@@ -101,7 +106,7 @@ class InventoryPlayersService:
             token_id = str(hero_nft["token_id"])
 
             stats = hero_map[token_id]
-            
+
             mtb_per_day = 0.145 * 0.5 * 1440 * stats['power']
 
             total_mtb_per_day += mtb_per_day
@@ -143,6 +148,8 @@ class InventoryPlayersService:
             "boxes": len(box_nfts),
             "heroes": len(hero_nfts),
             "bombs": len(bomb_nfts),
+            "balance_mtb": float(balance_mtb),
+            "balance_fiat": float(balance_mtb) * mtb_rate,
             "market_value_fiat": total_price * mtb_rate,
             "est_mtb_per_day": total_mtb_per_day
         }
