@@ -230,7 +230,7 @@ def table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
             ),
             Column(
                 id="market_value_fiat",
-                title="Value",
+                title="Nft Value",
                 right=True,
                 width="120px",
                 format=format_currency("$.market_value_fiat", "$.fiat_symbol"),
@@ -238,7 +238,7 @@ def table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
             ),
             Column(
                 id="balance_mtb",
-                title="Balance",
+                title="Token Value",
                 right=True,
                 width="140px",
                 format=format_template(
