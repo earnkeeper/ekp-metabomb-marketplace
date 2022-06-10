@@ -15,7 +15,7 @@ def heroes_listings_tab(LISTINGS_COLLECTION_NAME):
             Paragraphs(
                 [
                     "Browse the live Metabomb Marketplace for the best deals.",
-                    "The heroes with the best Return on Investment are shown at the top. (Based on Testnet gameplay mechanics) ",
+                    "The heroes with the best Return on Investment are shown at the top.",
                 ],
             ),
             Div([], "mb-3"),
