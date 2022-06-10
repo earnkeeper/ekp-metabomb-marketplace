@@ -240,7 +240,7 @@ def table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
                 id="balance_mtb",
                 title="Token Value",
                 right=True,
-                width="140px",
+                width="180px",
                 format=format_template(
                     "{{ mtb_balance }} ({{ fiat_balance }} )",
                     {
