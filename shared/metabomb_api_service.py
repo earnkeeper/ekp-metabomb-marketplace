@@ -4,6 +4,7 @@ from typing import List
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
 
+from shared.dto.bomb_dto import BombDto
 from shared.dto.box_market_listing_dto import BoxMarketListingDto
 from shared.dto.hero_dto import HeroDto
 from shared.dto.hero_market_listing_dto import HeroMarketListingDto
@@ -38,6 +39,13 @@ class MetabombApiService:
             lambda x: x["hero"]
         )
 
+    async def get_bomb(self, token_id) -> BombDto:
+        return await self.__gql_get(
+            self.__BOMB_QUERY,
+            {"id": str(token_id)},
+            lambda x: x["bomb"]
+        )
+
     async def get_market_heroes(self) -> List[HeroMarketListingDto]:
         return await self.cache_service.wrap(
             "metabomb_hero_listings",
@@ -49,12 +57,12 @@ class MetabombApiService:
             ex=60
         )
 
-    async def get_market_bombs(self) -> List[BombMarketListingDto]:
+    async def get_market_bombs(self, for_sale=1) -> List[BombMarketListingDto]:
         return await self.cache_service.wrap(
-            "metabomb_bomb_listings",
+            "metabomb_bombs_v2_listings",
             lambda: self.__gql_get(
                 self.__MARKET_BOMBS_QUERY,
-                self.__market_bombs_params(1, 5000),
+                self.__market_bombs_params(1, 5000, for_sale),
                 lambda x: x["bomb_market"]["bombs"]
             ),
             ex=60
@@ -87,10 +95,6 @@ class MetabombApiService:
             boxes {
             id
             token_id
-            user {
-                wallet_address
-                __typename
-            }
             box_type
             price
             for_sale
@@ -232,7 +236,7 @@ class MetabombApiService:
             }
         }
 
-    def __market_hero_params(self, page, count):
+    def __market_hero_params(self, page, count, for_sale=2):
         return {
             "input": {
                 "f5": 0,
@@ -249,12 +253,12 @@ class MetabombApiService:
                 "count": count,
                 "sort": 0,
                 "sort_type": 1,
-                "forSale": 2
+                "forSale": for_sale
             }
 
         }
 
-    def __market_bombs_params(self, page, count):
+    def __market_bombs_params(self, page, count, for_sale=1):
         return {
             "input":
                 {
@@ -287,6 +291,6 @@ class MetabombApiService:
                     "count": count,
                     "sort": 0,
                     "sort_type": 3,
-                    "forSale": 1
+                    "forSale": for_sale
                 }
         }

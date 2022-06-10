@@ -7,7 +7,7 @@ from app.features.inventory.player.inventory_service import InventoryService
 
 HEROES_COLLECTION_NAME = "metabomb_inventory_heroes"
 BOXES_COLLECTION_NAME = "metabomb_inventory_boxes"
-
+BOMBS_COLLECTION_NAME = "metabomb_inventory_bombs"
 
 class InventoryController:
     def __init__(
@@ -23,7 +23,8 @@ class InventoryController:
         await self.client_service.emit_page(
             sid,
             self.path,
-            page(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME),
+            page(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME,
+                 BOMBS_COLLECTION_NAME),
         )
 
     async def on_client_state_changed(self, sid, event):
@@ -35,7 +36,7 @@ class InventoryController:
 
         await self.client_service.emit_busy(sid, HEROES_COLLECTION_NAME)
         await self.client_service.emit_busy(sid, BOXES_COLLECTION_NAME)
-
+        await self.client_service.emit_busy(sid, BOMBS_COLLECTION_NAME)
         currency = client_currency(event)
         
         address = path.replace("inventory/", "")
@@ -65,3 +66,13 @@ class InventoryController:
         await self.client_service.emit_done(sid, BOXES_COLLECTION_NAME)
         
         # ---------------------------------------------------------------        
+
+        bomb_documents = await self.inventory_service.get_bomb_documents(address, currency)
+
+        await self.client_service.emit_documents(
+            sid,
+            BOMBS_COLLECTION_NAME,
+            bomb_documents
+        )
+
+        await self.client_service.emit_done(sid, BOMBS_COLLECTION_NAME)

@@ -2,7 +2,7 @@ import asyncio
 from ekp_sdk.services import MoralisApiService, CacheService
 from shared.utils.lists import flatten
 
-from shared.constants import BOX_CONTRACT_ADDRESSES, HERO_CONTRACT_ADDRESS
+from shared.constants import BOX_CONTRACT_ADDRESSES, HERO_CONTRACT_ADDRESS, BOMB_CONTRACT_ADDRESS
 
 
 class MetabombMoralisService:
@@ -25,6 +25,20 @@ class MetabombMoralisService:
             
         return await self.cache_service.wrap(
             f"metabomb_heroes_{address}",
+            lambda: get_from_api(address),
+            ex=self.cache_expiry
+        )
+
+    async def get_bombs_by_address(self, address):
+        async def get_from_api(address):
+            return await self.moralis_api_service.get_nfts_by_owner_and_token_address(
+                address,
+                BOMB_CONTRACT_ADDRESS,
+                'bsc',
+            )
+
+        return await self.cache_service.wrap(
+            f"metabomb_bombs_{address}",
             lambda: get_from_api(address),
             ex=self.cache_expiry
         )

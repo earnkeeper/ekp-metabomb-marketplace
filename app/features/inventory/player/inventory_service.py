@@ -1,4 +1,3 @@
-
 from ekp_sdk.services import CoingeckoService
 from shared.metabomb_coingecko_service import MetabombCoingeckoService
 from shared.metabomb_moralis_service import MetabombMoralisService
@@ -11,19 +10,18 @@ from datetime import datetime
 
 class InventoryService:
     def __init__(
-        self,
-        mapper_service: MapperService,
-        metabomb_api_service: MetabombApiService,
-        metabomb_coingecko_service: MetabombCoingeckoService,
-        metabomb_moralis_service=MetabombMoralisService,
+            self,
+            mapper_service: MapperService,
+            metabomb_api_service: MetabombApiService,
+            metabomb_coingecko_service: MetabombCoingeckoService,
+            metabomb_moralis_service=MetabombMoralisService,
     ):
         self.mapper_service = mapper_service
         self.metabomb_api_service = metabomb_api_service
         self.metabomb_coingecko_service = metabomb_coingecko_service
         self.metabomb_moralis_service = metabomb_moralis_service
-        
+
     async def get_hero_documents(self, address, currency):
-        documents = []
 
         hero_list = await self.metabomb_api_service.get_market_heroes()
         # print(f'hero list is: \n {hero_list}')
@@ -66,14 +64,14 @@ class InventoryService:
 
             mtb_per_day = 0.145 * 0.5 * 1440 * stats['power']
             fiat_per_day = mtb_per_day * mtb_rate
-            
+
             est_payback = None
             est_roi = None
-            
+
             if price_fiat:
                 est_payback = f"{int(price_fiat / fiat_per_day)} days"
                 est_roi = int(fiat_per_day * 365 * 100 / price_fiat)
-                
+
             document = {
                 "id": token_id,
                 "updated": datetime.now().timestamp(),
@@ -103,9 +101,67 @@ class InventoryService:
 
         return documents
 
-    async def get_box_documents(self, address, currency):
+    async def get_bomb_documents(self, address, currency):
+        bomb_list = await self.metabomb_api_service.get_market_bombs(for_sale=2)
+        mtb_rate = await self.metabomb_coingecko_service.get_mtb_price(currency["id"])
+
+        bomb_map = self.mapper_service.get_bomb_map(bomb_list)
+        bomb_price_map = self.mapper_service.get_bomb_price_map(bomb_list)
+        bomb_nfts = await self.metabomb_moralis_service.get_bombs_by_address(address)
+
         documents = []
 
+        for bomb_nft in bomb_nfts:
+
+            token_id = str(bomb_nft["token_id"])
+
+            if token_id not in bomb_map:
+                continue
+            bomb = bomb_map[token_id]
+            rarity = bomb["rarity"]
+            rarity_name = self.mapper_service.BOMB_RARITY_TO_NAME[rarity]
+            name = f"{rarity_name} Bomb"
+            skills = tuple(bomb[f"skill_{skill_id}"] for skill_id in range(1, 7))
+
+            price = self.mapper_service.get_bomb_price(
+                str(rarity),
+                skills,
+                bomb_price_map
+            )
+            price_fiat = None
+
+            if price:
+                price_fiat = price * mtb_rate
+
+            document = {
+                "id": token_id,
+                "updated": datetime.now().timestamp(),
+                "display_id": bomb['display_id'],
+                "name": name,
+                "rarity_name": rarity_name,
+                "element": self.mapper_service.BOMB_ELEMENT_TO_NAME[bomb["element"]].lower(),
+                "fiat_symbol": currency["symbol"],
+                "price": price,
+                "price_fiat": price_fiat,
+                "skill_1": {'skill': bomb['skill_1'],
+                            'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[bomb['skill_1']]},
+                "skill_2": {'skill': bomb['skill_2'],
+                            'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[bomb['skill_2']]},
+                "skill_3": {'skill': bomb['skill_3'],
+                            'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[bomb['skill_3']]},
+                "skill_4": {'skill': bomb['skill_4'],
+                            'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[bomb['skill_4']]},
+                "skill_5": {'skill': bomb['skill_5'],
+                            'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[bomb['skill_5']]},
+                "skill_6": {'skill': bomb['skill_6'],
+                            'tooltip': self.mapper_service.SKILLS_TO_TOOLTIP[bomb['skill_6']]},
+            }
+
+            documents.append(document)
+
+        return documents
+
+    async def get_box_documents(self, address, currency):
         box_list = await self.metabomb_api_service.get_market_boxes()
         mtb_rate = await self.metabomb_coingecko_service.get_mtb_price(currency["id"])
 

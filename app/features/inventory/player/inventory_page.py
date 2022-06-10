@@ -1,5 +1,6 @@
 from app.features.inventory.player.box_tab import box_tab
 from app.features.inventory.player.hero_tab import hero_tab
+from app.features.inventory.player.bomb_tab import bomb_tab
 from app.utils.page_title import page_title
 from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Tabs, Tab, count, sum, format_currency, Icon, \
     Link, format_template, Div, format_mask_address
@@ -7,7 +8,7 @@ from ekp_sdk.ui import Card, Chart, Col, Container, Image, Row, Span, Tabs, Tab,
 from app.utils.summary_card import summary_card
 
 
-def page(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME):
+def page(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME, BOMBS_COLLECTION_NAME):
     return Container(
         children=[
             Row(
@@ -49,7 +50,7 @@ def page(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME):
                 )
             ),
             Div([], "mt-1"),
-            summary_row(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME),
+            summary_row(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME, BOMBS_COLLECTION_NAME),
             Tabs(
                 [
                     Tab(
@@ -59,6 +60,10 @@ def page(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME):
                     Tab(
                         label="Boxes",
                         children=[box_tab(BOXES_COLLECTION_NAME)]
+                    ),
+                    Tab(
+                        label="Bombs",
+                        children=[bomb_tab(BOMBS_COLLECTION_NAME)]
                     ),
                 ]
             ),
@@ -110,7 +115,7 @@ def page(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME):
     )
 
 
-def summary_row(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME):
+def summary_row(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME, BOMBS_COLLECTION_NAME):
     return Container(
         children=[
             Row([
@@ -146,6 +151,24 @@ def summary_row(HEROES_COLLECTION_NAME, BOXES_COLLECTION_NAME):
                                     f"$.{BOXES_COLLECTION_NAME}..price_fiat"
                                 ),
                                 f"$.{BOXES_COLLECTION_NAME}[0].fiat_symbol"
+                            ),
+                        ),
+                    ]
+                ),
+                Col(
+                    "col-auto",
+                    [
+                        summary_card(
+                            format_template("{{ bomb_count }} Bombs", {
+                                "bomb_count": count(
+                                    f"$.{BOMBS_COLLECTION_NAME}.*"
+                                )
+                            }),
+                            format_currency(
+                                sum(
+                                    f"$.{BOMBS_COLLECTION_NAME}..price_fiat"
+                                ),
+                                f"$.{BOMBS_COLLECTION_NAME}[0].fiat_symbol"
                             ),
                         ),
                     ]

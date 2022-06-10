@@ -96,6 +96,17 @@ def summary_row(PLAYERS_COLLECTION_NAME):
                         ),
                     ]
                 ),
+                Col(
+                    "col-auto",
+                    [
+                        summary_card(
+                            "Total Bombs",
+                            sum(
+                                f"$.{PLAYERS_COLLECTION_NAME}..bombs"
+                            ),
+                        ),
+                    ]
+                ),
                 Col("col-auto", [
                     summary_card(
                         "Market Value",
@@ -178,6 +189,12 @@ def table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
             ),
             Column(
                 id="heroes",
+                right=True,
+                width="120px",
+                sortable=True
+            ),
+            Column(
+                id="bombs",
                 right=True,
                 width="120px",
                 sortable=True

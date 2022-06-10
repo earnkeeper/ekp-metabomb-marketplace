@@ -19,9 +19,9 @@ from shared.metabomb_coingecko_service import MetabombCoingeckoService
 
 class MapperService(BaseMapperService):
     def __init__(
-        self,
-        cache_service: CacheService,
-        metabomb_coingecko_service: MetabombCoingeckoService,
+            self,
+            cache_service: CacheService,
+            metabomb_coingecko_service: MetabombCoingeckoService,
     ):
         self.metabomb_coingecko_service = metabomb_coingecko_service
         self.cache_service = cache_service
@@ -58,7 +58,7 @@ class MapperService(BaseMapperService):
 
     def map_hero_name(self, rarity_name, level):
         return f'{rarity_name} Lv {int(level) + 1} Hero'
-    
+
     async def map_market_box_dtos_to_domain(self, dtos: List[BoxMarketListingDto]) -> List[MarketListing]:
         mtb_rate = await self.get_mtb_rate()
 
@@ -76,9 +76,9 @@ class MapperService(BaseMapperService):
             'type': box_type,
             'name': self.HERO_BOX_TYPE_TO_NAME[box_type]
         }
-        
+
         return box
-        
+
     async def map_market_box_dto_to_domain(self, dto: BoxMarketListingDto, mtb_rate: int = None) -> MarketListing:
         box = self.map_box_type_to_domain(dto["box_type"])
 
@@ -91,7 +91,7 @@ class MapperService(BaseMapperService):
             'id': dto['id'],
             'price_mtb': dto['price'],
             'price_usdc': dto['price'] * mtb_rate,
-            'seller': dto['user']['wallet_address'],
+            # 'seller': dto['user']['wallet_address'],
             'token_id': dto['token_id'],
             'updated': datetime.now().timestamp(),
         }
@@ -124,47 +124,75 @@ class MapperService(BaseMapperService):
 
     def get_hero_map(self, hero_list):
         hero_map = {}
-        
+
         for hero in hero_list:
             token_id = str(hero["id"])
             hero_map[token_id] = hero
-            
+
         return hero_map
+
+    def get_bomb_map(self, bomb_list):
+        bomb_map = {}
+
+        for bomb in bomb_list:
+            token_id = str(bomb["id"])
+            bomb_map[token_id] = bomb
+
+        return bomb_map
 
     def get_hero_price_map(self, hero_list):
         hero_price_map = {}
-        
+
         for hero in hero_list:
             if not hero["for_sale"]:
                 continue
-            
+
             rarity = str(hero["rarity"])
             level = str(hero["level"])
             price = int(hero["price"])
-            
+
             if rarity not in hero_price_map:
                 hero_price_map[rarity] = {}
-            
+
             if (level not in hero_price_map[rarity]) or (hero_price_map[rarity][level] > price):
                 hero_price_map[rarity][level] = price
-                
-        return hero_price_map    
-        
+
+        return hero_price_map
+
+    def get_bomb_price_map(self, bomb_list):
+        bomb_price_map = {}
+
+        for bomb in bomb_list:
+            if not bomb["for_sale"]:
+                continue
+
+            rarity = str(bomb["rarity"])
+            skills_list = tuple(bomb[f"skill_{skill_id}"] for skill_id in range(1, 7))
+            price = int(bomb["price"])
+
+            if rarity not in bomb_price_map:
+                bomb_price_map[rarity] = {}
+
+            if (skills_list not in bomb_price_map[rarity]) or (bomb_price_map[rarity][skills_list] > price):
+                bomb_price_map[rarity][skills_list] = price
+
+        return bomb_price_map
+
     def get_box_price_map(self, box_list: List[BoxMarketListingDto]):
         box_price_map = {}
-        
+
         for box in box_list:
             if ("for_sale" not in box) or (not box["for_sale"]):
                 continue
-            
+
             box_type = box["box_type"]
             box_name = self.get_box_name_by_box_type(box_type)
             price = box["price"]
-            
+
             if (box_name not in box_price_map) or (box_price_map[box_name] > price):
                 box_price_map[box_name] = price
-                
-        return box_price_map    
+
+        return box_price_map
 
     def get_hero_price(self, rarity, level, hero_price_map):
         if str(rarity) not in hero_price_map:
@@ -174,6 +202,15 @@ class MapperService(BaseMapperService):
             return None
 
         return hero_price_map[str(rarity)][str(level)]
+
+    def get_bomb_price(self, rarity, skills, bomb_price_map):
+        if str(rarity) not in bomb_price_map:
+            return None
+
+        if skills not in bomb_price_map[str(rarity)]:
+            return None
+
+        return bomb_price_map[str(rarity)][skills]
 
     async def map_market_hero_dto_to_domain(self, dto: HeroMarketListingDto, mtb_rate: int = None) -> MarketListing:
         hero: Hero = {
@@ -244,14 +281,14 @@ class MapperService(BaseMapperService):
 
     def get_box_name_by_box_type(self, box_type):
         return self.HERO_BOX_TYPE_TO_NAME.get(box_type, None)
-        
+
     HERO_BOX_CONTRACT_ADDRESS_TO_NAME = {
         COMMON_BOX_CONTRACT_ADDRESS: "Common Box",
         PREMIUM_BOX_CONTRACT_ADDRESS: "Premium Box",
         ULTRA_BOX_CONTRACT_ADDRESS: "Ultra Box",
         BOMB_BOX_CONTRACT_ADDRESS: "Bomb Box"
     }
-    
+
     HERO_CLASS_TO_NAME = {
         0: "Warrior",
         1: "Assassin",

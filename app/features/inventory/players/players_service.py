@@ -1,3 +1,4 @@
+from pprint import pprint
 
 from shared.metabomb_coingecko_service import MetabombCoingeckoService
 from shared.metabomb_moralis_service import MetabombMoralisService
@@ -25,14 +26,19 @@ class InventoryPlayersService:
         documents = []
 
         hero_list = await self.metabomb_api_service.get_market_heroes()
+
         box_list = await self.metabomb_api_service.get_market_boxes()
+        bomb_list = await self.metabomb_api_service.get_market_bombs(for_sale=2)
+
         mtb_rate = await self.metabomb_coingecko_service.get_mtb_price(currency["id"])
 
         hero_map = self.mapper_service.get_hero_map(hero_list)
+
+        bomb_map = self.mapper_service.get_bomb_map(bomb_list)
         hero_price_map = self.mapper_service.get_hero_price_map(hero_list)
 
+        bomb_price_map = self.mapper_service.get_bomb_price_map(bomb_list)
         box_price_map = self.mapper_service.get_box_price_map(box_list)
-
         for form_value in form_values:
             address = form_value["address"]
 
@@ -41,6 +47,8 @@ class InventoryPlayersService:
                 currency,
                 hero_map,
                 hero_price_map,
+                bomb_map,
+                bomb_price_map,
                 box_price_map,
                 mtb_rate
             )
@@ -55,16 +63,40 @@ class InventoryPlayersService:
         currency,
         hero_map,
         hero_price_map,
+        bomb_map,
+        bomb_price_map,
         box_price_map,
         mtb_rate
     ):
 
         box_nfts = await self.metabomb_moralis_service.get_boxes_by_address(address)
         hero_nfts = await self.metabomb_moralis_service.get_heroes_by_address(address)
-
+        bomb_nfts = await self.metabomb_moralis_service.get_bombs_by_address(address)
+        pprint(bomb_nfts)
         total_price = 0
 
         total_mtb_per_day = 0
+
+        for bomb_nft in bomb_nfts:
+            token_id = bomb_nft["token_id"]
+
+            if token_id not in bomb_map:
+                continue
+            bomb = bomb_map[token_id]
+
+            rarity = str(bomb["rarity"])
+
+            skills = tuple(bomb[f"skill_{skill_id}"] for skill_id in range(1, 7))
+
+            price = self.mapper_service.get_bomb_price(
+                rarity,
+                skills,
+                bomb_price_map
+            )
+
+            if price:
+                total_price += price
+
 
         for hero_nft in hero_nfts:
             token_id = hero_nft["token_id"]
@@ -111,6 +143,7 @@ class InventoryPlayersService:
             "fiat_symbol": currency["symbol"],
             "boxes": len(box_nfts),
             "heroes": len(hero_nfts),
+            "bombs": len(bomb_nfts),
             "market_value_fiat": total_price * mtb_rate,
             "est_mtb_per_day": total_mtb_per_day
         }
