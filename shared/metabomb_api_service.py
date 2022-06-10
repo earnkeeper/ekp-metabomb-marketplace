@@ -87,10 +87,6 @@ class MetabombApiService:
             boxes {
             id
             token_id
-            user {
-                wallet_address
-                __typename
-            }
             box_type
             price
             for_sale

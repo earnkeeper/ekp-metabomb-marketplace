@@ -91,7 +91,6 @@ class MapperService(BaseMapperService):
             'id': dto['id'],
             'price_mtb': dto['price'],
             'price_usdc': dto['price'] * mtb_rate,
-            'seller': dto['user']['wallet_address'],
             'token_id': dto['token_id'],
             'updated': datetime.now().timestamp(),
         }
