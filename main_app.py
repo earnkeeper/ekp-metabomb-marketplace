@@ -18,6 +18,8 @@ from app.features.dashboard.dashboard_fusion_service import DashboardFusionServi
 from app.features.dashboard.dashboard_hero_profit_service import DashboardHeroProfitService
 from app.features.dashboard.dashboard_opens_service import \
     DashboardOpensService
+from app.features.embed_best_daily_returns.embed_best_daily_returns_controller import EmbedBestDailyReturnsController
+from app.features.embed_best_daily_returns.embed_best_daily_returns_service import EmbedBestDailyReturnService
 from app.features.embed_box_floor.embed_box_floor_controller import EmbedBoxFloorController
 from app.features.heroes_market.heroes_market_controller import HeroesMarketController
 from app.features.heroes_market.history.heroes_history_service import HeroesHistoryService
@@ -260,6 +262,15 @@ class AppContainer(BaseContainer):
             heroes_listings_service=self.heroes_listings_service
         )
 
+        self.embed_best_daily_returns_service = EmbedBestDailyReturnService()
+
+        self.embed_best_daily_returns_controller = EmbedBestDailyReturnsController(
+            client_service=self.client_service,
+            embed_best_daily_return_service=self.embed_best_daily_returns_service,
+            heroes_history_service=self.heroes_history_service,
+            heroes_listings_service=self.heroes_listings_service
+        )
+
 
 if __name__ == '__main__':
     container = AppContainer()
@@ -277,5 +288,6 @@ if __name__ == '__main__':
     
     container.client_service.add_controller(container.embed_box_floor_controller)
     container.client_service.add_controller(container.embed_heroes_floor_controller)
+    container.client_service.add_controller(container.embed_best_daily_returns_controller)
 
     container.client_service.listen()
