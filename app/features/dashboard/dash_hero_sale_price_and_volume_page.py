@@ -12,10 +12,12 @@ def form_row(RARITIES_FORM_NAME, CHART_COLLECTION_NAME):
                 schema={
                     "type": "object",
                     "properties": {
-                        "rarity": "string"
+                        "rarity": "string",
+                        "currency": "string"
                     },
                     "default": {
-                        "rarity": "Common"
+                        "rarity": "Common",
+                        "currency": "MTB"
                     }
                 },
                 children=[
@@ -28,6 +30,18 @@ def form_row(RARITIES_FORM_NAME, CHART_COLLECTION_NAME):
                                     name="rarity",
                                     options=["Common", "Rare",
                                              "Epic", "Legend"],
+                                    min_width="120px"
+                                ),
+                            ],
+
+                        ),
+                        Col(
+                            "col-auto my-auto",
+                            [
+                                Select(
+                                    label="Currency",
+                                    name="currency",
+                                    options=["Fiat", "MTB"],
                                     min_width="120px"
                                 ),
                             ],
@@ -82,7 +96,7 @@ def chart_row(CHART_COLLECTION_NAME):
                         "text": "Avg Price"
                     },
                     "labels": {
-                        "formatter": format_currency("$", None)
+                        "formatter": format_currency("$", "$.fiatSymbol")
                     },
                     "opposite": True,
                 },
@@ -121,7 +135,7 @@ def chart_row(CHART_COLLECTION_NAME):
                         json_array(documents(CHART_COLLECTION_NAME)),
                         "$.timestamp_ms"
                     ),
-                    "$.price_fiat_avg"
+                    "$.price_avg"
                 ),
             },
         ],

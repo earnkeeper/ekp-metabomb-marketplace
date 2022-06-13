@@ -30,7 +30,7 @@ class BombSalePriceAndVolumeService:
         self.metabomb_coingecko_service = metabomb_coingecko_service
         self.mapper_service = mapper_service
 
-    async def get_documents(self, currency, form_value):
+    async def get_documents(self, currency, form_value_rarity, form_value_currency):
 
         rate = await self.metabomb_coingecko_service.get_usd_price(currency["id"])
 
@@ -39,7 +39,7 @@ class BombSalePriceAndVolumeService:
                 [
                     {"$match":
                         {
-                            "bomb.bomb.rarity_name": form_value
+                            "bomb.bomb.rarity_name": form_value_rarity
                         }
                     },
                     {
@@ -79,8 +79,9 @@ class BombSalePriceAndVolumeService:
 
             new_result_dict["timestamp_ms"] = int(dtm_timestamp) * 1000
             new_result_dict["number_of_sales"] = result["number_of_sales"]
-            new_result_dict["price_avg"] = result["price_avg"]
-            new_result_dict["price_fiat_avg"] = result["price_avg_usd"] * rate
+            new_result_dict["price_avg"] = result["price_avg"] if form_value_currency == 'MTB' \
+                else result["price_avg_usd"] * rate
+            new_result_dict["fiatSymbol"] = currency["symbol"]
             new_result_list.append(new_result_dict)
 
         return new_result_list

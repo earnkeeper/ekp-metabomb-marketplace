@@ -99,10 +99,14 @@ class DashboardController:
             hero_profit_calc_documents
         )
 
-        hero_rarity_form_value = form_values(event, RARITIES_FORM_NAME)
+        hero_form_values = form_values(event, RARITIES_FORM_NAME)
 
-        if hero_rarity_form_value and  ("rarity" in hero_rarity_form_value):
-            hero_chart_documents = await self.dash_hero_sale_price_and_volume_service.get_documents(currency, hero_rarity_form_value['rarity'] or [])
+        if hero_form_values and "rarity" in hero_form_values and "currency" in hero_form_values:
+            hero_chart_documents = await self.dash_hero_sale_price_and_volume_service.get_documents(currency,
+                                                                                                    hero_form_values[
+                                                                                                        'rarity'] or [],
+                                                                                                    hero_form_values[
+                                                                                                        'currency'] or [])
 
             await self.client_service.emit_documents(
                 sid,
@@ -110,20 +114,19 @@ class DashboardController:
                 hero_chart_documents
             )
 
-        bomb_rarity_form_value = form_values(event, BOMB_RARITIES_FORM_NAME)
+        bomb_form_values = form_values(event, BOMB_RARITIES_FORM_NAME)
 
-        if bomb_rarity_form_value and ("rarity" in bomb_rarity_form_value):
+        if bomb_form_values and "rarity" in bomb_form_values and "currency" in bomb_form_values:
             bomb_chart_documents = await self.dash_bomb_sale_price_and_volume_service.get_documents(currency,
-                                                                                               bomb_rarity_form_value[
-                                                                                                   'rarity'] or [])
-
+                                                                                                    bomb_form_values[
+                                                                                                        'rarity'] or [],
+                                                                                                    bomb_form_values[
+                                                                                                        'currency'] or [])
             await self.client_service.emit_documents(
                 sid,
                 BOMB_CHART_COLLECTION_NAME,
                 bomb_chart_documents
             )
-
-
 
         await self.client_service.emit_done(sid, OPENS_COLLECTION_NAME)
         await self.client_service.emit_done(sid, FUSION_COLLECTION_NAME)
