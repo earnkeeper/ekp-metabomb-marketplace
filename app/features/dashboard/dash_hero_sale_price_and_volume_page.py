@@ -41,7 +41,7 @@ def form_row(RARITIES_FORM_NAME, CHART_COLLECTION_NAME):
                                 Select(
                                     label="Currency",
                                     name="currency",
-                                    options=["Fiat", "MTB"],
+                                    options=["MTB", "Fiat"],
                                     min_width="120px"
                                 ),
                             ],

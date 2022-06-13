@@ -41,7 +41,7 @@ def bomb_form_row(BOMB_RARITIES_FORM_NAME, BOMB_CHART_COLLECTION_NAME):
                                 Select(
                                     label="Currency",
                                     name="currency",
-                                    options=["Fiat", "MTB"],
+                                    options=["MTB", "Fiat"],
                                     min_width="120px"
                                 ),
                             ],
