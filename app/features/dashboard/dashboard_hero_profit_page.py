@@ -44,23 +44,6 @@ def hero_dashboard_profit_calc_page(HERO_DASH_PROFIT_COLLECTION_NAME):
                     ),
                 ]),
             ]),
-            Row(
-                children=[
-                    Col(
-                        class_name="col-auto",
-                        children=[
-                            Span("⚠️")
-                        ]
-                    ),
-                    Col(
-                        class_name="col-auto px-0",
-                        children=[
-                            Span(
-                                "Est MTB earning calculations are based on the current state of testnet and subject to change."
-                            ), ]
-                    )
-                ]
-            ),
             Div([], "mt-1"),
             Row(
 

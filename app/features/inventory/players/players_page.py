@@ -20,23 +20,6 @@ def players_page(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME):
             summary_row(PLAYERS_COLLECTION_NAME),
             form_row(PLAYERS_FORM_NAME),
             table_row(PLAYERS_COLLECTION_NAME, PLAYERS_FORM_NAME),
-            Row(
-                children=[
-                    Col(
-                        class_name="col-auto",
-                        children=[
-                            Span("⚠️")
-                        ]
-                    ),
-                    Col(
-                        class_name="col-auto px-0",
-                        children=[
-                            Span(
-                                "Est MTB earning calculations are based on the current state of testnet and subject to change."
-                            ), ]
-                    )
-                ]
-            ),
             Div([], "mt-1"),
             Row(
 
