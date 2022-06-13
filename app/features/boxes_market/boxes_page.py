@@ -54,40 +54,45 @@ def summary_card(boxId):
     return Container(
         context=f"$.{boxId}",
         children=[
-            Card(
-                class_name="p-1",
+            Div(
                 children=[
-                    Row([
-                        Col("col-auto", [
-                            Image(
-                                src=switch_case("$.name", HERO_BOX_NAME_IMAGE),
-                                style={"height": "64px"}
-                            )
-                        ]),
-                        Col("col-auto pr-4", [
-                            Span("$.name", "font-medium-3 font-weight-bold d-block"),
-                            Span(
-                                content=format_template(
-                                    "Floor Price: {{ price }}",
-                                    {
-                                        "price": format_currency("$.floorPrice", "$.fiatSymbol")
-                                    }
-                                ),
-                                class_name="font-small-2 d-block"
-                            ),
-                            Div(style={"marginBottom": "2px"}),
-                            Span(
-                                content=format_template(
-                                    "24h Avg Price: {{ price }}",
-                                    {
-                                        "price": format_currency("$.avgPrice", "$.fiatSymbol")
-                                    }
-                                ),
-                                class_name="font-small-2 d-block"
-                            )
-                        ]),
+                    Card(
+                        class_name="p-1",
+                        children=[
+                            Row([
+                                Col("col-auto", [
+                                    Image(
+                                        src=switch_case("$.name", HERO_BOX_NAME_IMAGE),
+                                        style={"height": "64px"}
+                                    )
+                                ]),
+                                Col("col-auto pr-4", [
+                                    Span("$.name", "font-medium-3 font-weight-bold d-block"),
+                                    Span(
+                                        content=format_template(
+                                            "Floor Price: {{ price }}",
+                                            {
+                                                "price": format_currency("$.floorPrice", "$.fiatSymbol")
+                                            }
+                                        ),
+                                        class_name="font-small-2 d-block"
+                                    ),
+                                    Div(style={"marginBottom": "2px"}),
+                                    Span(
+                                        content=format_template(
+                                            "24h Avg Price: {{ price }}",
+                                            {
+                                                "price": format_currency("$.avgPrice", "$.fiatSymbol")
+                                            }
+                                        ),
+                                        class_name="font-small-2 d-block"
+                                    )
+                                ]),
 
-                    ])
-                ])
+                            ])
+                        ]),
+                ],
+                when="$.name"
+            )
         ]
     )
