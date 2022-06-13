@@ -96,7 +96,7 @@ def chart_row(CHART_COLLECTION_NAME):
                         "text": "Avg Price"
                     },
                     "labels": {
-                        "formatter": format_currency("$", "$.fiatSymbol")
+                        "formatter": commify("$")
                     },
                     "opposite": True,
                 },
