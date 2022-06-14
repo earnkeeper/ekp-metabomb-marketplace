@@ -28,7 +28,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
     return Datatable(
         data=documents(LISTINGS_COLLECTION_NAME),
         busy_when=is_busy(collection(LISTINGS_COLLECTION_NAME)),
-        default_sort_field_id="est_roi",
+        default_sort_field_id="est_payback",
         default_sort_asc=False,
         on_row_clicked=navigate(
             format_template("https://market.metabomb.io/hero/{{ token_id }}", {
@@ -58,7 +58,6 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 id="item",
                 value="$.name",
                 title="Item",
-                sortable=True,
                 searchable=True,
                 cell=name_cell(),
                 min_width="250px"
@@ -91,7 +90,6 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 title="Class",
                 cell=class_image(),
                 width="130px",
-                sortable=True,
             ),
             Column(
                 id="hero_power",
@@ -109,7 +107,6 @@ def market_row(LISTINGS_COLLECTION_NAME):
                                attr_name='hero_health'),
                 width="80px",
                 right=True,
-                sortable=True,
             ),
             Column(
                 id="hero_speed",
@@ -118,7 +115,6 @@ def market_row(LISTINGS_COLLECTION_NAME):
                                attr_name='hero_speed'),
                 width="80px",
                 right=True,
-                sortable=True,
             ),
             Column(
                 id="hero_stamina",
@@ -127,7 +123,6 @@ def market_row(LISTINGS_COLLECTION_NAME):
                                attr_name='hero_stamina'),
                 width="90px",
                 right=True,
-                sortable=True,
             ),
             Column(
                 id="hero_bomb_num",
@@ -136,7 +131,6 @@ def market_row(LISTINGS_COLLECTION_NAME):
                                attr_name='hero_bomb_num'),
                 width="80px",
                 right=True,
-                sortable=True,
             ),
             Column(
                 id="hero_bomb_range",
@@ -145,7 +139,6 @@ def market_row(LISTINGS_COLLECTION_NAME):
                                attr_name='hero_bomb_range'),
                 width="80px",
                 right=True,
-                sortable=True,
             ),
             Column(
                 id="rarity_name",
