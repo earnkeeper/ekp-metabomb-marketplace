@@ -27,7 +27,8 @@ def market_row(LISTINGS_COLLECTION_NAME):
     return Datatable(
         data=documents(LISTINGS_COLLECTION_NAME),
         busy_when=is_busy(collection(LISTINGS_COLLECTION_NAME)),
-        default_sort_field_id="timestamp",
+        default_sort_field_id="price",
+        default_sort_asc=True,
         pagination_per_page=18,
         disable_list_view=True,
         search_hint="Search by token id or box name...",
@@ -46,7 +47,6 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 id="item",
                 value="$.name",
                 title="Item",
-                sortable=True,
                 searchable=True,
                 cell=name_cell(),
                 min_width="200px"

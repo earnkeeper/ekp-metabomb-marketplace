@@ -255,16 +255,21 @@ class MapperService(BaseMapperService):
 
         if mtb_rate is None:
             mtb_rate = await self.get_mtb_rate()
-
+        # try:
         bomb_market_listing: MarketListing = {
             'bomb': bomb,
             'for_sale': dto['for_sale'],
             'id': dto['id'],
             'price_mtb': dto['price'],
-            'price_usdc': dto.get('price', 0) * mtb_rate,
+            'price_usdc': dto['price'] * mtb_rate if dto['price'] else None,
             'token_id': dto['id'],
             'updated': datetime.now().timestamp(),
         }
+        # except TypeError as e:
+        #     print(e)
+        #     print(dto['price'])
+        #     print(mtb_rate)
+        #     raise Exception('Typeerror')
 
         return bomb_market_listing
 

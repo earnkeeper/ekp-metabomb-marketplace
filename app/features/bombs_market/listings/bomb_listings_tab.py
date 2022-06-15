@@ -27,7 +27,8 @@ def market_row(LISTINGS_COLLECTION_NAME):
     return Datatable(
         data=documents(LISTINGS_COLLECTION_NAME),
         busy_when=is_busy(collection(LISTINGS_COLLECTION_NAME)),
-        default_sort_asc=False,
+        default_sort_field_id="priceFiat",
+        default_sort_asc=True,
         pagination_per_page=18,
         on_row_clicked=navigate(
             format_template("https://market.metabomb.io/bomb/{{ token_id }}", {
@@ -55,7 +56,6 @@ def market_row(LISTINGS_COLLECTION_NAME):
                 id="item",
                 value="$.name",
                 title="Item",
-                sortable=True,
                 searchable=True,
                 cell=name_cell(),
                 min_width="260px"
