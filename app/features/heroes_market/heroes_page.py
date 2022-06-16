@@ -1,8 +1,7 @@
 from ekp_sdk.ui import (Card, Col, Container, Div, Image, Row, Span, Tab, Tabs,
-                        format_currency, format_template, switch_case, Alert)
+                        format_currency, format_template, switch_case, Alert, Paragraphs)
 from app.features.heroes_market.history.heroes_history_tab import history_tab
 from app.features.heroes_market.listings.heroes_listings_tab import heroes_listings_tab
-from app.utils.game_constants import METABOMB_IMAGE_URL
 from app.utils.page_title import page_title
 from app.utils.game_constants import METABOMB_IMAGE_URL
 
@@ -12,6 +11,12 @@ def heroes_page(HISTORY_COLLECTION_NAME, HERO_LISTINGS_COLLECTION_NAME, HERO_SUM
         children=[
             Div([], "mb-4"),
             page_title('shopping-bag', 'Hero Market'),
+            Paragraphs(
+                [
+                    "Browse the live Metabomb Marketplace for the best deals. The heroes with the best Return on Investment are shown at the top.",
+                    "Click the History tab to browse the last 1000 sales from the market place. Check out our discord for real time notifications of new listings",
+                ],
+            ),
             summary_row(HERO_SUMMARY_COLLECTION_NAME),
             Tabs(
                 [

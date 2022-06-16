@@ -3,7 +3,7 @@ from app.features.boxes_market.listings.boxes_listings_tab import listings_tab
 from app.utils.game_constants import HERO_BOX_NAME_IMAGE
 from app.utils.page_title import page_title
 from ekp_sdk.ui import (Card, Col, Container, Div, Image, Row, Span, Tab, Tabs,
-                        format_currency, format_template, switch_case, Alert)
+                        format_currency, format_template, switch_case, Alert, Paragraphs)
 
 
 def boxes_page(LISTINGS_COLLECTION_NAME, HISTORY_COLLECTION_NAME, SUMMARY_COLLECTION_NAME):
@@ -11,6 +11,12 @@ def boxes_page(LISTINGS_COLLECTION_NAME, HISTORY_COLLECTION_NAME, SUMMARY_COLLEC
         children=[
             Div([], "mb-4"),
             page_title('shopping-bag', 'Box Market'),
+            Paragraphs(
+                [
+                    "The live Metabomb Box marketplace! Think it looks the same as the offical one, look again 👀. Compare every price to the 24 hour average and check prices in your currency (select at top of page)",
+                    "Click the History tab to browse the last 1000 sales from the market place. Check out our discord for real time notifications of new listings"
+                ],
+            ),
             summary_row(SUMMARY_COLLECTION_NAME),
             Tabs(
                 [
