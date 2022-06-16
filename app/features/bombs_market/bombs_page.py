@@ -1,5 +1,5 @@
 from ekp_sdk.ui import (Card, Col, Container, Div, Image, Row, Span, Tab, Tabs,
-                        format_currency, format_template, switch_case)
+                        format_currency, format_template, switch_case, Paragraphs)
 from app.features.bombs_market.history.bombs_history_tab import history_tab
 from app.features.bombs_market.listings.bomb_listings_tab import bomb_listings_tab
 from app.utils.game_constants import METABOMB_IMAGE_URL
@@ -14,6 +14,12 @@ def bombs_page(
     return Container(
         children=[
             page_title('shopping-bag', 'Bomb Market'),
+            Paragraphs(
+                [
+                    "Browse the live Metabomb Bomb Market for the best deals on bombs. 🤔 Bombs with skill 5 increase earning by 100%, look out for deals on these ones.",
+                    "Click the History tab to browse the last 1000 sales from the bomb Marketplace. Check out our discord for real time notifications of new listings.",
+                ],
+            ),
             summary_row(BOMBS_SUMMARY_COLLECTION_NAME),
             Tabs(
                 [

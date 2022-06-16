@@ -11,13 +11,6 @@ from ekp_sdk.util import documents, collection
 def listings_tab(LISTINGS_COLLECTION_NAME):
     return Container(
         children=[
-            Paragraphs(
-                [
-                    "The live Metabomb marketplace! Think it looks the same as the offical one, look again 👀",
-                    "Compare every price to the 24 hour average and check prices in your currency (select at top of page)",
-                ],
-            ),
-            Div([], "mb-3"),
             market_row(LISTINGS_COLLECTION_NAME),
         ]
     )

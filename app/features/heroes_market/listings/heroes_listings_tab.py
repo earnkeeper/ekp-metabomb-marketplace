@@ -12,13 +12,6 @@ from shared.constants import HERO_CONTRACT_ADDRESS
 def heroes_listings_tab(LISTINGS_COLLECTION_NAME):
     return Container(
         children=[
-            Paragraphs(
-                [
-                    "Browse the live Metabomb Marketplace for the best deals.",
-                    "The heroes with the best Return on Investment are shown at the top.",
-                ],
-            ),
-            Div([], "mb-3"),
             market_row(LISTINGS_COLLECTION_NAME),
         ]
     )
