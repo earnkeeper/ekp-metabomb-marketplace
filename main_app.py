@@ -36,6 +36,7 @@ from app.features.embed_box_floor.embed_box_floor_service import EmbedBoxesServi
 from app.features.embed_hero_floor.embed_hero_floor_service import EmbedHeroesService
 from app.features.embed_hero_floor.embed_hero_floor_controller import EmbedHeroesFloorController
 
+
 class AppContainer(BaseContainer):
     def __init__(self):
         config = AutoConfig(".env")
@@ -145,7 +146,6 @@ class AppContainer(BaseContainer):
 
         self.bombs_summary_service = BombsSummaryService()
 
-
         self.bombs_market_controller = BombsMarketController(
             client_service=self.client_service,
             bombs_history_service=self.bombs_history_service,
@@ -153,12 +153,10 @@ class AppContainer(BaseContainer):
             bombs_summary_service=self.bombs_summary_service
         )
 
-
-        
         # FEATURES - BOX FLOOR EMBED
 
         self.embed_boxes_service = EmbedBoxesService()
-        
+
         self.embed_box_floor_controller = EmbedBoxFloorController(
             client_service=self.client_service,
             boxes_history_service=self.boxes_history_service,
@@ -192,9 +190,8 @@ if __name__ == '__main__':
     container.client_service.add_controller(container.heroes_market_controller)
     container.client_service.add_controller(container.bombs_market_controller)
 
-    
-    # container.client_service.add_controller(container.embed_box_floor_controller)
-    # container.client_service.add_controller(container.embed_heroes_floor_controller)
-    # container.client_service.add_controller(container.embed_best_daily_returns_controller)
+    container.client_service.add_controller(container.embed_box_floor_controller)
+    container.client_service.add_controller(container.embed_heroes_floor_controller)
+    container.client_service.add_controller(container.embed_best_daily_returns_controller)
 
     container.client_service.listen()
