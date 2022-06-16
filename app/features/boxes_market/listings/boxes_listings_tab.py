@@ -21,6 +21,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
         data=documents(LISTINGS_COLLECTION_NAME),
         busy_when=is_busy(collection(LISTINGS_COLLECTION_NAME)),
         default_sort_field_id="price",
+        default_sort_asc=True,
         pagination_per_page=18,
         disable_list_view=True,
         search_hint="Search by token id or box name...",

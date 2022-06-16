@@ -22,7 +22,7 @@ def market_row(LISTINGS_COLLECTION_NAME):
         data=documents(LISTINGS_COLLECTION_NAME),
         busy_when=is_busy(collection(LISTINGS_COLLECTION_NAME)),
         default_sort_field_id="est_payback",
-        default_sort_asc=False,
+        default_sort_asc=True,
         on_row_clicked=navigate(
             format_template("https://market.metabomb.io/hero/{{ token_id }}", {
                 "token_id": "$.tokenId"
