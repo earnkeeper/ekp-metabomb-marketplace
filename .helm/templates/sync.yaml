@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: sync
 spec:
-  schedule: "* * * * *"
+  schedule: "13 1 * * *"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
